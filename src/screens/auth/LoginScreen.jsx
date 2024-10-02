@@ -25,7 +25,6 @@ const LoginScreen = ({ navigation }) => {
     setLoading(true);
 
     try {
-        console.log(`${API_URL}/Account/login`)
       const response = await axios.post(`${API_URL}/Account/login`, {
         email: email,
         password: password
@@ -40,7 +39,7 @@ const LoginScreen = ({ navigation }) => {
       await AsyncStorage.setItem("token", response.data.token);
 
       // Navegar a la pantalla de productos u otra pantalla
-      navigation.navigate("Productos");
+      navigation.navigate("HomeTabs");
     } catch (error) {
       console.error("Error en inicio de sesión:", error);
       // Puedes mostrar un mensaje de error aquí

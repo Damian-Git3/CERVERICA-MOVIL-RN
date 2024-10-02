@@ -1,4 +1,6 @@
-const baseURL = "http://192.168.1.9:5000/api/receta";
+import { API_URL } from '@env'
+
+const baseURL = `${API_URL}/receta`;
 
 // Función para obtener el token
 const obtenerToken = () => {
