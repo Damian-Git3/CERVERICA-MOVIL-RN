@@ -95,10 +95,23 @@ const ProductosScreen = ({ navigation }) => {
                                     resizeMode="contain"
                                 />
 
-                                <Text style={styles.nombre}>{cerveza.nombre}</Text>
+
+                                <Text style={styles.stock}>¡AGOTADO!</Text>
+
+                                {/* Aquí añadimos el footer */}
+                                <View style={styles.footer}>
+                                    <Text style={styles.nombre}>{cerveza.nombre}</Text>
+                                    <TouchableOpacity
+                                        style={styles.addButton}
+                                        onPress={() => addToCart(cerveza.id)}
+                                    >
+                                        <Text style={styles.addButtonText}>Agregar al carrito</Text>
+                                    </TouchableOpacity>
+                                </View>
                             </ImageBackground>
                         ))}
                     </View>
+
 
                 </View>
             </ScrollView>
@@ -139,6 +152,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     imagen: {
+        marginTop: 10,
         width: '100%',
         height: 200,
     },
@@ -150,13 +164,43 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 8,
     },
+    addButton: {
+        backgroundColor: '#e0e0e0',
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+        borderRadius: 5,
+    },
+    addButtonText: {
+        color: '#b9b9b9',
+        fontSize: 14,
+        fontWeight: 'bold',
+    },
+    footer: {
+        width: '100%',
+        justifyContent: 'space-between', // Espacio entre el nombre y el botón
+        alignItems: 'center',
+        paddingBottom: 10,
+        backgroundColor: '#eae9e8',
+    },
     precio: {
         color: '#E1A500',
         fontWeight: 'bold',
     },
+    stock: {
+        position: 'absolute',
+        width: 80,
+        textAlign: 'center',
+        backgroundColor: '#e72929',
+        color: 'white',
+        fontSize: 12,
+        fontWeight: 'bold',
+        padding: 4,
+        transform: [{ rotate: '-35deg' }],
+        top: 50,
+        left: 10
+    },
     nombre: {
         color: '#E1A500',
-
         fontSize: 16,
         fontWeight: 'bold',
         padding: 8,
