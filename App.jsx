@@ -1,22 +1,78 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import WelcomeScreen from './src/screens/auth/WelcomeScreen';
+import LoginScreen from './src/screens/auth/LoginScreen';
 import ProductosScreen from './src/screens/productos/ProductosScreen';
+import NotificacionesScreen from './src/screens/notifications/NotificacionesScreen';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { View, Text, TextInput, Image, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { Provider } from 'react-redux';
+import store from './src/store/store';
 
 const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
+
+const TabNavigator = ({ navigation }) => {
+
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+
+          if (route.name === 'Productos') {
+            iconName = focused ? 'beer' : 'beer-outline';
+          } else if (route.name === 'Notificaciones') {
+            iconName = focused ? 'notifications' : 'notifications-outline';
+          } else if (route.name === 'Logout') {
+            iconName = focused ? 'log-out' : 'log-out-outline';
+          }
+
+          return <Icon name={iconName} size={size} color={color} />;
+        },
+        tabBarActiveTintColor: '#E1A500',
+        tabBarInactiveTintColor: 'gray',
+      })}
+    >
+      <Tab.Screen name="Productos" component={ProductosScreen} />
+      <Tab.Screen name="Notificaciones" component={NotificacionesScreen} />
+      <Tab.Screen 
+        name="Logout" 
+        component={LoginScreen} 
+        options={{
+          tabBarButton: (props) => (
+            <TouchableOpacity {...props} onPress={() => navigation.navigate('Login')} />
+          ),
+        }}  
+      />
+    </Tab.Navigator>
+  );
+}
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
-        {/* Pantalla de login */}
+    <Provider store={store}>
+      <NavigationContainer>
+      <Stack.Navigator initialRouteName="Welcome">
+        <Stack.Screen 
+          name="Welcome" 
+          component={WelcomeScreen} 
+          options={{ headerShown: false }} 
+        />
         <Stack.Screen 
           name="Login" 
-          component={ProductosScreen} 
-          options={{ headerShown: false }}  // Si no quieres mostrar el encabezado
+          component={LoginScreen} 
+          options={{ headerShown: false }} 
+        />
+        <Stack.Screen 
+          name="Productos" 
+          component={TabNavigator} 
+          options={{ headerShown: false }} 
         />
       </Stack.Navigator>
     </NavigationContainer>
+    </Provider>
   );
 }
