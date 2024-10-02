@@ -1,53 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Image, ScrollView, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import logo from './../../../assets/logo-completo.png';
 import { Picker } from '@react-native-picker/picker';
-import cerveza1 from './../../../assets/botellas/botella_ayipa_mx.png';
-import fondo1 from './../../../assets/fondos/fondo_ay.jpg';
 import { obtenerRecetasLanding } from '../../services/recetaService';
 
 const ProductosScreen = ({ navigation }) => {
+    const [error, setError] = useState(null);
     const [isFavoriteFilter, setIsFavoriteFilter] = useState(false);
     const [selectedOption, setSelectedOption] = useState('todo');
     const [recetas, setRecetas] = useState([]);
 
+    
     useEffect(() => {
         const cargarRecetas = async () => {
             try {
+                console.log("entre")
                 const data = await obtenerRecetasLanding();
                 setRecetas(data);
-                console.log(data);
             } catch (err) {
                 setError(err.message);
+                console.log(err.message)
             }
         };
 
         cargarRecetas();
     }, []);
 
-    // Suponiendo que tienes un arreglo de cervezas
-    const cervezas = [
-        { id: 1, nombre: 'Cerveza Rubia', precio: 10.99, img: cerveza1, fondo: fondo1, isFavorite: false },
-        { id: 2, nombre: 'Cerveza Oscura', precio: 12.50, img: cerveza1, fondo: fondo1, isFavorite: false },
-        { id: 3, nombre: 'Cerveza Oscura', precio: 12.50, img: cerveza1, fondo: fondo1, isFavorite: false },
-        { id: 4, nombre: 'Cerveza Oscura', precio: 12.50, img: cerveza1, fondo: fondo1, isFavorite: false },
-        { id: 5, nombre: 'Cerveza Oscura', precio: 12.50, img: cerveza1, fondo: fondo1, isFavorite: false },
-        { id: 6, nombre: 'Cerveza Oscura', precio: 12.50, img: cerveza1, fondo: fondo1, isFavorite: false },
-    ];
-
-    // Cambia el estado de favorito al presionar
     const toggleFavorite = (id) => {
-        const updatedCervezas = cervezas.map(cerveza =>
-            cerveza.id === id ? { ...cerveza, isFavorite: !cerveza.isFavorite } : cerveza
+        const updatedCervezas = recetas.map(receta =>
+            receta.id === id ? { ...receta, isFavorite: !receta.isFavorite } : receta
         );
-        setCervezas(updatedCervezas);
+        setRecetas(updatedCervezas);
     };
-
-    // Filtrar cervezas según el estado de favoritos
-    const filteredCervezas = isFavoriteFilter
-        ? cervezas.filter(cerveza => cerveza.isFavorite)
-        : cervezas;
 
     return (
         <View style={styles.container}>
@@ -85,40 +69,41 @@ const ProductosScreen = ({ navigation }) => {
                         </Picker>
                     </View>
 
+                    
                     <View style={styles.containerCard}>
-                        {filteredCervezas.map((cerveza) => (
+                        {recetas.map((receta) => (
                             <ImageBackground
-                                key={cerveza.id}
-                                source={cerveza.rutaFondo}
+                                key={receta.id}
+                                source={{ uri: receta.rutaFondo }}
                                 style={styles.card}
                                 imageStyle={styles.backgroundImage}
                             >
                                 <View style={styles.header}>
-                                    <Text style={styles.precio}>${cerveza.precio.toFixed(2)}</Text>
+                                    <Text style={styles.precio}>${receta.precioPaquete1.toFixed(2)}</Text>
                                     <TouchableOpacity onPress={() => toggleFavorite(cerveza.id)}>
                                         <Icon
-                                            name={cerveza.isFavorite ? 'heart' : 'heart-outline'}
+                                            name={receta.isFavorite ? 'heart' : 'heart-outline'}
                                             size={24}
-                                            color={cerveza.isFavorite ? 'red' : '#000'}
+                                            color={receta.isFavorite ? 'red' : '#000'}
                                         />
                                     </TouchableOpacity>
                                 </View>
 
                                 <Image
-                                    source={cerveza.imagen}
+                                    source={{ uri: receta.imagen }} 
                                     style={styles.imagen}
                                     resizeMode="contain"
                                 />
 
-
                                 <Text style={styles.stock}>¡AGOTADO!</Text>
 
-                                {/* Aquí añadimos el footer */}
                                 <View style={styles.footer}>
-                                    <Text style={styles.nombre}>{cerveza.nombre}</Text>
+                                    <Text style={styles.nombre}>{receta.nombre}</Text>
+                                    <Text style={styles.especificaciones}>{receta.especificaciones}</Text>
+                                    
                                     <TouchableOpacity
                                         style={styles.addButton}
-                                        onPress={() => addToCart(cerveza.id)}
+                                        onPress={() => addToCart(receta.id)}
                                     >
                                         <Text style={styles.addButtonText}>Agregar al carrito</Text>
                                     </TouchableOpacity>
@@ -146,7 +131,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'space-between',
-        marginTop: 10
+        marginTop: 10,
+        overflow: 'hidden'
     },
     card: {
         backgroundColor: '#fff',
@@ -183,7 +169,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#e0e0e0',
         paddingVertical: 5,
         paddingHorizontal: 10,
-        borderRadius: 5,
+        borderRadius: 5
     },
     addButtonText: {
         color: '#b9b9b9',
@@ -191,8 +177,9 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     footer: {
+        height: 110,
         width: '100%',
-        justifyContent: 'space-between', // Espacio entre el nombre y el botón
+        justifyContent: 'space-between', 
         alignItems: 'center',
         paddingBottom: 10,
         backgroundColor: '#eae9e8',
@@ -214,11 +201,19 @@ const styles = StyleSheet.create({
         top: 50,
         left: 10
     },
+    especificaciones: {
+        textAlign: 'center',
+        color: '#000',
+        fontSize: 8,
+        paddingHorizontal: 10,
+    },
     nombre: {
-        color: '#E1A500',
+        textAlign: 'center',
+        color: '#000',
         fontSize: 16,
         fontWeight: 'bold',
-        padding: 8,
+        paddingHorizontal: 8,
+        paddingTop: 10,
     },
     scrollContainer: {
         paddingBottom: 16

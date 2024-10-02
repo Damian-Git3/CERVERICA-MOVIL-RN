@@ -1,4 +1,4 @@
-const baseURL = "http://localhost:5000/api/receta";
+const baseURL = "http://192.168.1.9:5000/api/receta";
 
 // Función para obtener el token
 const obtenerToken = () => {
@@ -7,6 +7,45 @@ const obtenerToken = () => {
 };
 
 const fetchGet = async (endpoint) => {
+  // Definir los encabezados sin el token
+  const headers = {
+    "Content-Type": "application/json",
+  };
+
+  try {
+    // Realizar la solicitud fetch
+    const response = await fetch(`${baseURL}${endpoint}`, {
+      method: "GET",
+      headers: headers,
+    });
+
+    // Verificar si la respuesta es exitosa
+    if (!response.ok) {
+      // Intentar obtener el cuerpo del error
+      let errorMessage = "No se pudo obtener datos"; // Mensaje por defecto
+      try {
+        const errorData = await response.json(); // Capturar el cuerpo del error
+        errorMessage = errorData.message || errorMessage; // Usar el mensaje del error si existe
+      } catch (jsonError) {
+        // Si no se puede convertir a JSON, mantener el mensaje por defecto
+        console.error("Error al parsear el cuerpo de la respuesta de error:", jsonError);
+      }
+
+      throw new Error(`Error ${response.status}: ${errorMessage}`);
+    }
+
+    // Retornar los datos en caso de éxito
+    return await response.json();
+  } catch (error) {
+    // Manejar errores en la llamada a la API
+    console.error("Error en la llamada API:", error);
+    throw error; // Lanzar el error para manejarlo en otro lugar si es necesario
+  }
+};
+
+  
+/*
+const fetchGet = async (endpoint) => {
   const token = obtenerToken();
   const headers = {
     Authorization: `Bearer ${token}`,
@@ -14,13 +53,18 @@ const fetchGet = async (endpoint) => {
   };
 
   try {
-    const response = await fetch(`${_baseURL}${endpoint}`, {
+    const response = await fetch(`${baseURL}${endpoint}`, {
       method: "GET",
       headers: headers,
     });
 
     if (!response.ok) {
-      throw new Error(`Error: ${response.status}`);
+      const errorData = await response.json(); // Capturar el cuerpo del error
+      throw new Error(
+        `Error ${response.status}: ${
+          errorData.message || "No se pudo obtener datos"
+        }`
+      );
     }
 
     return await response.json();
@@ -29,6 +73,7 @@ const fetchGet = async (endpoint) => {
     throw error;
   }
 };
+*/
 
 const fetchPost = async (endpoint, data) => {
   const token = obtenerToken();
