@@ -1,15 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Image, ScrollView, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import logo from './../../../assets/logo-completo.png';
 import { Picker } from '@react-native-picker/picker';
 import cerveza1 from './../../../assets/botellas/botella_ayipa_mx.png';
 import fondo1 from './../../../assets/fondos/fondo_ay.jpg';
+import { obtenerRecetasLanding } from '../../services/recetaService';
 
 const ProductosScreen = ({ navigation }) => {
     const [isFavoriteFilter, setIsFavoriteFilter] = useState(false);
-
     const [selectedOption, setSelectedOption] = useState('todo');
+    const [recetas, setRecetas] = useState([]);
+
+    useEffect(() => {
+        const cargarRecetas = async () => {
+            try {
+                const data = await obtenerRecetasLanding();
+                setRecetas(data);
+                console.log(data);
+            } catch (err) {
+                setError(err.message);
+            }
+        };
+
+        cargarRecetas();
+    }, []);
 
     // Suponiendo que tienes un arreglo de cervezas
     const cervezas = [
@@ -74,7 +89,7 @@ const ProductosScreen = ({ navigation }) => {
                         {filteredCervezas.map((cerveza) => (
                             <ImageBackground
                                 key={cerveza.id}
-                                source={cerveza.fondo}
+                                source={cerveza.rutaFondo}
                                 style={styles.card}
                                 imageStyle={styles.backgroundImage}
                             >
@@ -90,7 +105,7 @@ const ProductosScreen = ({ navigation }) => {
                                 </View>
 
                                 <Image
-                                    source={cerveza.img}
+                                    source={cerveza.imagen}
                                     style={styles.imagen}
                                     resizeMode="contain"
                                 />
@@ -215,8 +230,8 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     containerButtons: {
+        marginTop: 10,
         padding: 5,
-        width: '100%',
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'space-between',
@@ -242,7 +257,7 @@ const styles = StyleSheet.create({
     },
     inputContainer: {
         width: '100%',
-        margin: 10,
+        marginTop: 30,
         padding: 5,
         flexDirection: 'row',
         alignItems: 'center',
