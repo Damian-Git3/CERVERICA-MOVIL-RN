@@ -1,5 +1,5 @@
 // src/store/store.js
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore,combineReducers  } from '@reduxjs/toolkit';
 import notificationReducer from './notifications/notificationReducer';
 // Importa otros reducers si los tienes
 

@@ -59,6 +59,8 @@ const NotificacionesScreen = () => {
     }
   };
 
+ 
+
   if (loading) {
     return (
       <View style={styles.loader}>
@@ -104,3 +106,143 @@ const styles = StyleSheet.create({
 });
 
 export default NotificacionesScreen;
+
+
+
+
+// // NotificacionesScreen.js
+// import React, { useState, useEffect } from 'react';
+// import { View, Text, FlatList, TextInput, Image, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
+// import axios from 'axios'; // Para las peticiones de API
+// import { API_URL } from '@env';
+
+// const NotificacionesScreen = () => {
+//   const [notificaciones, setNotificaciones] = useState([]);
+//   const [filterQuery, setFilterQuery] = useState('');
+//   const [loading, setLoading] = useState(true);
+//   const [ascendente, setAscendente] = useState(true);
+
+//   useEffect(() => {
+//     fetchNotificaciones();
+//   }, []);
+
+//   const fetchNotificaciones = async () => {
+//     try {
+//       const response = await axios.get(`${API_URL}Notificaciones`, {
+//         headers: {
+//           'Authorization': `Bearer ${getToken()}`
+//         }
+//       });
+//       setNotificaciones(response.data);
+//       setLoading(false);
+//     } catch (error) {
+//       console.error(error);
+//     }
+//   };
+
+//   const filterNotificaciones = (query) => {
+//     setFilterQuery(query.toLowerCase());
+//   };
+
+//   const toggleOrden = () => {
+//     setAscendente(!ascendente);
+//     const sortedNotificaciones = [...notificaciones].sort((a, b) =>
+//       ascendente ? new Date(b.fecha) - new Date(a.fecha) : new Date(a.fecha) - new Date(b.fecha)
+//     );
+//     setNotificaciones(sortedNotificaciones);
+//   };
+
+//   const renderNotificacion = ({ item }) => (
+//     <View style={styles.notificacionItem}>
+//       <Image source={require('../../../assets/logo-completo.png')} style={styles.icon} />
+//       <View style={styles.notificacionText}>
+//         <Text style={styles.mensaje}>{item.mensaje}</Text>
+//         <Text style={styles.fecha}>{formatFecha(item.fecha)}</Text>
+//       </View>
+//     </View>
+//   );
+
+//   const formatFecha = (fecha) => {
+//     // Implementar lógica para formatear la fecha (similar al código original en Kotlin)
+//     const diffInMinutes = Math.floor((new Date() - new Date(fecha)) / (1000 * 60));
+//     if (diffInMinutes < 60) return `Hace ${diffInMinutes} minutos`;
+//     const diffInHours = Math.floor(diffInMinutes / 60);
+//     if (diffInHours < 24) return `Hace ${diffInHours} horas`;
+//     return `Hace ${Math.floor(diffInHours / 24)} días`;
+//   };
+
+//   if (loading) {
+//     return <ActivityIndicator size="large" color="#0000ff" />;
+//   }
+
+//   return (
+//     <View style={styles.container}>
+//       <TextInput
+//         style={styles.searchInput}
+//         placeholder="Buscar..."
+//         value={filterQuery}
+//         onChangeText={filterNotificaciones}
+//       />
+//       <TouchableOpacity onPress={toggleOrden}>
+//         <Text style={styles.ordenButton}>
+//           {ascendente ? 'Fecha Descendente' : 'Fecha Ascendente'}
+//         </Text>
+//       </TouchableOpacity>
+//       <FlatList
+//         data={notificaciones.filter((item) =>
+//           item.mensaje.toLowerCase().includes(filterQuery)
+//         )}
+//         renderItem={renderNotificacion}
+//         keyExtractor={(item) => item.id.toString()}
+//       />
+//     </View>
+//   );
+// };
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     padding: 16,
+//   },
+//   searchInput: {
+//     height: 50,
+//     borderColor: '#ddd',
+//     borderWidth: 1,
+//     borderRadius: 8,
+//     paddingHorizontal: 16,
+//     marginBottom: 16,
+//   },
+//   ordenButton: {
+//     textAlign: 'center',
+//     color: '#000',
+//     marginBottom: 10,
+//     fontWeight: 'bold',
+//   },
+//   notificacionItem: {
+//     flexDirection: 'row',
+//     padding: 10,
+//     backgroundColor: '#fff',
+//     borderRadius: 8,
+//     marginBottom: 10,
+//     elevation: 1,
+//   },
+//   icon: {
+//     width: 40,
+//     height: 40,
+//     marginRight: 10,
+//   },
+//   notificacionText: {
+//     flex: 1,
+//   },
+//   mensaje: {
+//     fontWeight: 'bold',
+//     fontSize: 14,
+//     color: '#333',
+//   },
+//   fecha: {
+//     fontSize: 12,
+//     color: '#666',
+//   },
+// });
+
+// export default NotificacionesScreen;

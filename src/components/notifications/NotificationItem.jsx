@@ -9,12 +9,12 @@ const NotificationItem = ({ notificacion, onVistoPress }) => {
   const getIconoTipo = (tipo) => {
     switch (tipo) {
       case 1:
-        return require('../../assets/images/cuenta.png');
+        return require('../../../assets/logo-completo.png');
       case 2:
-        return require('../../assets/images/favorito.png');
+        return require('../../../assets/logo-completo.png');
       // Añade más casos según tus tipos
       default:
-        return require('../../assets/images/beer.png');
+        return require('../../../assets/logo-completo.png');
     }
   };
 
@@ -27,7 +27,7 @@ const NotificationItem = ({ notificacion, onVistoPress }) => {
       </View>
       <TouchableOpacity onPress={() => onVistoPress(notificacion)}>
         <Image
-          source={require('../../assets/images/fire.png')}
+          source={require('../../../assets/logo-completo.png')}
           style={styles.botonVisto}
         />
       </TouchableOpacity>

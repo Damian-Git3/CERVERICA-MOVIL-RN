@@ -27,7 +27,10 @@ const WelcomeScreen = ({ navigation }) => {
                     <View style={styles.containerButtons}>
                         <Text style={styles.welcomeText}>¡Hey! Bienvenido de nuevo</Text>
 
-                        <TouchableOpacity style={styles.loginButton}>
+                        <TouchableOpacity
+                            style={styles.loginButton}
+                            onPress={() => navigation.navigate('Login')}
+                        >
                             <Text style={styles.loginButtonText}>Ingresar</Text>
                         </TouchableOpacity>
 
