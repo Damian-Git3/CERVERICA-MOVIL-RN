@@ -1,17 +1,17 @@
 // src/services/notificationService.js
-import axios from 'axios';
+import apiClient from '../services/apiService';
 import { API_URL } from '@env';
 
 const BASE_URL = API_URL;
 
 export const fetchNotificaciones = async () => {
   try {
-    const response = await axios.get(`${BASE_URL}/Notificacion`, {
+    const response = await apiClient.get(`${BASE_URL}/Notificacion`, {
       headers: {
-        //Authorization: `Bearer ${getToken()}`, // Implementa getToken según tu lógica
-        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1AbS5tIiwibmFtZSI6IknDsWlnbyBNb250b3lhIiwibmFtZWlkIjoiOTc1ZjA5NGItYTMzMy00NzQyLWIyMzUtMTk2MDg5NzhmY2Y5IiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDo0MjAwIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo1MDAwIiwicm9sZSI6IkNsaWVudGUiLCJuYmYiOjE3Mjc4OTg4MjYsImV4cCI6MTcyNzkwOTYyNiwiaWF0IjoxNzI3ODk4ODI2fQ.OZr8jUh00iQUMtvfAOa_WReXaJu4TE777MBqQrtE8oI`
+        Authorization: `Bearer ${getToken()}`, // Implementa getToken según tu lógica
       },
     });
+    console.log(response)
     return response.data;
   } catch (error) {
     throw error;

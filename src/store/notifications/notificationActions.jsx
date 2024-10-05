@@ -12,6 +12,8 @@ import {
       dispatch({ type: GET_NOTIFICACIONES_REQUEST });
       try {
         const data = await fetchNotificaciones();
+        console.log("fetch notificaciones")
+        console.log(data)
         dispatch({ type: GET_NOTIFICACIONES_SUCCESS, payload: data });
       } catch (error) {
         dispatch({ type: GET_NOTIFICACIONES_FAILURE, payload: error.message });
