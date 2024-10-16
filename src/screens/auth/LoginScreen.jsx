@@ -25,6 +25,9 @@ const LoginScreen = ({ navigation }) => {
     setLoading(true);
 
     try {
+      // Realizar la petición de inicio de sesión
+      // Imprimimos la URL de la API para verificar que se obtiene correctamente
+      console.log(API_URL);
       const response = await axios.post(`${API_URL}/Account/login`, {
         email: email,
         password: password
