@@ -133,10 +133,6 @@ const LoginScreen = () => {
               color="#E1A500"
             />
           )}
-
-          <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-            <Text style={styles.registerText}>¿Eres un usuario nuevo?</Text>
-          </TouchableOpacity>
         </View>
       </ScrollView>
     </View>
