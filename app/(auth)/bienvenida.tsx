@@ -7,11 +7,11 @@ import CustomButton from "@/components/CustomButton";
 import { slidersBienvenida } from "@/constants";
 import { router } from "expo-router";
 
-const Home = () => {
+const Bienvenida = () => {
   const swiperRef = useRef<Swiper>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [sliderActual, setSliderActual] = useState(0);
 
-  const isLastSlide = activeIndex === slidersBienvenida.length - 1;
+  const isLastSlide = sliderActual === slidersBienvenida.length - 1;
 
   return (
     <SafeAreaView className="flex h-full items-center justify-between bg-white">
@@ -21,40 +21,44 @@ const Home = () => {
         }}
         className="w-full flex justify-end items-end p-5"
       >
-        <Text className="text-black text-md font-JakartaBold">Skip</Text>
+        <Text className="text-black text-md font-JakartaBold">Saltar</Text>
       </TouchableOpacity>
 
       <Swiper
         ref={swiperRef}
         loop={false}
         dot={
-          <View className="w-[32px] h-[4px] mx-1 bg-[#E2E8F0] rounded-full" />
+          <View className="w-[32px] h-[4px] mx-1 bg-[#9ea2a7] rounded-full" />
         }
         activeDot={
-          <View className="w-[32px] h-[4px] mx-1 bg-[#0286FF] rounded-full" />
+          <View className="w-[32px] h-[4px] mx-1 bg-[#ed9224] rounded-full" />
         }
-        onIndexChanged={(index) => setActiveIndex(index)}
+        onIndexChanged={(indice) => setSliderActual(indice)}
       >
         {slidersBienvenida.map((slider) => (
           <View
             key={slider.id}
             className="flex items-center justify-center p-5"
           >
-            <Image className="w-full h-[300px]" resizeMode="contain" />
+            <Image
+              source={slider.imagen}
+              className="w-full h-[300px]"
+              resizeMode="contain"
+            />
             <View className="flex flex-row items-center justify-center w-full mt-10">
               <Text className="text-black text-3xl font-bold mx-10 text-center">
-                {slider.title}
+                {slider.titulo}
               </Text>
             </View>
             <Text className="text-md font-JakartaSemiBold text-center text-[#858585] mx-10 mt-3">
-              {slider.description}
+              {slider.descripcion}
             </Text>
           </View>
         ))}
       </Swiper>
 
       <CustomButton
-        title={isLastSlide ? "Get Started" : "Next"}
+        title={isLastSlide ? "Iniciar sesión" : "Siguiente"}
         onPress={() =>
           isLastSlide
             ? router.replace("/(auth)/login")
@@ -66,4 +70,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Bienvenida;
