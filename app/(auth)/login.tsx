@@ -3,7 +3,6 @@ import {
   View,
   Text,
   TextInput,
-  Image,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -20,12 +19,18 @@ const LoginScreen = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false); // Estado para mostrar/ocultar contraseña
 
+  console.log(process.env.EXPO_PUBLIC_BASE_URL);
+
   const handleLogin = async () => {
     setLoading(true);
 
     try {
+      router.replace("/(agente)/(tabs)/inicio");
+
+      return;
+
       const response = await axios.post(
-        `http://127.0.0.1/Account/login`,
+        `${process.env.BASE_URL}/Account/login`,
         {
           email: email,
           password: password,
