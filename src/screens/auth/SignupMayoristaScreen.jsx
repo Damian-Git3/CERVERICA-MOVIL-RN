@@ -10,38 +10,53 @@ import {
     ActivityIndicator,
     Alert,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/Ionicons";
-import axios from "axios";
+import loginRequest from "../../services/authService";
 import { API_URL } from '@env';
+import axios from "axios";
 
-const SignupScreen = ({ navigation }) => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState(""); // Estado para confirmar contraseña
-    const [name, setName] = useState(""); // Estado para nombre
+const SignupMayoristaScreen = ({ navigation }) => {
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false); // Estado para mostrar/ocultar confirmación de contraseña
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-    const [isEmailValid, setIsEmailValid] = useState(true);
+    // Nuevos estados para la información de la empresa y contacto
+    const [nombreEmpresa, setNombreEmpresa] = useState("");
+    const [direccionEmpresa, setDireccionEmpresa] = useState("");
+    const [telefonoEmpresa, setTelefonoEmpresa] = useState("");
+    const [emailEmpresa, setEmailEmpresa] = useState("");
+
+    const [nombreContacto, setNombreContacto] = useState("");
+    const [cargoContacto, setCargoContacto] = useState("");
+    const [telefonoContacto, setTelefonoContacto] = useState("");
+    const [emailContacto, setEmailContacto] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+
+    const [isPhoneEmpresaValid, setIsPhoneEmpresaValid] = useState(true);
+    const [isPhoneContactoValid, setIsPhoneContactoValid] = useState(true);
+    const [isEmailEmpresaValid, setIsEmailEmpresaValid] = useState(true);
+    const [isEmailContactoValid, setIsEmailContactoValid] = useState(true);
 
     const [errors, setErrors] = useState({});
-
 
     const handleSignUp = async () => {
         setLoading(true);
 
         // Validar que los campos no estén vacíos
-        if (!name || !email || !password || !confirmPassword) {
+        if (!password || !confirmPassword || !nombreEmpresa || !direccionEmpresa || !telefonoEmpresa || !emailEmpresa || !nombreContacto || !cargoContacto || !telefonoContacto || !emailContacto) {
             Alert.alert("Error", "Todos los campos son obligatorios");
+            console.log("Error", "Todos los campos son obligatorios");
             setLoading(false);
             return;
         }
 
         // Validar que el email sea válido
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
+        if (!emailRegex.test(emailEmpresa) || !emailRegex.test(emailContacto)) {
             Alert.alert("Error", "Por favor ingresa un correo electrónico válido");
+            console.log("Error", "Por favor ingresa un correo electrónico válido");
             setLoading(false);
             return;
         }
@@ -49,6 +64,7 @@ const SignupScreen = ({ navigation }) => {
         // Validar que la contraseña sea válida
         if (!validatePassword(password)) {
             Alert.alert("Error", "La contraseña debe contener al menos 1 mayúscula, 1 número y 2 caracteres especiales*");
+            console.log("Error", "La contraseña debe contener al menos 1 mayúscula, 1 número y 2 caracteres especiales*");
             setLoading(false);
             return;
         }
@@ -56,31 +72,51 @@ const SignupScreen = ({ navigation }) => {
         // Verificar que las contraseñas coincidan
         if (password !== confirmPassword) {
             Alert.alert("Error", "Las contraseñas no coinciden");
+            console.log("Error", "Las contraseñas no coinciden");
+            setLoading(false);
+            return;
+        }
+
+        // Validar el formato del teléfono (opcional, dependiendo de la región puedes ajustar el regex)
+        const phoneRegex = /^[0-9]{10}$/;
+        if (!phoneRegex.test(telefonoEmpresa) || !phoneRegex.test(telefonoContacto)) {
+            Alert.alert("Error", "El número de teléfono debe tener 10 dígitos");
+            console.log("Error", "El número de teléfono debe tener 10 dígitos");
             setLoading(false);
             return;
         }
 
         // Crear el objeto con los datos de entrada
         const signUpData = {
-            email: email,
-            fullName: name,
             password: password,
-            role: "Cliente"
+            rol: "Mayorista",
+            nombreEmpresa: nombreEmpresa,
+            direccionEmpresa: direccionEmpresa,
+            telefonoEmpresa: telefonoEmpresa,
+            emailEmpresa: emailEmpresa,
+            
+            nombreContacto: nombreContacto,
+            cargoContacto: cargoContacto,
+            telefonoContacto: telefonoContacto,
+            emailContacto: emailContacto
         };
 
-        // Imprimir el objeto en la consola
+        // Imprimir el objeto en la consola para depuración
         console.log(JSON.stringify(signUpData, null, 2));
 
         try {
             // Llamar a la API para registrar la cuenta
             await registrarCuenta(signUpData);
 
-            Alert.alert("Success", "Se creo la cuenta exitosamente.");
-            // Navegar a HomeTabs después de un registro exitoso
+            Alert.alert("Success", "Se creó la cuenta exitosamente.");
+            console.log("Se creo")
+
+            // Navegar a la pantalla de inicio de sesión después de un registro exitoso
             navigation.navigate("Login");
         } catch (error) {
             console.error("Error en el registro:", error);
             Alert.alert("Error", "No se pudo registrar la cuenta. Intenta nuevamente.");
+            console.log("Error")
         } finally {
             setLoading(false);
         }
@@ -88,7 +124,7 @@ const SignupScreen = ({ navigation }) => {
 
     // Función para registrar la cuenta
     const registrarCuenta = async (request) => {
-        const response = await fetch(`${API_URL}/Account/register`, {
+        const response = await fetch(`${API_URL}/ClienteMayorista`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -114,12 +150,11 @@ const SignupScreen = ({ navigation }) => {
     };
 
     const toggleConfirmPasswordVisibility = () => {
-        setShowConfirmPassword((prev) => !prev); // Cambiar el estado de visibilidad de confirmación de contraseña
+        setShowConfirmPassword((prev) => !prev);
     };
 
     const handleInput = (value, setValue, fieldName) => {
         setValue(value);
-
         if (value.trim() === "") {
             setErrors((prevErrors) => ({ ...prevErrors, [fieldName]: "Este campo es obligatorio*" }));
         } else {
@@ -144,6 +179,27 @@ const SignupScreen = ({ navigation }) => {
         } else {
             setIsValid(false); // Correo inválido
             setErrors((prevErrors) => ({ ...prevErrors, [fieldName]: "El correo electrónico no es válido*" }));
+        }
+    };
+
+
+    // Función para validar y limitar la entrada a solo números y 10 caracteres
+    const handlePhoneInput = (text, setText, setIsValid, fieldName) => {
+        const numericText = text.replace(/[^0-9]/g, '').slice(0, 10);
+        setText(numericText);
+
+        if (text.trim() === "") {
+            setErrors((prevErrors) => ({ ...prevErrors, [fieldName]: "Este campo es obligatorio*" }));
+        } else {
+            setErrors((prevErrors) => ({ ...prevErrors, [fieldName]: null }));
+        }
+
+        // Verificar si el número tiene exactamente 10 caracteres
+        if (numericText.length === 10) {
+            setIsValid(true);  // Número válido
+        } else {
+            setIsValid(false); // Número inválido
+            setErrors((prevErrors) => ({ ...prevErrors, [fieldName]: "El teléfono debe contener 10 números*" }));
         }
     };
 
@@ -180,6 +236,20 @@ const SignupScreen = ({ navigation }) => {
         }
     };
 
+    const isFormValid =
+        !loading &&
+        !Object.values(errors).some(error => error !== null) &&
+        nombreEmpresa &&
+        direccionEmpresa &&
+        telefonoEmpresa &&
+        emailEmpresa &&
+        nombreContacto &&
+        cargoContacto &&
+        telefonoContacto &&
+        emailContacto &&
+        password &&
+        confirmPassword;
+
     return (
         <View style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -188,20 +258,50 @@ const SignupScreen = ({ navigation }) => {
                     <View style={styles.circulo2}></View>
                     <View style={styles.circulo3}></View>
 
-                    <Text style={styles.welcomeText}>Crear Cuenta</Text>
+                    <Text style={styles.welcomeText}>Crear Cuenta Mayorista</Text>
+
+                    {/* Nuevos campos para la empresa */}
+                    <View style={styles.containerFlex}>
+                        <View style={styles.inputContainer}>
+                            <Icon name="business" size={24} color="#E1A500" style={styles.icon} />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Nombre de la Empresa"
+                                placeholderTextColor="#E1A500"
+                                value={nombreEmpresa}
+                                onChangeText={(text) => handleInput(text, setNombreEmpresa, "nombreEmpresa")}
+                            />
+                        </View>
+                        {errors.nombreEmpresa && <Text style={styles.errorText}>{errors.nombreEmpresa}</Text>}
+                    </View>
 
                     <View style={styles.containerFlex}>
                         <View style={styles.inputContainer}>
-                            <Icon name="person" size={24} color="#E1A500" style={styles.icon} />
+                            <Icon name="location" size={24} color="#E1A500" style={styles.icon} />
                             <TextInput
                                 style={styles.input}
-                                placeholder="Nombre"
+                                placeholder="Dirección de la Empresa"
                                 placeholderTextColor="#E1A500"
-                                value={name}
-                                onChangeText={(text) => handleInput(text, setName, "name")}
+                                value={direccionEmpresa}
+                                onChangeText={(text) => handleInput(text, setDireccionEmpresa, "direccionEmpresa")}
                             />
                         </View>
-                        {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
+                        {errors.direccionEmpresa && <Text style={styles.errorText}>{errors.direccionEmpresa}</Text>}
+                    </View>
+
+                    <View style={styles.containerFlex}>
+                        <View style={styles.inputContainer}>
+                            <Icon name="call" size={24} color="#E1A500" style={styles.icon} />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Teléfono de la Empresa"
+                                placeholderTextColor="#E1A500"
+                                value={telefonoEmpresa}
+                                onChangeText={(text) => handlePhoneInput(text, setTelefonoEmpresa, setIsPhoneEmpresaValid, "telefonoEmpresa")}
+                                keyboardType="phone-pad"
+                            />
+                        </View>
+                        {errors.telefonoEmpresa && <Text style={styles.errorText}>{errors.telefonoEmpresa}</Text>}
                     </View>
 
                     <View style={styles.containerFlex}>
@@ -209,15 +309,75 @@ const SignupScreen = ({ navigation }) => {
                             <Icon name="mail" size={24} color="#E1A500" style={styles.icon} />
                             <TextInput
                                 style={styles.input}
-                                placeholder="Email"
+                                placeholder="Email de la Empresa"
                                 placeholderTextColor="#E1A500"
-                                value={email}
-                                keyboardType="email-address"
+                                value={emailEmpresa}
                                 autoCapitalize="none"
-                                onChangeText={(text) => handleEmailInput(text, setEmail, setIsEmailValid, "email")}
+                                onChangeText={(text) => handleEmailInput(text, setEmailEmpresa, setIsEmailEmpresaValid, "emailEmpresa")}
+                                keyboardType="email-address"
                             />
                         </View>
-                        {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
+                        {errors.emailEmpresa && <Text style={styles.errorText}>{errors.emailEmpresa}</Text>}
+                    </View>
+
+                    {/* Nuevos campos de contacto */}
+                    <View style={styles.containerFlex}>
+                        <View style={styles.inputContainer}>
+                            <Icon name="person" size={24} color="#E1A500" style={styles.icon} />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Nombre de Contacto"
+                                placeholderTextColor="#E1A500"
+                                value={nombreContacto}
+                                onChangeText={(text) => handleInput(text, setNombreContacto, "nombreContacto")}
+                            />
+                        </View>
+                        {errors.nombreContacto && <Text style={styles.errorText}>{errors.nombreContacto}</Text>}
+                    </View>
+
+                    <View style={styles.containerFlex}>
+                        <View style={styles.inputContainer}>
+                            <Icon name="person-circle" size={24} color="#E1A500" style={styles.icon} />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Cargo de Contacto"
+                                placeholderTextColor="#E1A500"
+                                value={cargoContacto}
+                                onChangeText={(text) => handleInput(text, setCargoContacto, "cargoContacto")}
+                            />
+                        </View>
+                        {errors.cargoContacto && <Text style={styles.errorText}>{errors.cargoContacto}</Text>}
+                    </View>
+
+                    <View style={styles.containerFlex}>
+                        <View style={styles.inputContainer}>
+                            <Icon name="call" size={24} color="#E1A500" style={styles.icon} />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Teléfono de Contacto"
+                                placeholderTextColor="#E1A500"
+                                value={telefonoContacto}
+                                onChangeText={(text) => handlePhoneInput(text, setTelefonoContacto, setIsPhoneContactoValid, "telefonoContacto")}
+                                keyboardType="phone-pad"
+                            />
+                        </View>
+                        {errors.telefonoContacto && <Text style={styles.errorText}>{errors.telefonoContacto}</Text>}
+                    </View>
+
+                    <View style={styles.containerFlex}>
+                        <View style={styles.inputContainer}>
+                            <Icon name="mail" size={24} color="#E1A500" style={styles.icon} />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Email de Contacto"
+                                placeholderTextColor="#E1A500"
+                                value={emailContacto}
+                                onChangeText={(text) => handleEmailInput(text, setEmailContacto, setIsEmailContactoValid, "emailContacto")}
+                                keyboardType="email-address"
+                                autoCapitalize="none"
+                            />
+                        </View>
+                        {errors.emailContacto && <Text style={styles.errorText}>{errors.emailContacto}</Text>}
                     </View>
 
                     <View style={styles.containerFlex}>
@@ -276,7 +436,6 @@ const SignupScreen = ({ navigation }) => {
                         {errors.confirmPassword && <Text style={styles.errorText}>{errors.confirmPassword}</Text>}
                     </View>
 
-
                 </View>
 
                 <TouchableOpacity style={styles.backButton} onPress={handleReturn}>
@@ -291,17 +450,15 @@ const SignupScreen = ({ navigation }) => {
                 <View style={styles.containerItems}>
                     <TouchableOpacity
                         style={
-                            !loading && !Object.values(errors).some(error => error !== null) && name && email && password && confirmPassword
-                                ? styles.signupButton  // Aplica el estilo completo cuando todo es válido
-                                : [styles.signupButton, { backgroundColor: '#d3d3d3', opacity: 0.6 }] // Aplica un estilo deshabilitado
+                            isFormValid
+                                ? styles.signupButton
+                                : [styles.signupButton, { backgroundColor: '#d3d3d3', opacity: 0.6 }]
                         }
                         onPress={handleSignUp}
-                        disabled={loading || Object.values(errors).some(error => error !== null) || !name || !email || !password || !confirmPassword}
+                        disabled={!isFormValid}
                     >
                         <Text style={styles.signupButtonText}>Registrarse</Text>
                     </TouchableOpacity>
-
-
 
                     {loading && (
                         <ActivityIndicator
@@ -311,18 +468,15 @@ const SignupScreen = ({ navigation }) => {
                         />
                     )}
 
-                    <TouchableOpacity onPress={() => navigation.navigate("SignupMayorista")}>
-                        <Text style={styles.registerText}>¿Eres mayorista?</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-                        <Text style={styles.loginText}>
-                            ¿Ya tienes una cuenta?{" "}
-                            <Text style={{ color: '#E1A500' }}>Iniciar sesión</Text>
-                        </Text>
-                    </TouchableOpacity>
-
                 </View>
+
+                <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+                    <Text style={styles.loginText}>
+                        ¿Ya tienes una cuenta?{" "}
+                        <Text style={{ color: '#E1A500' }}>Iniciar sesión</Text>
+                    </Text>
+                </TouchableOpacity>
+
             </ScrollView>
         </View>
     );
@@ -388,6 +542,7 @@ const styles = StyleSheet.create({
         borderBottomColor: "#E1A500",
         borderBottomWidth: 2,
         paddingHorizontal: 16,
+
         color: "#fff",
         paddingLeft: 30,
     },
@@ -430,25 +585,29 @@ const styles = StyleSheet.create({
     },
     registerText: {
         textAlign: "center",
-        margin: 32,
+        marginTop: 32,
         color: "#E1A500",
         fontSize: 16,
         fontWeight: "bold",
     },
     loginText: {
         textAlign: "center",
+        marginTop: 32,
         marginBottom: 32,
         color: "#fff",
         fontSize: 16,
         fontWeight: "600",
     },
-    containerFlex: {
-        paddingVertical: 5,
+    inputError: {
+        borderBottomColor: 'red',
     },
     errorText: {
         color: "#E1A500",
         fontSize: 12,
     },
+    containerFlex: {
+        paddingVertical: 5,
+    }
 });
 
-export default SignupScreen;
+export default SignupMayoristaScreen;

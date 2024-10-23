@@ -5,6 +5,9 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import WelcomeScreen from "./src/screens/auth/WelcomeScreen";
 import LoginScreen from "./src/screens/auth/LoginScreen";
+import MenuScreen from "./src/screens/menu/MenuScreen";
+import SignupScreen from "./src/screens/auth/SignupScreen";
+import SignupMayoristaScreen from "./src/screens/auth/SignupMayoristaScreen";
 import ProductosScreen from "./src/screens/productos/ProductosScreen";
 import ClientesScreen from "./src/screens/clientes/ClientesScreen";
 import NotificacionesScreen from "./src/screens/notifications/NotificacionesScreen";
@@ -26,6 +29,9 @@ const TabNavigator = ({ navigation }) => {
           if (route.name === "Productos") {
             iconName = focused ? "beer" : "beer-outline";
           }
+          else if (route.name === "Menu") {
+            iconName = focused ? "menu" : "menu-outline";
+          }          
           else if (route.name === "Clientes") {
             iconName = focused ? "people" : "people-outline";
           }
@@ -42,6 +48,7 @@ const TabNavigator = ({ navigation }) => {
       })}
     >
 
+      <Tab.Screen name="Menu" component={MenuScreen} />
       <Tab.Screen name="Clientes" component={ClientesScreen} />
       <Tab.Screen name="Productos" component={ProductosScreen} />
       <Tab.Screen name="Notificaciones" component={NotificacionesScreen} />
@@ -68,12 +75,22 @@ export default function App() {
         <Stack.Navigator initialRouteName="Welcome">
           <Stack.Screen
             name="Welcome"
-            component={WelcomeScreen}
+            component={MenuScreen}
             options={{ headerShown: false }}
           />
           <Stack.Screen
             name="Login"
             component={LoginScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Signup"
+            component={SignupScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="SignupMayorista"
+            component={SignupMayoristaScreen}
             options={{ headerShown: false }}
           />
           <Stack.Screen
