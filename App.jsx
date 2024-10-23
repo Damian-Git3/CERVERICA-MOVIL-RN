@@ -1,3 +1,4 @@
+import 'react-native-gesture-handler';
 import React from "react";
 import { TouchableOpacity } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
@@ -10,6 +11,7 @@ import NotificacionesScreen from "./src/screens/notifications/NotificacionesScre
 import Icon from "react-native-vector-icons/Ionicons";
 import { Provider } from "react-redux";
 import store from "./src/store/store";
+import ReporteVentasScreen from "./src/screens/productos/ReporteVentasScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -37,6 +39,7 @@ const TabNavigator = ({navigation}) => {
     >
       <Tab.Screen name="Productos" component={ProductosScreen} />
       <Tab.Screen name="Notificaciones" component={NotificacionesScreen} />
+      <Tab.Screen name="ReporteVentas" component={ReporteVentasScreen} />
       <Tab.Screen
         name="Logout"
         component={LoginScreen}

@@ -1,5 +1,5 @@
 // src/reducers/authReducer.js
-import { LOGIN_SUCCESS, LOGOUT } from '../actions/authActions';
+import { LOGIN_SUCCESS, LOGOUT } from '../auth/authActions';
 
 const initialState = {
   token: null,

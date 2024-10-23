@@ -28,6 +28,7 @@ const LoginScreen = ({ navigation }) => {
       // Realizar la petición de inicio de sesión
       // Imprimimos la URL de la API para verificar que se obtiene correctamente
       console.log(API_URL);
+      console.log(`${API_URL}/Account/login`);
       const response = await axios.post(`${API_URL}/Account/login`, {
         email: email,
         password: password
@@ -36,6 +37,7 @@ const LoginScreen = ({ navigation }) => {
             'Content-Type': 'application/json'
         }
     });
+      console.log(response.data);
       setLoading(false);
 
       // Almacenar el token en AsyncStorage
