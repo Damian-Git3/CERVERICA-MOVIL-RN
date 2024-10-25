@@ -33,11 +33,11 @@ export const AuthProvider = ({ children }: any) => {
         const sessionSecureStore = await SecureStore.getItemAsync(SESSION_KEY);
 
         if (sessionSecureStore) {
+          const session: Session = JSON.parse(sessionSecureStore);
+
           axios.defaults.headers.common[
             "Authorization"
-          ] = `Bearer ${sessionSecureStore}`;
-
-          const session: Session = JSON.parse(sessionSecureStore);
+          ] = `Bearer ${session.token}`;
 
           setSessionState({
             session,
@@ -91,8 +91,6 @@ export const AuthProvider = ({ children }: any) => {
       `${process.env.EXPO_PUBLIC_BASE_URL}/Account/logout`,
       {}
     );
-
-    console.log(result);
 
     await SecureStore.deleteItemAsync(SESSION_KEY);
 

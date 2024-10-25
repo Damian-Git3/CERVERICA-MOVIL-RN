@@ -8,12 +8,7 @@ const Inicio = () => {
   const { onLogout } = useAuth();
 
   const handleLogout = async () => {
-    console.log("Iniciando");
-    
-
     const respuestaLogout = await onLogout!();
-
-    console.log(respuestaLogout);
 
     router.replace("/(auth)/login");
   };
