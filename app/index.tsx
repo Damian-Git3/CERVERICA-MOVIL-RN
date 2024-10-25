@@ -1,11 +1,17 @@
+import { useAuth } from "@/context/AuthContext";
 import { Redirect } from "expo-router";
+import { useEffect } from "react";
 
 const Page = () => {
-  /* const { isSignedIn } = useAuth();
+  const { sessionState, loading } = useAuth();
 
-  if (isSignedIn) return <Redirect href="/(root)/(tabs)/home" />; */
+  if (!loading) {
+    if (sessionState?.session) {
+      return <Redirect href="/(agente)/(tabs)/inicio" />;
+    }
 
-  return <Redirect href="/(auth)/bienvenida" />;
+    return <Redirect href="/(auth)/bienvenida" />;
+  }
 };
 
 export default Page;

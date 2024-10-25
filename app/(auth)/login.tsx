@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -8,59 +8,39 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/Ionicons";
-import axios from "axios";
 import { router } from "expo-router";
+import { useAuth } from "@/context/AuthContext";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false); // Estado para mostrar/ocultar contraseña
-
-  console.log(process.env.EXPO_PUBLIC_BASE_URL);
+  const { onLogin, sessionState } = useAuth();
 
   const handleLogin = async () => {
     setLoading(true);
 
     try {
-      router.replace("/(agente)/(tabs)/inicio");
+      const respuestaLogin = await onLogin!(email, password);
 
-      return;
-
-      const response = await axios.post(
-        `${process.env.BASE_URL}/Account/login`,
-        {
-          email: email,
-          password: password,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
+      if (respuestaLogin.data.isSuccess) {
+        if (respuestaLogin.data.rol == "Agente") {
+          router.replace("/(agente)/(tabs)/inicio");
+        } else if (respuestaLogin.data.rol == "Cliente") {
+          router.replace("/(agente)/(tabs)/inicio");
+        } else if (respuestaLogin.data.rol == "Gestion") {
+          router.replace("/(agente)/(tabs)/inicio");
         }
-      );
-      setLoading(false);
-
-      // Almacenar el token en AsyncStorage
-      await AsyncStorage.setItem("token", response.data.token);
-
-      // Navegar a la pantalla de productos u otra pantalla
-      // CAMBIAR A HOME
-      router.replace("/(auth)/bienvenida");
-    } catch (error) {
-      console.error("Error en inicio de sesión:", error);
-      // Puedes mostrar un mensaje de error aquí
+      }
+    } catch (error: any) {
     } finally {
       setLoading(false);
     }
   };
 
   const handleReturn = () => {
-    setLoading(true);
-    setTimeout(() => setLoading(false), 3000); // Simular carga
-    // CAMBIAR A HOME
     router.replace("/(auth)/bienvenida");
   };
 
