@@ -4,20 +4,20 @@
     "slug": "Cerverica-movil-CRM-RN",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/icono_completo.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/icon.png",
+      "image": "./assets/images/icono_completo.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ed9224"
+      "backgroundColor": "#f5d9ab"
     },
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/icon.png",
+        "foregroundImage": "./assets/images/icono_completo.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.anonymous.CervericamovilCRMRN"
@@ -25,12 +25,9 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/favicono_navbar.png"
     },
-    "plugins": [
-      "expo-router",
-      "expo-secure-store"
-    ],
+    "plugins": ["expo-router", "expo-secure-store"],
     "experiments": {
       "typedRoutes": true
     }

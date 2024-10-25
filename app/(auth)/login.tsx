@@ -7,115 +7,153 @@ import {
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
+  Image,
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { router } from "expo-router";
 import { useAuth } from "@/context/AuthContext";
+import top_vector from "@/assets/images/topVector.png";
+import CustomButton from "@/components/CustomButton";
+import { images } from "@/constants";
+
+import * as Progress from "react-native-progress";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const [errores, setErrores] = useState<string[]>([]);
+
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false); // Estado para mostrar/ocultar contraseña
+  const [showPassword, setShowPassword] = useState(false);
   const { onLogin, sessionState } = useAuth();
 
   const handleLogin = async () => {
     setLoading(true);
+    setErrores([]);
 
     try {
       const respuestaLogin = await onLogin!(email, password);
 
+      if (respuestaLogin.errors) {
+        const newErrors: string[] = [];
+
+        Object.values(respuestaLogin.errors).forEach((errorMessages) => {
+          if (Array.isArray(errorMessages)) {
+            newErrors.push(...errorMessages);
+          }
+        });
+
+        setErrores(newErrors);
+
+        return;
+      }
+
+      if (respuestaLogin.isSuccess == false) {
+        setErrores([respuestaLogin.message]);
+      }
+
       if (respuestaLogin.data.isSuccess) {
-        if (respuestaLogin.data.rol == "Agente") {
+        if (respuestaLogin.data.rol === "Agente") {
           router.replace("/(agente)/(tabs)/inicio");
-        } else if (respuestaLogin.data.rol == "Cliente") {
+        } else if (respuestaLogin.data.rol === "Cliente") {
           router.replace("/(agente)/(tabs)/inicio");
-        } else if (respuestaLogin.data.rol == "Gestion") {
+        } else if (respuestaLogin.data.rol === "Gestion") {
           router.replace("/(agente)/(tabs)/inicio");
         }
       }
     } catch (error: any) {
+      console.log("login", error);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleReturn = () => {
-    router.replace("/(auth)/bienvenida");
-  };
-
   const togglePasswordVisibility = () => {
-    setShowPassword((prev) => !prev); // Cambiar el estado de visibilidad
+    setShowPassword((prev) => !prev);
   };
 
   return (
     <View style={styles.container}>
-      <ScrollView /* contentContainerStyle={styles.scrollContainer} */>
-        <View style={styles.containerItems}>
-          <View style={styles.circulo1}></View>
-          <View style={styles.circulo2}></View>
-          <View style={styles.circulo3}></View>
+      {/* Imagen en la parte superior, fija */}
+      <View style={styles.topImageContainer}>
+        <Image source={images.topVector} style={styles.topImage} />
+      </View>
 
-          <Text style={styles.welcomeText}>Bienvenido</Text>
+      {/* Contenido desplazable */}
+      <ScrollView style={styles.scrollContent}>
+        <View className="flex items-center justify-center">
+          <Image
+            source={images.iconoCompleto}
+            style={{
+              width: 200,
+              height: 150,
+              resizeMode: "contain",
+            }}
+          />
+        </View>
 
+        <View style={styles.helloContainer}>
+          <Text style={styles.helloText}>Bienvenido!</Text>
+        </View>
+
+        <View>
+          <Text style={styles.signInText}>Inicia sesión en tu cuenta</Text>
+        </View>
+
+        <View style={styles.formContainer}>
           <View style={styles.inputContainer}>
-            <Icon name="mail" size={24} color="#E1A500" style={styles.icon} />
+            <Icon name="mail" size={24} style={styles.inputIcon} />
             <TextInput
-              style={styles.input}
-              placeholder="Email"
-              placeholderTextColor="#E1A500"
+              style={styles.textInput}
+              placeholderTextColor="#a9a9a9"
+              placeholder="Correo"
+              textContentType="emailAddress"
+              keyboardType="email-address"
               value={email}
               onChangeText={setEmail}
-              keyboardType="email-address"
-              autoCapitalize="none"
             />
           </View>
 
           <View style={styles.inputContainer}>
-            <Icon
-              name={showPassword ? "lock-open" : "lock-closed"}
-              size={24}
-              color="#E1A500"
-              style={styles.icon}
-            />
+            <Icon name="lock-closed" size={24} style={styles.inputIcon} />
             <TextInput
-              style={styles.input}
+              style={styles.textInput}
+              placeholderTextColor="#a9a9a9"
               placeholder="Contraseña"
-              placeholderTextColor="#E1A500"
-              secureTextEntry={!showPassword} // Cambiar la visibilidad de la contraseña
+              secureTextEntry={!showPassword}
               value={password}
               onChangeText={setPassword}
             />
             <TouchableOpacity onPress={togglePasswordVisibility}>
               <Icon
                 name={showPassword ? "eye-off" : "eye"}
-                size={24}
                 color="#E1A500"
-                style={styles.eyeIcon}
+                size={18}
+                style={styles.inputIcon}
               />
             </TouchableOpacity>
           </View>
-        </View>
 
-        <TouchableOpacity style={styles.backButton} onPress={handleReturn}>
-          <Icon
-            name="arrow-back"
-            size={24}
-            color="#000"
-            style={styles.backButtonIcon}
-          />
-        </TouchableOpacity>
+          {/* Mostrar errores */}
+          {errores.length > 0 && (
+            <View className="mb-5">
+              {errores.map((error, index) => (
+                <Text key={index} className="text-danger-500">
+                  {error}
+                </Text>
+              ))}
+            </View>
+          )}
 
-        <View style={styles.containerItems}>
-          <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-            <Text style={styles.loginButtonText}>Iniciar sesión</Text>
-          </TouchableOpacity>
+          <CustomButton title="Iniciar sesión" onPress={handleLogin} />
 
           {loading && (
-            <ActivityIndicator
-              style={styles.progressBar}
-              size="large"
-              color="#E1A500"
+            <Progress.Bar
+              indeterminate={true}
+              width={null}
+              color="#ED9224"
+              className="mt-5"
             />
           )}
         </View>
@@ -125,111 +163,60 @@ const LoginScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  circulo1: {
-    backgroundColor: "#4d3a5e",
-    padding: 70,
-    position: "absolute",
-    borderRadius: 100,
-    top: -60,
-    left: 20,
-  },
-  circulo2: {
-    backgroundColor: "#444037",
-    padding: 40,
-    position: "absolute",
-    borderRadius: 100,
-    top: 130,
-    left: 100,
-  },
-  circulo3: {
-    backgroundColor: "#4c4b38",
-    padding: 60,
-    position: "absolute",
-    borderRadius: 100,
-    top: 130,
-    left: 230,
-  },
   container: {
     flex: 1,
-    backgroundColor: "#343434",
+    backgroundColor: "#F5F5F5",
   },
-  topBackground: {
+  topImageContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 2,
+  },
+  topImage: {
     width: "100%",
-    height: 200,
-    resizeMode: "cover",
+    height: 130,
   },
-  welcomeText: {
-    color: "#fff",
-    fontSize: 40,
-    fontWeight: "bold",
-    marginTop: 100,
-    marginBottom: 100,
+  scrollContent: {
+    flex: 1,
+    paddingTop: 150,
+    zIndex: 1,
   },
-  containerItems: {
-    paddingHorizontal: 32,
+  helloContainer: {
+    alignItems: "center",
+  },
+  helloText: {
+    textAlign: "center",
+    fontSize: 60,
+    fontWeight: "500",
+  },
+  signInText: {
+    textAlign: "center",
+    fontSize: 22,
+    marginBottom: 10,
+  },
+  formContainer: {
+    paddingHorizontal: 20,
   },
   inputContainer: {
+    backgroundColor: "white",
     flexDirection: "row",
+    borderRadius: 20,
     alignItems: "center",
-  },
-  icon: {
-    position: "absolute",
-    bottom: 30,
-  },
-  input: {
-    width: "100%",
     height: 50,
-    paddingHorizontal: 32,
-    backgroundColor: "transparent",
-    borderBottomColor: "#E1A500",
-    borderBottomWidth: 2,
+    elevation: 10,
     marginBottom: 20,
-    color: "#fff",
-    paddingLeft: 30,
   },
-  eyeIcon: {
-    bottom: 10,
-    marginLeft: -30,
+  inputIcon: {
+    color: "#ed9224",
+    marginLeft: 20,
+    marginRight: 15,
   },
-  backButton: {
-    width: 70,
-    height: 50,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#E1A500",
-    borderRadius: 5,
-    borderBottomEndRadius: 50,
-    borderTopRightRadius: 20,
-  },
-  backButtonIcon: {
-    color: "white",
-  },
-  loginButton: {
-    width: "100%",
-    height: 50,
-    backgroundColor: "transparent",
-    borderWidth: 2,
-    borderColor: "#E1A500",
-    borderRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 32,
-  },
-
-  loginButtonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  progressBar: {
-    marginTop: 20,
-  },
-  registerText: {
-    textAlign: "center",
-    marginTop: 32,
-    color: "#E1A500",
-    fontSize: 16,
-    fontWeight: "bold",
+  textInput: {
+    flex: 1,
+    height: "100%",
+    fontSize: 20,
   },
 });
 

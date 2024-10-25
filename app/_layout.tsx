@@ -1,7 +1,7 @@
-import * as SplashScreen from "expo-splash-screen";
-
 import { AuthProvider } from "@/context/AuthContext";
 import { Stack } from "expo-router";
+
+import "../config/axiosConfig";
 
 export default function RootLayout() {
   return (

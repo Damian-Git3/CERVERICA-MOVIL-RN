@@ -8,7 +8,7 @@ type AuthProps = {
   onRegister?: (email: string, password: string) => Promise<any>;
   onLogin?: (email: string, password: string) => Promise<any>;
   onLogout?: () => Promise<any>;
-  loading: boolean;
+  cargandoAuth: boolean;
 };
 
 const SESSION_KEY = "MY_SESSION";
@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }: any) => {
       session: null,
     }
   );
-  const [loading, setLoading] = useState(true);
+  const [cargandoAuth, setCargandoAuth] = useState(true);
 
   useEffect(() => {
     const loadSession = async () => {
@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }: any) => {
       } catch (error) {
         console.error("Error al cargar la sesión:", error);
       } finally {
-        setLoading(false);
+        setCargandoAuth(false);
       }
     };
 
@@ -63,13 +63,10 @@ export const AuthProvider = ({ children }: any) => {
 
   const onLogin = async (email: string, password: string) => {
     try {
-      const result = await axios.post(
-        `${process.env.EXPO_PUBLIC_BASE_URL}/Account/login`,
-        {
-          email,
-          password,
-        }
-      );
+      const result = await axios.post(`/Account/login`, {
+        email,
+        password,
+      });
 
       setSessionState({
         session: result.data,
@@ -80,9 +77,25 @@ export const AuthProvider = ({ children }: any) => {
       ] = `Bearer ${result.data.token}`;
 
       await SecureStore.setItemAsync(SESSION_KEY, JSON.stringify(result.data));
+
       return result;
-    } catch (e) {
-      return { error: true, msg: e };
+    } catch (e: any) {
+      if (axios.isAxiosError(e)) {
+        if (e.response) {
+          return e.response.data;
+        } else if (e.request) {
+          // La solicitud se realizó pero no se recibió respuesta
+          console.log("Error request:", e.request);
+        } else {
+          // Algo pasó al configurar la solicitud
+          console.log("Error message:", e.message);
+        }
+      } else {
+        // Manejar otros tipos de errores
+        console.log("Unexpected error:", e);
+      }
+
+      return null; // O lo que desees retornar en caso de error
     }
   };
 
@@ -108,7 +121,7 @@ export const AuthProvider = ({ children }: any) => {
     onLogin,
     onLogout,
     sessionState,
-    loading,
+    cargandoAuth,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
