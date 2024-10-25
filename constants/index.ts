@@ -3,6 +3,8 @@ import botella2 from "@/assets/images/botella_razz_mx.png";
 import botella3 from "@/assets/images/botella_surfa_mx.png";
 
 import topVector from "@/assets/images/topVector.png";
+import leftVectorLogin from "@/assets/images/left_vector_login.png";
+import leftVectorSignUp from "@/assets/images/left_vector_sign_up.png";
 
 import iconoNavbar from "@/assets/images/icono_navbar.png";
 import iconoCompleto from "@/assets/images/icono_completo.png";
@@ -41,6 +43,8 @@ export const images = {
   iconoCompleto,
   iconoNavbar,
   topVector,
+  leftVectorLogin,
+  leftVectorSignUp,
 };
 
 export const keyboardVerticalOffset = Platform.OS === "ios" ? 40 : 0;

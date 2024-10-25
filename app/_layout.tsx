@@ -1,7 +1,10 @@
 import { AuthProvider } from "@/context/AuthContext";
 import { Stack } from "expo-router";
 
-import "../config/axiosConfig";
+import "../config/NativeWindConfig";
+import "../config/AxiosConfig";
+
+import "react-native-reanimated";
 
 export default function RootLayout() {
   return (

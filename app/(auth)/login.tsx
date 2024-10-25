@@ -6,13 +6,12 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
-  ActivityIndicator,
   Image,
+  ImageBackground,
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { router } from "expo-router";
 import { useAuth } from "@/context/AuthContext";
-import top_vector from "@/assets/images/topVector.png";
 import CustomButton from "@/components/CustomButton";
 import { images } from "@/constants";
 
@@ -74,34 +73,35 @@ const LoginScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View className="flex-1 bg-[#F5F5F5]">
       {/* Imagen en la parte superior, fija */}
-      <View style={styles.topImageContainer}>
-        <Image source={images.topVector} style={styles.topImage} />
+      <View className="absolute top-0 left-0 right-0 z-2">
+        <Image source={images.topVector} className="w-full h-[150]" />
       </View>
 
       {/* Contenido desplazable */}
-      <ScrollView style={styles.scrollContent}>
+      <ScrollView className="flex-1 z-1 pt-[150]">
         <View className="flex items-center justify-center">
           <Image
             source={images.iconoCompleto}
-            style={{
-              width: 200,
-              height: 150,
-              resizeMode: "contain",
-            }}
+            className="w-[200] h-[150]"
+            resizeMode="contain"
           />
         </View>
 
-        <View style={styles.helloContainer}>
-          <Text style={styles.helloText}>Bienvenido!</Text>
+        <View className="items-center mt-5">
+          <Text className="text-center text-[60px] font-medium">
+            Bienvenido!
+          </Text>
         </View>
 
         <View>
-          <Text style={styles.signInText}>Inicia sesión en tu cuenta</Text>
+          <Text className="text-center mb-10 text-[22px]">
+            Inicia sesión en tu cuenta
+          </Text>
         </View>
 
-        <View style={styles.formContainer}>
+        <View className="px-5">
           <View style={styles.inputContainer}>
             <Icon name="mail" size={24} style={styles.inputIcon} />
             <TextInput
@@ -157,45 +157,30 @@ const LoginScreen = () => {
             />
           )}
         </View>
+
+        <View className="flex-1 justify-center items-center">
+          <Text className="text-center mt-28 text-lg">
+            No tienes una cuenta?{" "}
+            <TouchableOpacity
+              onPress={() => router.replace("/(auth)/registro-tipo-cuenta")}
+            >
+              <Text className="text-[#ed9224] text-base">Registrate</Text>
+            </TouchableOpacity>
+          </Text>
+        </View>
       </ScrollView>
+
+      <View className="absolute bottom-0 left-0">
+        <ImageBackground
+          source={images.leftVectorLogin}
+          className="h-[250px] w-[150px]"
+        />
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#F5F5F5",
-  },
-  topImageContainer: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    zIndex: 2,
-  },
-  topImage: {
-    width: "100%",
-    height: 130,
-  },
-  scrollContent: {
-    flex: 1,
-    paddingTop: 150,
-    zIndex: 1,
-  },
-  helloContainer: {
-    alignItems: "center",
-  },
-  helloText: {
-    textAlign: "center",
-    fontSize: 60,
-    fontWeight: "500",
-  },
-  signInText: {
-    textAlign: "center",
-    fontSize: 22,
-    marginBottom: 10,
-  },
   formContainer: {
     paddingHorizontal: 20,
   },

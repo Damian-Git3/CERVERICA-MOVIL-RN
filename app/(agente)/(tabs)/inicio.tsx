@@ -10,7 +10,13 @@ const Inicio = () => {
   const handleLogout = async () => {
     const respuestaLogout = await onLogout!();
 
-    router.replace("/(auth)/login");
+    //TODO: Generar toast para notificar salida
+
+    if (respuestaLogout.data.isSuccess) {
+      router.replace("/(auth)/login");
+    }
+
+    //TODO: Mostrar porque no se pudo hacer logout
   };
 
   return (

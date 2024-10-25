@@ -5,6 +5,10 @@ const Layout = () => {
     <Stack>
       <Stack.Screen name="bienvenida" options={{ headerShown: false }} />
       <Stack.Screen name="login" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="registro-tipo-cuenta"
+        options={{ headerShown: false }}
+      />
     </Stack>
   );
 };
