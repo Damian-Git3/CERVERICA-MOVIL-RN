@@ -42,8 +42,15 @@ const RegistroTipoCuenta = () => {
         </View>
 
         <View className="p-5">
-          <CustomButton title="Soy cliente" className="mb-10" />
-          <CustomButton title="Soy mayorista" />
+          <CustomButton
+            title="Soy cliente"
+            className="mb-10"
+            onPress={() => router.replace("/(auth)/registro-cliente")}
+          />
+          <CustomButton
+            title="Soy mayorista"
+            onPress={() => router.replace("/(auth)/registro-mayorista")}
+          />
         </View>
 
         <TouchableOpacity

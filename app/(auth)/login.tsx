@@ -25,7 +25,7 @@ const LoginScreen = () => {
 
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const { onLogin, sessionState } = useAuth();
+  const { onLogin } = useAuth();
 
   const handleLogin = async () => {
     setLoading(true);
@@ -80,7 +80,7 @@ const LoginScreen = () => {
       </View>
 
       {/* Contenido desplazable */}
-      <ScrollView className="flex-1 z-1 pt-[150]">
+      <ScrollView className="flex-1 pt-[150] z-1">
         <View className="flex items-center justify-center">
           <Image
             source={images.iconoCompleto}

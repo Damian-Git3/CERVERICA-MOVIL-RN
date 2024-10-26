@@ -1,11 +1,13 @@
-import { Session } from "@/app/model/session";
+import { Session } from "@/models/session";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import { createContext, useContext, useEffect, useState } from "react";
 
 type AuthProps = {
   sessionState?: { session: Session | null };
-  onRegister?: (email: string, password: string) => Promise<any>;
+  onRegisterUsuarioCliente?: (
+    nuevoUsuarioCliente: nuevoUsuarioCliente
+  ) => Promise<any>;
   onLogin?: (email: string, password: string) => Promise<any>;
   onLogout?: () => Promise<any>;
   cargandoAuth: boolean;
@@ -53,11 +55,28 @@ export const AuthProvider = ({ children }: any) => {
     loadSession();
   }, []);
 
-  const onRegister = async (email: string, password: string) => {
+  const onRegisterUsuarioCliente = async (
+    nuevoUsuarioCliente: nuevoUsuarioCliente
+  ) => {
     try {
-      return await axios.post(`${process.env.EXPO_PUBLIC_BASE_URL}`);
+      return await axios.post(`/Account/register`, nuevoUsuarioCliente);
     } catch (e) {
-      return { error: true, msg: (e as any).response.data.msg };
+      if (axios.isAxiosError(e)) {
+        if (e.response) {
+          return e.response.data;
+        } else if (e.request) {
+          // La solicitud se realizó pero no se recibió respuesta
+          console.log("Error request:", e.request);
+        } else {
+          // Algo pasó al configurar la solicitud
+          console.log("Error message:", e.message);
+        }
+      } else {
+        // Manejar otros tipos de errores
+        console.log("Unexpected error:", e);
+      }
+
+      return null;
     }
   };
 
@@ -95,15 +114,12 @@ export const AuthProvider = ({ children }: any) => {
         console.log("Unexpected error:", e);
       }
 
-      return null; // O lo que desees retornar en caso de error
+      return null;
     }
   };
 
   const onLogout = async () => {
-    const result = await axios.post(
-      `${process.env.EXPO_PUBLIC_BASE_URL}/Account/logout`,
-      {}
-    );
+    const result = await axios.post(`/Account/logout`, {});
 
     await SecureStore.deleteItemAsync(SESSION_KEY);
 
@@ -117,7 +133,7 @@ export const AuthProvider = ({ children }: any) => {
   };
 
   const value = {
-    onRegister,
+    onRegisterUsuarioCliente,
     onLogin,
     onLogout,
     sessionState,

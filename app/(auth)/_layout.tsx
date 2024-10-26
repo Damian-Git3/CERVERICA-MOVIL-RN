@@ -9,6 +9,11 @@ const Layout = () => {
         name="registro-tipo-cuenta"
         options={{ headerShown: false }}
       />
+      <Stack.Screen name="registro-cliente" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="registro-mayorista"
+        options={{ headerShown: false }}
+      />
     </Stack>
   );
 };
