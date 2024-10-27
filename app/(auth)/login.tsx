@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -8,16 +8,20 @@ import {
   TouchableOpacity,
   Image,
   ImageBackground,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { router } from "expo-router";
-import { useAuth } from "@/context/AuthContext";
 import CustomButton from "@/components/CustomButton";
 import { images } from "@/constants";
 
 import * as Progress from "react-native-progress";
+import AuthContext from "@/context/Auth/AuthContext";
 
 const LoginScreen = () => {
+  const { session } = useContext(AuthContext);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -25,7 +29,8 @@ const LoginScreen = () => {
 
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const { onLogin } = useAuth();
+
+  const { onLogin } = useContext(AuthContext);
 
   const handleLogin = async () => {
     setLoading(true);
@@ -73,7 +78,7 @@ const LoginScreen = () => {
   };
 
   return (
-    <View className="flex-1 bg-[#F5F5F5]">
+    <KeyboardAvoidingView behavior="padding" className="flex-1 bg-[#F5F5F5]">
       {/* Imagen en la parte superior, fija */}
       <View className="absolute top-0 left-0 right-0 z-2">
         <Image source={images.topVector} className="w-full h-[150]" />
@@ -162,7 +167,7 @@ const LoginScreen = () => {
           <Text className="text-center mt-28 text-lg">
             No tienes una cuenta?{" "}
             <TouchableOpacity
-              onPress={() => router.replace("/(auth)/registro-tipo-cuenta")}
+              onPress={() => router.push("/(auth)/registro-tipo-cuenta")}
             >
               <Text className="text-[#ed9224] text-base">Registrate</Text>
             </TouchableOpacity>
@@ -176,7 +181,7 @@ const LoginScreen = () => {
           className="h-[250px] w-[150px]"
         />
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

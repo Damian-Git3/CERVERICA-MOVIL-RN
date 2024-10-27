@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -8,20 +8,23 @@ import {
   TouchableOpacity,
   Image,
   ImageBackground,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { router } from "expo-router";
-import { useAuth } from "@/context/AuthContext";
 import CustomButton from "@/components/CustomButton";
 import { images } from "@/constants";
 
 import * as Progress from "react-native-progress";
 import Toast from "react-native-toast-message";
+import AuthContext from "@/context/Auth/AuthContext";
 
 const RegistroCliente = () => {
   const [nuevoUsuario, setNuevoUsuario] = useState({
     nombre: "",
     correo: "",
+    telefono: "",
     password: "",
     passwordConfirm: "",
   });
@@ -31,7 +34,7 @@ const RegistroCliente = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
-  const { onRegisterUsuarioCliente } = useAuth();
+  const { onRegisterUsuarioCliente } = useContext(AuthContext);
 
   const validarFormulario = () => {
     const erorresFormulario: string[] = [];
@@ -42,6 +45,10 @@ const RegistroCliente = () => {
 
     if (!nuevoUsuario.correo || nuevoUsuario.correo.trim() == "") {
       erorresFormulario.push("El correo no debe estar vacío");
+    }
+
+    if (!nuevoUsuario.telefono || nuevoUsuario.telefono.trim() == "") {
+      erorresFormulario.push("El telefono no debe estar vacío");
     }
 
     if (!nuevoUsuario.password || nuevoUsuario.password.trim() == "") {
@@ -86,6 +93,7 @@ const RegistroCliente = () => {
         email: nuevoUsuario.correo,
         fullName: nuevoUsuario.nombre,
         password: nuevoUsuario.password,
+        telefono: nuevoUsuario.telefono,
         role: "Cliente",
       });
 
@@ -107,8 +115,6 @@ const RegistroCliente = () => {
         return;
       }
 
-      console.log(respuestaRegistrarUsuario.data);
-
       if (respuestaRegistrarUsuario.data.isSuccess == false) {
         setErrores([respuestaRegistrarUsuario.data.message]);
       }
@@ -123,7 +129,7 @@ const RegistroCliente = () => {
         router.replace("/(auth)/login");
       }
     } catch (error: any) {
-      console.log("login", error);
+      console.log(error);
     } finally {
       setLoading(false);
     }
@@ -137,7 +143,7 @@ const RegistroCliente = () => {
   };
 
   return (
-    <View className="flex-1 bg-[#F5F5F5]">
+    <KeyboardAvoidingView behavior="padding" className="flex-1 bg-[#F5F5F5]">
       {/* Imagen en la parte superior, fija */}
       <View className="absolute top-0 left-0 right-0 z-2">
         <Image source={images.topVector} className="w-full h-[150]" />
@@ -175,6 +181,19 @@ const RegistroCliente = () => {
               keyboardType="email-address"
               value={nuevoUsuario.correo}
               onChangeText={(value) => handleInputChange("correo", value)}
+            />
+          </View>
+
+          {/* Input télefono */}
+          <View style={styles.inputContainer}>
+            <Icon name="call" size={24} style={styles.inputIcon} />
+            <TextInput
+              style={styles.textInput}
+              placeholderTextColor="#a9a9a9"
+              placeholder="Telefono"
+              keyboardType="phone-pad"
+              value={nuevoUsuario.telefono}
+              onChangeText={(value) => handleInputChange("telefono", value)}
             />
           </View>
 
@@ -247,10 +266,7 @@ const RegistroCliente = () => {
           )}
         </View>
 
-        <TouchableOpacity
-          onPress={() => router.replace("/(auth)/registro-tipo-cuenta")}
-          className="mt-14"
-        >
+        <TouchableOpacity onPress={() => router.back()} className="mt-14">
           <Text className="text-[#ed9224] text-lg text-center">← Regresar</Text>
         </TouchableOpacity>
       </ScrollView>
@@ -261,7 +277,7 @@ const RegistroCliente = () => {
           className="h-[250px] w-[150px]"
         />
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

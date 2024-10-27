@@ -1,16 +1,24 @@
 import { icons } from "@/constants";
-import { useAuth } from "@/context/AuthContext";
+import AuthContext from "@/context/Auth/AuthContext";
 import { router } from "expo-router";
+import { useContext } from "react";
 import { Image, Text, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Toast from "react-native-toast-message";
 
 const Inicio = () => {
-  const { onLogout } = useAuth();
+  const { onLogout, session } = useContext(AuthContext);
+
+  console.log(session);
 
   const handleLogout = async () => {
     const respuestaLogout = await onLogout!();
 
-    //TODO: Generar toast para notificar salida
+    Toast.show({
+      type: "success",
+      text1: "Esperamos vuelvas pronto!",
+      text2: "Lamentamos que te tengas que ir:(",
+    });
 
     if (respuestaLogout.data.isSuccess) {
       router.replace("/(auth)/login");
