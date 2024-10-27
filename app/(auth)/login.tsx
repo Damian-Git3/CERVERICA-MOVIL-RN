@@ -29,6 +29,7 @@ const LoginScreen = () => {
 
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
   const { onLogin } = useContext(AuthContext);
 
   const handleLogin = async () => {
@@ -77,11 +78,7 @@ const LoginScreen = () => {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior="padding"
-      keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
-      className="flex-1 bg-[#F5F5F5]"
-    >
+    <KeyboardAvoidingView behavior="padding" className="flex-1 bg-[#F5F5F5]">
       {/* Imagen en la parte superior, fija */}
       <View className="absolute top-0 left-0 right-0 z-2">
         <Image source={images.topVector} className="w-full h-[150]" />

@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Image,
   ImageBackground,
+  KeyboardAvoidingView,
 } from "react-native";
 import { router } from "expo-router";
 
@@ -34,6 +35,8 @@ const RegistroMayorista = () => {
     emailEmpresa: "",
     RFCEmpresa: "",
   });
+
+  console.log(nuevoMayorista);
 
   const [errores, setErrores] = useState<string[]>([]);
 
@@ -164,7 +167,7 @@ const RegistroMayorista = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-[#F5F5F5]">
+    <KeyboardAvoidingView behavior="padding" className="flex-1 bg-[#F5F5F5]">
       <View className="absolute top-0 left-0 right-0 z-2">
         <Image
           source={images.topVector}
@@ -172,10 +175,7 @@ const RegistroMayorista = () => {
         />
       </View>
 
-      <TouchableOpacity
-        onPress={() => router.replace("/(auth)/registro-tipo-cuenta")}
-        className="mt-14"
-      >
+      <TouchableOpacity onPress={() => router.back()} className="mt-14">
         <Text className="text-[#ed9224] text-lg text-center">← Regresar</Text>
       </TouchableOpacity>
 
@@ -324,7 +324,7 @@ const RegistroMayorista = () => {
           className="h-[250px] w-[150px]"
         />
       </View>
-    </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 

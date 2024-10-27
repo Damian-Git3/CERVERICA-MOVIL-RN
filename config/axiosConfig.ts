@@ -13,7 +13,6 @@ axios.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && error.response.status === 401) {
-      //TODO: Generar toast para notificar sesión expiro
       Toast.show({
         type: "error",
         text1: "Esperamos demasiado tiempo!",

@@ -16,18 +16,20 @@ export default function RootLayout() {
   return (
     <AuthState>
       <AuthLoaded>
-        <Stack>
-          <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-          <Stack.Screen name="(mayorista)" options={{ headerShown: false }} />
-          <Stack.Screen name="(agente)" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="(configurador)"
-            options={{ headerShown: false }}
-          />
-        </Stack>
+        <GestureHandlerRootView className="flex-1">
+          <Stack>
+            <Stack.Screen name="index" options={{ headerShown: false }} />
+            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+            <Stack.Screen name="(mayorista)" options={{ headerShown: false }} />
+            <Stack.Screen name="(agente)" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="(configurador)"
+              options={{ headerShown: false }}
+            />
+          </Stack>
 
-        <Toast config={toastConfig} />
+          <Toast config={toastConfig} />
+        </GestureHandlerRootView>
       </AuthLoaded>
     </AuthState>
   );

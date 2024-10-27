@@ -143,11 +143,7 @@ const RegistroCliente = () => {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior="padding"
-      keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
-      className="flex-1 bg-[#F5F5F5]"
-    >
+    <KeyboardAvoidingView behavior="padding" className="flex-1 bg-[#F5F5F5]">
       {/* Imagen en la parte superior, fija */}
       <View className="absolute top-0 left-0 right-0 z-2">
         <Image source={images.topVector} className="w-full h-[150]" />
@@ -270,10 +266,7 @@ const RegistroCliente = () => {
           )}
         </View>
 
-        <TouchableOpacity
-          onPress={() => router.replace("/(auth)/registro-tipo-cuenta")}
-          className="mt-14"
-        >
+        <TouchableOpacity onPress={() => router.back()} className="mt-14">
           <Text className="text-[#ed9224] text-lg text-center">← Regresar</Text>
         </TouchableOpacity>
       </ScrollView>

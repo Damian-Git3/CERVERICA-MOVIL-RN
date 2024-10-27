@@ -52,10 +52,7 @@ const RegistroTipoCuenta = () => {
           />
         </View>
 
-        <TouchableOpacity
-          onPress={() => router.replace("/(auth)/login")}
-          className="mt-14"
-        >
+        <TouchableOpacity onPress={() => router.back()} className="mt-14">
           <Text className="text-[#ed9224] text-lg text-center">← Regresar</Text>
         </TouchableOpacity>
       </ScrollView>
