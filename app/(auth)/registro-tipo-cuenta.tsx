@@ -11,7 +11,6 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { router } from "expo-router";
-import { useAuth } from "@/context/AuthContext";
 import CustomButton from "@/components/CustomButton";
 import { images } from "@/constants";
 
@@ -45,11 +44,11 @@ const RegistroTipoCuenta = () => {
           <CustomButton
             title="Soy cliente"
             className="mb-10"
-            onPress={() => router.replace("/(auth)/registro-cliente")}
+            onPress={() => router.push("/(auth)/registro-cliente")}
           />
           <CustomButton
             title="Soy mayorista"
-            onPress={() => router.replace("/(auth)/registro-mayorista")}
+            onPress={() => router.push("/(auth)/registro-mayorista")}
           />
         </View>
 
