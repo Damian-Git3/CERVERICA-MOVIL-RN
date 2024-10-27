@@ -2,7 +2,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import { Stack } from "expo-router";
 
 import "../config/NativeWindConfig";
-import "../config/AxiosConfig";
+import "../config/axiosConfig";
 
 import "react-native-reanimated";
 
