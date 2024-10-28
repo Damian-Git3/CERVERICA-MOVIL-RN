@@ -1,7 +1,14 @@
 import { ButtonProps } from "@/types/ButtonProps";
 import { TouchableOpacity, Text } from "react-native";
 
-const getBgVariantStyle = (variant: ButtonProps["bgVariant"]) => {
+const getBgVariantStyle = (
+  variant: ButtonProps["bgVariant"],
+  disabled: boolean
+) => {
+  if (disabled) {
+    return "bg-gray-300"; // Fondo para botón deshabilitado
+  }
+
   switch (variant) {
     case "secondary":
       return "bg-gray-500";
@@ -16,7 +23,14 @@ const getBgVariantStyle = (variant: ButtonProps["bgVariant"]) => {
   }
 };
 
-const getTextVariantStyle = (variant: ButtonProps["textVariant"]) => {
+const getTextVariantStyle = (
+  variant: ButtonProps["textVariant"],
+  disabled: boolean
+) => {
+  if (disabled) {
+    return "text-gray-400"; // Color de texto para botón deshabilitado
+  }
+
   switch (variant) {
     case "primary":
       return "text-black";
@@ -39,18 +53,25 @@ const CustomButton = ({
   IconLeft,
   IconRight,
   className,
+  disabled = false, // Asume disabled como falso por defecto
   ...props
 }: ButtonProps) => {
   return (
     <TouchableOpacity
-      onPress={onPress}
-      className={`w-full rounded-full p-3 flex flex-row justify-center items-center shadow-md shadow-neutral-400/70 ${getBgVariantStyle(
-        bgVariant
-      )} ${className}`}
+      onPress={disabled ? undefined : onPress} // Evita onPress si está deshabilitado
+      className={`w-full rounded-full p-3 flex flex-row justify-center items-center shadow-md shadow-neutral-400/70 
+      ${getBgVariantStyle(bgVariant, disabled)} 
+      ${className} ${disabled ? "opacity-50" : ""}`} // Agrega opacidad si está deshabilitado
+      disabled={disabled}
       {...props}
     >
       {IconLeft && <IconLeft />}
-      <Text className={`text-lg font-bold ${getTextVariantStyle(textVariant)}`}>
+      <Text
+        className={`text-lg font-bold ${getTextVariantStyle(
+          textVariant,
+          disabled
+        )}`}
+      >
         {title}
       </Text>
       {IconRight && <IconRight />}

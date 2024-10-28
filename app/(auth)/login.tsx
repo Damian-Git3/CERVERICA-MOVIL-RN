@@ -59,11 +59,11 @@ const LoginScreen = () => {
 
       if (respuestaLogin.data.isSuccess) {
         if (respuestaLogin.data.rol === "Agente") {
-          router.replace("/(agente)/(tabs)/inicio");
+          router.replace("/(crm)/(agente)/inicio");
         } else if (respuestaLogin.data.rol === "Cliente") {
-          router.replace("/(agente)/(tabs)/inicio");
+          router.replace("/(crm)/(agente)/inicio");
         } else if (respuestaLogin.data.rol === "Gestion") {
-          router.replace("/(agente)/(tabs)/inicio");
+          router.replace("/(crm)/(agente)/inicio");
         }
       }
     } catch (error: any) {

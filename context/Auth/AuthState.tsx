@@ -119,6 +119,29 @@ export default function AuthState({ children }: { children: any }) {
     }
   };
 
+  const onRegisterUsuarioMayorista = async (
+    nuevoUsuarioMayorista: nuevoUsuarioMayorista
+  ) => {
+    try {
+      return (await axios.post(`/ClienteMayorista`, nuevoUsuarioMayorista))
+        .data;
+    } catch (e) {
+      if (axios.isAxiosError(e)) {
+        if (e.response) {
+          return e.response.data;
+        } else if (e.request) {
+          console.log("Error request:", e.request);
+        } else {
+          console.log("Error message:", e.message);
+        }
+      } else {
+        console.log("Unexpected error:", e);
+      }
+
+      return null;
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -127,6 +150,7 @@ export default function AuthState({ children }: { children: any }) {
         onLogin,
         onLogout,
         onRegisterUsuarioCliente,
+        onRegisterUsuarioMayorista,
       }}
     >
       {children}
