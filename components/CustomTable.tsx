@@ -6,7 +6,7 @@ interface TableProps {
   data: string[][];
 }
 
-const CustomTable: React.FC<TableProps> = ({ headers, data }) => {
+export const CustomTable: React.FC<TableProps> = ({ headers, data }) => {
   return (
     <View style={styles.container}>
       <ScrollView horizontal>
@@ -36,23 +36,74 @@ const CustomTable: React.FC<TableProps> = ({ headers, data }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
+    backgroundColor: "#F5F5F5",
   },
+
   row: {
     flexDirection: "row",
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
   },
+
   headerCell: {
-    flex: 1,
     padding: 10,
-    backgroundColor: "#f1f1f1",
+    backgroundColor: "#f9f9f9",
     fontWeight: "bold",
-    textAlign: "center",
   },
+
   cell: {
-    flex: 1,
     padding: 10,
+  },
+
+  topImageContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 2,
+  },
+  topImage: {
+    width: "100%",
+    height: 130,
+  },
+  scrollContent: {
+    flex: 1,
+    paddingTop: 150,
+    zIndex: 1,
+  },
+  helloContainer: {
+    alignItems: "center",
+  },
+  helloText: {
     textAlign: "center",
+    fontSize: 60,
+    fontWeight: "500",
+  },
+  signInText: {
+    textAlign: "center",
+    fontSize: 22,
+    marginBottom: 10,
+  },
+  formContainer: {
+    paddingHorizontal: 20,
+  },
+  inputContainer: {
+    backgroundColor: "white",
+    flexDirection: "row",
+    borderRadius: 20,
+    alignItems: "center",
+    height: 50,
+    elevation: 10,
+    marginBottom: 20,
+  },
+  inputIcon: {
+    color: "#ed9224",
+    marginLeft: 20,
+    marginRight: 15,
+  },
+  textInput: {
+    flex: 1,
+    height: "100%",
+    fontSize: 20,
   },
 });
-
-export default CustomTable;

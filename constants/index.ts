@@ -96,3 +96,7 @@ export const icons = {
   target,
   to,
 };
+
+export const listHeaders = {
+  ventas: ["Fecha de venta", "Total de cervezas", "Metodo de envio", "Metodo de pago", "Estatus", "Total de venta"],
+}

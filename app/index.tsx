@@ -8,7 +8,14 @@ const Page = () => {
     console.log(sessionState);
 
     if (sessionState?.session) {
-      return <Redirect href="/(agente)/(tabs)/inicio" />;
+      switch (sessionState.session.rol) {
+        case "agente":
+          return <Redirect href="/(agente)/(tabs)/inicio" />;
+          break;
+        case "admin":
+          return <Redirect href="/(admin)/(tabs)/inicio" />;
+          break;
+      }
     }
 
     return <Redirect href="/(auth)/bienvenida" />;

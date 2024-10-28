@@ -7,4 +7,9 @@ import { createContext } from "react";
 
 
 
-export const VentaContext = createContext({});
+export const VentaContext = createContext({
+  ventas: [],
+  ventaSeleccionada: {},
+  getVentas : () => {},
+  getVenta : (id: number) => {},
+});

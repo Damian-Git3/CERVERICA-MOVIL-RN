@@ -1,7 +1,7 @@
 import { GET_VENTA, GET_VENTAS } from "../types";
 
 
-const VentaReducer = (state: any, action: any) => {
+export const VentaReducer = (state: any, action: any) => {
   switch (action.type) {
     case GET_VENTAS:
       return {
@@ -21,5 +21,3 @@ const VentaReducer = (state: any, action: any) => {
       return state;
   }
 };
-
-export { VentaReducer, initialState };
