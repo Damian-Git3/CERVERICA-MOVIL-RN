@@ -1,5 +1,4 @@
 import { Stack } from "expo-router";
-
 import "../config/NativeWindConfig";
 import "../config/AxiosConfig";
 import "../config/ConfigGeneral";
