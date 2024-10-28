@@ -2,14 +2,11 @@ import { icons } from "@/constants";
 import AuthContext from "@/context/Auth/AuthContext";
 import { router } from "expo-router";
 import { useContext } from "react";
-import { Image, Text, TouchableOpacity } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
 
-const Inicio = () => {
-  const { onLogout, session } = useContext(AuthContext);
-
-  console.log(session);
+const Menu = () => {
+  const { onLogout } = useContext(AuthContext);
 
   const handleLogout = async () => {
     const respuestaLogout = await onLogout!();
@@ -23,22 +20,17 @@ const Inicio = () => {
     if (respuestaLogout.data.isSuccess) {
       router.replace("/(auth)/login");
     }
-
-    //TODO: Mostrar porque no se pudo hacer logout
   };
 
   return (
-    <SafeAreaView>
-      <Text>Desde inicio</Text>
+    <View>
+      <Text>Menu</Text>
 
-      <TouchableOpacity
-        onPress={handleLogout}
-        className="justify-center items-center w-10 h-10 rounded-full bg-white"
-      >
+      <TouchableOpacity onPress={handleLogout}>
         <Image source={icons.out} className="w-4 h-4" />
       </TouchableOpacity>
-    </SafeAreaView>
+    </View>
   );
 };
 
-export default Inicio;
+export default Menu;

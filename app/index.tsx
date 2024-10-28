@@ -6,7 +6,7 @@ const Page = () => {
   const { session } = useContext(AuthContext);
 
   if (session) {
-    return <Redirect href="/(agente)/(tabs)/inicio" />;
+    return <Redirect href="/(crm)/(agente)/inicio" />;
   }
 
   return <Redirect href="/(auth)/bienvenida" />;
