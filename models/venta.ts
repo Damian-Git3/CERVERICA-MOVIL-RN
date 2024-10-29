@@ -3,10 +3,10 @@ export interface Venta {
   id: number;
   fechaVenta: string;
   totalCervezas: number;
-  metodoEnvio: string; // Asumiendo que MetodoEnvio es un string, ajusta según sea necesario
-  metodoPago: string; // Asumiendo que MetodoPago es un string, ajusta según sea necesario
+  metodoEnvio: number; // Asumiendo que MetodoEnvio es un string, ajusta según sea necesario
+  metodoPago: number; // Asumiendo que MetodoPago es un string, ajusta según sea necesario
   numeroTarjeta: string; // Asumiendo que NumeroTarjeta es un string, ajusta según sea necesario
-  estatusVenta: string; // Asumiendo que EstatusVenta es un string, ajusta según sea necesario
+  estatusVenta: number; // Asumiendo que EstatusVenta es un string, ajusta según sea necesario
   montoVenta: number;
   productosPedido: DetalleVenta[];
 }
@@ -27,10 +27,11 @@ export interface ReporteVentas {
     date: string;
     monto: number;
   }];
+  total: number;
 }
 
 export interface ResumenVentas {
-  dia: number;
+  semana: number;
   mes: number;
   anio: number;
 

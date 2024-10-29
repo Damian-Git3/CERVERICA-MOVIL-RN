@@ -1,52 +1,55 @@
-import { ResumenVentas } from '@/app/model/venta';
-import { useVenta } from '@/context/VentaContext';
-import React, { useEffect } from 'react';
-import { View, Text, FlatList, Button, StyleSheet } from 'react-native';
+import VentaContext from "@/context/Venta/VentaContext";
+import { ResumenVentas } from "@/models/venta";
+import React, { useContext, useEffect } from "react";
+import { View, Text, FlatList, Button, StyleSheet } from "react-native";
 
-
-interface VentasProps {
-    data: ResumenVentas;
+interface TableResumenVentasProps {
+  navigateToReporte: (param: string) => void;
 }
 
 interface CardProps {
   resumenVentas: ResumenVentas;
 }
 
-const TableResumenVentas = ({ navigateToReporte }) => {
-    const { resumenVentas, getResumenVentas } = useVenta();
+const TableResumenVentas: React.FC<TableResumenVentasProps> = ({
+  navigateToReporte,
+}) => {
+  const { resumenVentas, getResumenVentas } = useContext(VentaContext);
 
-    useEffect(() => {
-        getResumenVentas();
-        console.log("getResumenVentas");
-        console.log("resumenVentas", resumenVentas);
-    }, []);
+  useEffect(() => {
+    if (getResumenVentas) {
+      getResumenVentas();
+      console.log("getResumenVentas");
+      console.log("resumenVentas", resumenVentas);
+    }
+  }, []);
 
-    return (
-        <View style={styles.container}>
-            <View style={styles.header}>
-                <Text style={styles.headerText}>Día</Text>
-                <Text style={styles.headerText}>Mes</Text>
-                <Text style={styles.headerText}>Año</Text>
-                <Text style={styles.headerText}>Total</Text>
-            </View>
-            <FlatList
-                data={resumenVentas || []}
-                keyExtractor={(item) => `${item.dia}-${item.mes}-${item.anio}`}
-                renderItem={({ item }) => (
-                    <View style={styles.listItem}>
-                        <Text style={styles.dia}>{item.dia}</Text>
-                        <Text style={styles.mes}>{item.mes}</Text>
-                        <Text style={styles.anio}>{item.anio}</Text>
-                        <Text style={styles.total}>{item.total}</Text>
-                        <Button
-                            title="Ver detalle"
-                            onPress={() => navigateToReporte(item.mes)}
-                        />
-                    </View>
-                )}
+  return (
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Semana</Text>
+        <Text style={styles.headerText}>Mes</Text>
+        <Text style={styles.headerText}>Año</Text>
+      </View>
+      <FlatList
+        data={resumenVentas ? [resumenVentas] : []}
+        keyExtractor={(item) =>
+          `resumen-${item.semana}-${item.mes}-${item.anio}`
+        }
+        renderItem={({ item }) => (
+          <View style={styles.listItem}>
+            <Text style={styles.semana}>{item.semana}</Text>
+            <Text style={styles.mes}>{item.mes}</Text>
+            <Text style={styles.anio}>{item.anio}</Text>
+            <Button
+              title="Ver detalle"
+              onPress={() => navigateToReporte("semana")}
             />
-        </View>
-    );
+          </View>
+        )}
+      />
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -76,7 +79,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#ccc",
   },
-  dia: {
+  semana: {
     flex: 1,
     fontSize: 16,
     textAlign: "center",
@@ -87,11 +90,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   anio: {
-    flex: 1,
-    fontSize: 16,
-    textAlign: "center",
-  },
-  total: {
     flex: 1,
     fontSize: 16,
     textAlign: "center",
@@ -120,15 +118,11 @@ const styles = StyleSheet.create({
 export default TableResumenVentas;
 
 export const Card: React.FC<CardProps> = ({ resumenVentas }) => {
-
-
   return (
     <View style={styles.card}>
-        <Text style={styles.title}>Día: {resumenVentas.dia}</Text>
-        <Text style={styles.description}>Mes: {resumenVentas.mes}</Text>
-        <Text style={styles.description}>Año: {resumenVentas.anio}</Text>
-        <Text style={styles.description}>Total: {resumenVentas.total}</Text>
-      
+      <Text style={styles.title}>Semana: {resumenVentas.semana}</Text>
+      <Text style={styles.description}>Mes: {resumenVentas.mes}</Text>
+      <Text style={styles.description}>Año: {resumenVentas.anio}</Text>
     </View>
   );
 };

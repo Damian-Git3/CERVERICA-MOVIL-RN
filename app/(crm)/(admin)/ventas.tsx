@@ -1,21 +1,24 @@
 import { icons } from "@/constants";
-import { useAuth } from "@/context/AuthContext";
 import { router } from "expo-router";
 import { Image, Text, TouchableOpacity, StyleSheet, View, FlatList, Button } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useVenta, VentaProvider } from "@/context/VentaContext";
 import { ListVentas } from "@/components/ListVentas";
+import { useContext } from "react";
+import AuthContext from "@/context/Auth/AuthContext";
+import VentaState from "@/context/Venta/VentaState";
+import TableResumenVentas from "@/components/TableResumenVentas";
+import VentaLoaded from "@/context/Venta/VentaLoaded";
 
 const Ventas = () => {
-  const { onLogout } = useAuth();
+  const { onLogout } = useContext(AuthContext);
 
   const handleLogout = async () => {
     const respuestaLogout = await onLogout!();
     router.replace("/(auth)/login");
   };
 
-  const navigateToReporte = (period: string) => {
-    router.push(`/reporte/${period}`);
+  const navigateToReporte = (param: string) => {
+    router.push(`/(crm)/(admin)/reporteVentas?param=${param}`);
   };
 
   const ventas = [
@@ -26,33 +29,20 @@ const Ventas = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <VentaProvider>
-        <Text>Desde ventas</Text>
-        <ListVentas data={[]} />
+      <VentaState>
+          <Text>Desde ventas</Text>
+          <ListVentas data={[]} />
+          <TableResumenVentas navigateToReporte={navigateToReporte} />
 
-        <View style={styles.container}>
-          <FlatList
-            data={ventas}
-            keyExtractor={(item) => item.mes}
-            renderItem={({ item }) => (
-              <View style={styles.listItem}>
-                <Text style={styles.mes}>{item.mes}</Text>
-                <Text style={styles.total}>{item.total}</Text>
-                <Button
-                  title="Ver detalle"
-                  onPress={() => navigateToReporte(item.mes)}
-                />
-              </View>
-            )}
-          />
-        </View>
-
-        <View style={styles.buttonContainer}></View>
-          <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
-            <Image source={icons.out} style={styles.logoutIcon} />
-          </TouchableOpacity>
-        </View>
-      </VentaProvider>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              onPress={handleLogout}
+              style={styles.logoutButton}
+            >
+              <Image source={icons.out} style={styles.logoutIcon} />
+            </TouchableOpacity>
+          </View>
+      </VentaState>
     </SafeAreaView>
   );
 };
@@ -121,5 +111,7 @@ const styles = StyleSheet.create({
     color: "#888",
   },
 });
+
+
 
 export default Ventas;
