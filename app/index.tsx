@@ -1,25 +1,15 @@
-import { useAuth } from "@/context/AuthContext";
+import AuthContext from "@/context/Auth/AuthContext";
 import { Redirect } from "expo-router";
+import { useContext } from "react";
 
 const Page = () => {
-  const { sessionState, cargandoAuth } = useAuth();
+  const { session } = useContext(AuthContext);
 
-  if (!cargandoAuth) {
-    console.log(sessionState);
-
-    if (sessionState?.session) {
-      switch (sessionState.session.rol) {
-        case "agente":
-          return <Redirect href="/(agente)/(tabs)/inicio" />;
-          break;
-        case "admin":
-          return <Redirect href="/(admin)/(tabs)/inicio" />;
-          break;
-      }
-    }
-
-    return <Redirect href="/(auth)/bienvenida" />;
+  if (session) {
+    return <Redirect href="/(crm)/(agente)/inicio" />;
   }
+
+  return <Redirect href="/(auth)/bienvenida" />;
 };
 
 export default Page;
