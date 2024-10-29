@@ -68,7 +68,7 @@ const LoginScreen = () => {
         } else if (respuestaLogin.data.rol === "Gestion") {
           router.replace("/(agente)/(tabs)/inicio");
         } else if (respuestaLogin.data.rol === "Admin") {
-          router.replace("/(agente)/(tabs)/inicio");
+          router.replace("/(perfil)/(tabs)/profile");
         }
       }
     } catch (error: any) {
