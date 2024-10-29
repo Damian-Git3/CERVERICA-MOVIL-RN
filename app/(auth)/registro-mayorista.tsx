@@ -17,8 +17,10 @@ import Toast from "react-native-toast-message";
 import AuthContext from "@/context/Auth/AuthContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/Ionicons";
+// @ts-ignore
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
 import { images } from "@/constants";
+import CustomButton from "@/components/CustomButton";
 
 const RegistroMayorista = () => {
   const [nuevoMayorista, setNuevoUsuario] = useState({
@@ -36,71 +38,119 @@ const RegistroMayorista = () => {
     RFCEmpresa: "",
   });
 
-  console.log(nuevoMayorista);
+  const [isContactoValido, setIsContactoValido] = useState(false);
+  const [isEmpresaValido, setIsEmpresaValido] = useState(false);
+  const [erroresFormularioContacto, setErroresFormularioContacto] = useState<
+    string[]
+  >([]);
 
-  const [errores, setErrores] = useState<string[]>([]);
+  const [erroresFormularioEmpresa, setErroresFormularioEmpresa] = useState<
+    string[]
+  >([]);
 
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
   const { onRegisterUsuarioMayorista } = useContext(AuthContext);
 
+  const [pasoActual, setPasoActual] = useState(0);
+
   const validarFormularioContacto = () => {
-    const erorresFormulario: string[] = [];
+    const errores = [];
 
-    if (
-      !nuevoMayorista.nombreContacto ||
-      nuevoMayorista.nombreContacto.trim() == ""
+    if (!nuevoMayorista.nombreContacto.trim()) {
+      errores.push("El nombre no debe estar vacío");
+    }
+    if (!nuevoMayorista.emailContacto.trim()) {
+      errores.push("El correo no debe estar vacío");
+    } else if (
+      !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(nuevoMayorista.emailContacto)
     ) {
-      erorresFormulario.push("El nombre no debe estar vacío");
+      errores.push("El formato del correo es inválido");
     }
-
-    if (
-      !nuevoMayorista.emailContacto ||
-      nuevoMayorista.emailContacto.trim() == ""
-    ) {
-      erorresFormulario.push("El correo no debe estar vacío");
+    if (!nuevoMayorista.cargoContacto.trim()) {
+      errores.push("El cargo no debe estar vacío");
     }
-
-    if (
-      !nuevoMayorista.passwordContacto ||
-      nuevoMayorista.passwordContacto.trim() == ""
-    ) {
-      erorresFormulario.push("La contraseña no debe estar vacia");
+    if (!nuevoMayorista.telefonoContacto.trim()) {
+      errores.push("El teléfono no debe estar vacío");
+    } else if (!/^\d{10}$/.test(nuevoMayorista.telefonoContacto)) {
+      errores.push("El teléfono debe contener 10 dígitos");
     }
-
-    if (
-      !nuevoMayorista.passwordConfirmContacto ||
-      nuevoMayorista.passwordConfirmContacto.trim() == ""
-    ) {
-      erorresFormulario.push("La confirmación no debe estar vacío");
-    }
-
-    if (erorresFormulario.length != 0) {
-      setErrores(erorresFormulario);
-      return false;
-    } else {
-      return true;
-    }
-  };
-
-  const validarPasswordContacto = () => {
+    if (!nuevoMayorista.passwordContacto.trim())
+      errores.push("La contraseña no debe estar vacia");
     if (
       nuevoMayorista.passwordContacto !== nuevoMayorista.passwordConfirmContacto
     ) {
-      setErrores(["Las contraseñas deben coincidir"]);
-      return false;
+      errores.push("Las contraseñas deben coincidir");
     }
 
-    return true;
+    setErroresFormularioContacto(errores);
+    setIsContactoValido(errores.length === 0);
   };
 
+  useEffect(() => {
+    validarFormularioContacto();
+  }, [
+    nuevoMayorista.nombreContacto,
+    nuevoMayorista.emailContacto,
+    nuevoMayorista.telefonoContacto,
+    nuevoMayorista.cargoContacto,
+    nuevoMayorista.passwordContacto,
+    nuevoMayorista.passwordConfirmContacto,
+  ]);
+
+  const validarFormularioEmpresa = () => {
+    const errores = [];
+
+    if (!nuevoMayorista.nombreEmpresa.trim()) {
+      errores.push("El nombre no debe estar vacío");
+    }
+
+    if (!nuevoMayorista.emailEmpresa.trim()) {
+      errores.push("El correo no debe estar vacío");
+    } else if (
+      !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(nuevoMayorista.emailEmpresa)
+    ) {
+      errores.push("El formato del correo es inválido");
+    }
+
+    if (!nuevoMayorista.direccionEmpresa.trim()) {
+      errores.push("El cargo no debe estar vacío");
+    }
+
+    if (!nuevoMayorista.telefonoEmpresa.trim()) {
+      errores.push("El teléfono no debe estar vacío");
+    } else if (!/^\d{10}$/.test(nuevoMayorista.telefonoEmpresa)) {
+      errores.push("El teléfono debe contener 10 dígitos");
+    }
+
+    if (!nuevoMayorista.RFCEmpresa.trim()) {
+      errores.push("El RFC no debe estar vacío");
+    } else if (
+      !/^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/.test(
+        nuevoMayorista.RFCEmpresa
+      )
+    ) {
+      errores.push("El RFC no tiene un formato válido");
+    }
+
+    setErroresFormularioEmpresa(errores);
+    setIsEmpresaValido(errores.length === 0);
+  };
+
+  useEffect(() => {
+    validarFormularioEmpresa();
+  }, [
+    nuevoMayorista.nombreEmpresa,
+    nuevoMayorista.emailEmpresa,
+    nuevoMayorista.direccionEmpresa,
+    nuevoMayorista.telefonoEmpresa,
+    nuevoMayorista.RFCEmpresa,
+  ]);
+
   const handleRegistrarUsuario = async () => {
-    setErrores([]);
-
-    if (!validarFormularioContacto()) return;
-
-    if (!validarPasswordContacto()) return;
+    setErroresFormularioContacto([]);
+    setErroresFormularioEmpresa([]);
 
     setLoading(true);
 
@@ -121,29 +171,7 @@ const RegistroMayorista = () => {
         rol: "Mayorista",
       });
 
-      if (respuestaRegistrarUsuario.errors) {
-        const newErrors: string[] = [];
-
-        Object.values(respuestaRegistrarUsuario.errors).forEach(
-          (errorMessages) => {
-            if (Array.isArray(errorMessages)) {
-              newErrors.push(...errorMessages);
-            } else if (typeof errorMessages == "string") {
-              newErrors.push(errorMessages);
-            }
-          }
-        );
-
-        setErrores(newErrors);
-
-        return;
-      }
-
-      if (respuestaRegistrarUsuario.data.isSuccess == false) {
-        setErrores([respuestaRegistrarUsuario.data.message]);
-      }
-
-      if (respuestaRegistrarUsuario.data.isSuccess) {
+      if (respuestaRegistrarUsuario.isSuccess) {
         Toast.show({
           type: "success",
           text1: "Cuenta creada!",
@@ -151,6 +179,36 @@ const RegistroMayorista = () => {
         });
 
         router.replace("/(auth)/login");
+      } else {
+        if (respuestaRegistrarUsuario.errors) {
+          Toast.show({
+            type: "error",
+            text1: "Algo sucedio!",
+            text2: "No se pudo completar el registro:(",
+          });
+
+          const newErrors: string[] = [];
+
+          Object.values(respuestaRegistrarUsuario.errors).forEach(
+            (errorMessages) => {
+              if (Array.isArray(errorMessages)) {
+                newErrors.push(...errorMessages);
+              } else if (typeof errorMessages == "string") {
+                newErrors.push(errorMessages);
+              }
+            }
+          );
+
+          if (respuestaRegistrarUsuario.pantallaErrores == "usuario") {
+            setErroresFormularioContacto(newErrors);
+            setPasoActual(0);
+          } else {
+            setErroresFormularioEmpresa(newErrors);
+            setPasoActual(1);
+          }
+
+          return;
+        }
       }
     } catch (error: any) {
       console.log(error);
@@ -186,16 +244,22 @@ const RegistroMayorista = () => {
         completedStepIconColor="#ed9224"
         labelColor="#ed9224"
         activeLabelColor="#ed9224"
+        activeStep={pasoActual}
       >
-        <ProgressStep label="Datos usuario" nextBtnText="Siguiente">
-          <View style={{ alignItems: "center" }}>
-            <View className="items-center mt-5 mb-10">
+        <ProgressStep
+          label="Datos usuario"
+          nextBtnText="Siguiente"
+          onNext={validarFormularioContacto}
+          removeBtnRow={true}
+        >
+          <View style={{ alignItems: "center" }} className="px-5">
+            <View className="items-center mb-5">
               <Text className="text-center text-[60px] font-medium">
-                Registrate
+                Contacto
               </Text>
             </View>
 
-            <View className="w-full px-5">
+            <View className="w-full">
               {/* Input nombre */}
               <View style={styles.inputContainer}>
                 <Icon name="person-sharp" size={24} style={styles.inputIcon} />
@@ -246,9 +310,10 @@ const RegistroMayorista = () => {
                 <TextInput
                   style={styles.textInput}
                   placeholderTextColor="#a9a9a9"
-                  placeholder="Telefono"
+                  placeholder="Teléfono"
                   keyboardType="phone-pad"
                   value={nuevoMayorista.telefonoContacto}
+                  maxLength={10}
                   onChangeText={(value) =>
                     handleInputChange("telefonoContacto", value)
                   }
@@ -305,15 +370,144 @@ const RegistroMayorista = () => {
                 </TouchableOpacity>
               </View>
             </View>
+
+            {/* Mostrar errores */}
+            {erroresFormularioContacto.length > 0 && (
+              <View className="mb-5 w-full">
+                {erroresFormularioContacto.map((error, index) => (
+                  <Text key={index} className="text-danger-500">
+                    {error}
+                  </Text>
+                ))}
+              </View>
+            )}
+
+            <CustomButton
+              title="Siguiente"
+              onPress={() => setPasoActual(1)}
+              disabled={!isContactoValido}
+              className="mb-14"
+            />
           </View>
         </ProgressStep>
         <ProgressStep
           label="Datos empresa"
           previousBtnText="Anterior"
           finishBtnText="Registrarme"
+          removeBtnRow={true}
         >
-          <View style={{ alignItems: "center" }}>
-            <Text>This is the content within step 2!</Text>
+          <View style={{ alignItems: "center" }} className="px-5">
+            <View className="items-center mb-5">
+              <Text className="text-center text-[60px] font-medium">
+                Empresa
+              </Text>
+            </View>
+
+            {loading && (
+              <Progress.Bar
+                indeterminate={true}
+                width={350}
+                color="#ED9224"
+                className="mb-5"
+              />
+            )}
+
+            {/* Input nombre empresa */}
+            <View style={styles.inputContainer}>
+              <Icon name="business" size={24} style={styles.inputIcon} />
+              <TextInput
+                style={styles.textInput}
+                placeholderTextColor="#a9a9a9"
+                placeholder="Nombre empresa"
+                value={nuevoMayorista.nombreEmpresa}
+                onChangeText={(value) =>
+                  handleInputChange("nombreEmpresa", value)
+                }
+              />
+            </View>
+
+            {/* Input correo */}
+            <View style={styles.inputContainer}>
+              <Icon name="mail" size={24} style={styles.inputIcon} />
+              <TextInput
+                style={styles.textInput}
+                placeholderTextColor="#a9a9a9"
+                placeholder="Correo empresa"
+                textContentType="emailAddress"
+                keyboardType="email-address"
+                value={nuevoMayorista.emailEmpresa}
+                onChangeText={(value) =>
+                  handleInputChange("emailEmpresa", value)
+                }
+              />
+            </View>
+
+            {/* Input dirección empresa */}
+            <View style={styles.inputContainer}>
+              <Icon name="pin" size={24} style={styles.inputIcon} />
+              <TextInput
+                style={styles.textInput}
+                placeholderTextColor="#a9a9a9"
+                placeholder="Dirección empresa"
+                value={nuevoMayorista.direccionEmpresa}
+                onChangeText={(value) =>
+                  handleInputChange("direccionEmpresa", value)
+                }
+              />
+            </View>
+
+            {/* Input teléfono empresa */}
+            <View style={styles.inputContainer}>
+              <Icon name="call" size={24} style={styles.inputIcon} />
+              <TextInput
+                style={styles.textInput}
+                placeholderTextColor="#a9a9a9"
+                placeholder="Teléfono empresa"
+                maxLength={10}
+                value={nuevoMayorista.telefonoEmpresa}
+                keyboardType="phone-pad"
+                onChangeText={(value) =>
+                  handleInputChange("telefonoEmpresa", value)
+                }
+              />
+            </View>
+
+            {/* Input RFC empresa */}
+            <View style={styles.inputContainer}>
+              <Icon name="storefront" size={24} style={styles.inputIcon} />
+              <TextInput
+                style={styles.textInput}
+                placeholderTextColor="#a9a9a9"
+                placeholder="RFC Empresa"
+                maxLength={13}
+                value={nuevoMayorista.RFCEmpresa}
+                onChangeText={(value) => handleInputChange("RFCEmpresa", value)}
+              />
+            </View>
+
+            {/* Mostrar errores */}
+            {erroresFormularioEmpresa.length > 0 && (
+              <View className="mb-5 w-full">
+                {erroresFormularioEmpresa.map((error, index) => (
+                  <Text key={index} className="text-danger-500">
+                    {error}
+                  </Text>
+                ))}
+              </View>
+            )}
+
+            <CustomButton
+              title="Registrarme"
+              onPress={handleRegistrarUsuario}
+              disabled={!isEmpresaValido}
+              className="mb-5"
+            />
+
+            <CustomButton
+              title="Anterior"
+              bgVariant="secondary"
+              onPress={() => setPasoActual(0)}
+            />
           </View>
         </ProgressStep>
       </ProgressSteps>
@@ -321,7 +515,7 @@ const RegistroMayorista = () => {
       <View className="absolute bottom-0 left-0" pointerEvents="none">
         <ImageBackground
           source={images.leftVectorSignUp}
-          className="h-[250px] w-[150px]"
+          className="h-[250px] w-[150px] -translate-x-14"
         />
       </View>
     </KeyboardAvoidingView>

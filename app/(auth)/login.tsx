@@ -62,11 +62,11 @@ const LoginScreen = () => {
         console.log(respuestaLogin.data.rol);
 
         if (respuestaLogin.data.rol === "Agente") {
-          router.replace("/(agente)/(tabs)/inicio");
+          router.replace("/(crm)/(agente)/inicio");
         } else if (respuestaLogin.data.rol === "Cliente") {
-          router.replace("/(agente)/(tabs)/inicio");
+          router.replace("/(crm)/(agente)/inicio");
         } else if (respuestaLogin.data.rol === "Gestion") {
-          router.replace("/(agente)/(tabs)/inicio");
+          router.replace("/(crm)/(agente)/inicio");
         } else if (respuestaLogin.data.rol === "Admin") {
           router.replace("/(perfil)/(tabs)/profile");
         }
