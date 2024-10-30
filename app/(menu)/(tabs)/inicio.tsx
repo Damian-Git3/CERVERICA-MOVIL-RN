@@ -3,7 +3,7 @@ import { useAuth } from "@/context/AuthContext";
 import { router } from "expo-router";
 import { View, Image, Text, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import styles from "../../(agente)/(tabs)/menuStyle";
+import styles from "../../(crm)/menuStyle";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 

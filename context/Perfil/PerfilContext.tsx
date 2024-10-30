@@ -1,6 +1,6 @@
 import { createContext } from "react";
 import { Session } from "@/models/session";
-import { UserDetailDto } from "@/dtos/user";
+import { UserDetailDto, UserMayoristaDetailDto } from "@/dtos/user";
 import { TransaccionPuntosDto } from "@/dtos/transaccionPuntos";
 import { PuntosFidelidadDto } from "@/dtos/puntosFidelidad";
 
@@ -8,7 +8,10 @@ type PerfilContextProps = {
   session?: Session | null;
   obteniendoSession: boolean;
   userDetails?: UserDetailDto | null;
+  userMayoristaDetails?: UserMayoristaDetailDto | null;
+
   getUserDetails?: () => Promise<UserDetailDto | null>;
+  getUserMayoristaDetails?: () => Promise<UserMayoristaDetailDto | null>;
 
   transacciones?: TransaccionPuntosDto[];
   getTransacciones?: () => Promise<TransaccionPuntosDto[] | null>;

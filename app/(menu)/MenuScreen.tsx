@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import styles from "../(agente)/(tabs)/menuStyle";
+import styles from "../(crm)/menuStyle";
 
 const MenuScreen = () => {
   const userName = "Nombre del Usuario";

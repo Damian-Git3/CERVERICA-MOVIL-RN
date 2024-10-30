@@ -10,7 +10,9 @@ const PerfilReducer = (state: any, action: any) => {
     case "UPDATE_USER_DETAILS":
       console.log("UPDATE_USER_DETAILS payload:", payload);
       return { ...state, userDetails: action.payload };
-
+    case "UPDATE_USER_MAYORISTA_DETAILS":
+      console.log("UPDATE_USER_MAYORISTA_DETAILS payload:", payload);
+      return { ...state, userMayoristaDetails: action.payload };
     case "UPDATE_PUNTOS_FIDELIDAD":
       console.log("UPDATE_PUNTOS_FIDELIDAD payload:", payload);
       return { ...state, puntosFidelidad: payload };

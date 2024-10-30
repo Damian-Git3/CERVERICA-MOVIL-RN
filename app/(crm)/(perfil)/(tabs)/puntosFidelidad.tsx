@@ -2,8 +2,11 @@ import { useContext } from "react";
 import PerfilContext from "@/context/Perfil/PerfilContext";
 import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useNavigation } from "expo-router";
 
-const Beneficios = () => {
+const Puntosfidelidad = () => {
+  const navigation = useNavigation();
+  navigation.setOptions({ headerShown: false });
   const { puntosFidelidad, transacciones } = useContext(PerfilContext);
 
   return (
@@ -64,4 +67,4 @@ const Beneficios = () => {
   );
 };
 
-export default Beneficios;
+export default Puntosfidelidad;

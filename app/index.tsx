@@ -7,6 +7,7 @@ const Page = () => {
 
   if (session) {
     return <Redirect href="/(crm)/(agente)/inicio" />;
+    //return <Redirect href="/(auth)/bienvenida" />;
   }
 
   return <Redirect href="/(auth)/bienvenida" />;

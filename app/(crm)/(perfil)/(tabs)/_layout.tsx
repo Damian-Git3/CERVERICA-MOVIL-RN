@@ -1,3 +1,5 @@
+{
+  /* 
 import { Tabs } from "expo-router";
 import { Image, ImageSourcePropType, View } from "react-native";
 
@@ -54,6 +56,7 @@ export default function Layout() {
         },
       }}
     >
+      {/* 
       <Tabs.Screen
         name="profile"
         options={{
@@ -65,16 +68,26 @@ export default function Layout() {
         }}
       />
       <Tabs.Screen
-        name="beneficios"
+        name="puntosFidelidad"
         options={{
-          title: "beneficios",
+          title: "puntosFidelidad",
           headerShown: false,
           tabBarIcon: ({ focused }) => (
             <TabIcon source={icons.chat} focused={focused} />
           ),
         }}
       />
-      {/* <Tabs.Screen
+      <Tabs.Screen
+        name="agente"
+        options={{
+          title: "agente",
+          headerShown: false,
+          tabBarIcon: ({ focused }) => (
+            <TabIcon source={icons.profile} focused={focused} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="rides"
         options={{
           title: "Rides",
@@ -103,7 +116,10 @@ export default function Layout() {
             <TabIcon source={icons.profile} focused={focused} />
           ),
         }}
-      /> */}
+      /> 
     </Tabs>
   );
+}
+
+*/
 }

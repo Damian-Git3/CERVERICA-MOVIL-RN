@@ -18,5 +18,5 @@ type nuevoUsuarioMayorista = {
   direccionEmpresa: string;
   telefonoEmpresa: string;
   emailEmpresa: string;
-  RFCEmpresa: string;
+  rfcEmpresa: string;
 };

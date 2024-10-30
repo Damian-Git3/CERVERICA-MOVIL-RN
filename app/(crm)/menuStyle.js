@@ -81,6 +81,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#212121", // Color rojo para el botón
     borderRadius: 5,
     alignItems: "center",
+    marginBottom: 60,
   },
   logoutButtonText: {
     color: "#fff",

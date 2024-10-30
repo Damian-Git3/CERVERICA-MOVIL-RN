@@ -26,6 +26,7 @@ export default function PerfilState({ children }: { children: any }) {
   const [obteniendoSession, setObteniendoSession] = useState(true);
 
   useEffect(() => {
+    console.log("LOAD SESSION");
     const loadSession = async () => {
       try {
         const sessionSecureStore = await SecureStore.getItemAsync(SESSION_KEY);
@@ -64,13 +65,14 @@ export default function PerfilState({ children }: { children: any }) {
 
   // Método para obtener detalles del usuario mayorista.
   const getUserMayoristaDetails = async () => {
+    console.log("OBTENIENDO MAYORISTA");
     try {
       const response = await axios.get<UserMayoristaDetailDto>(
-        `/Account/detail`
+        `/Account/detail-mayorista`
       );
 
       dispatch({
-        type: "UPDATE_USER_DETAILS",
+        type: "UPDATE_USER_MAYORISTA_DETAILS",
         payload: response.data,
       });
 
@@ -139,7 +141,9 @@ export default function PerfilState({ children }: { children: any }) {
       value={{
         session: state.session,
         userDetails: state.userDetails,
+        userMayoristaDetails: state.userMayoristaDetails,
         getUserDetails,
+        getUserMayoristaDetails,
         obteniendoSession,
 
         puntosFidelidad: state.puntosFidelidad,

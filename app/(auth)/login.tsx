@@ -68,7 +68,9 @@ const LoginScreen = () => {
         } else if (respuestaLogin.data.rol === "Gestion") {
           router.replace("/(crm)/(agente)/inicio");
         } else if (respuestaLogin.data.rol === "Admin") {
-          router.replace("/(perfil)/(tabs)/profile");
+          router.replace("/(crm)/(agente)/inicio");
+        } else if (respuestaLogin.data.rol === "Mayorista") {
+          router.replace("/(crm)/(agente)/inicio");
         }
       }
     } catch (error: any) {
@@ -169,7 +171,7 @@ const LoginScreen = () => {
         </View>
 
         <View className="flex-1 justify-center items-center">
-          <Text className="text-center mt-28 text-lg">
+          <Text className="text-center mt-5 text-lg">
             No tienes una cuenta?{" "}
             <TouchableOpacity
               onPress={() => router.push("/(auth)/registro-tipo-cuenta")}

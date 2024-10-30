@@ -1,5 +1,5 @@
 import { Session } from "@/models/session";
-import { UserDetailDto } from "@/dtos/user";
+import { UserDetailDto, UserMayoristaDetailDto } from "@/dtos/user";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import { createContext, useContext, useEffect, useState } from "react";
@@ -9,6 +9,7 @@ import { PuntosFidelidadDto } from "@/dtos/puntosFidelidad";
 type PerfilProps = {
   sessionState?: { session: Session | null };
   getUserDetails?: () => Promise<UserDetailDto | null>;
+  getUserMayoristaDetails?: () => Promise<UserMayoristaDetailDto | null>;
   cargandoAuth: boolean;
 
   puntosFidelidad?: PuntosFidelidadDto | null;
