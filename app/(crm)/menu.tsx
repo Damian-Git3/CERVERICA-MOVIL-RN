@@ -1,11 +1,14 @@
+import CustomButton from "@/components/CustomButton";
+import { icons } from "@/constants";
 import AuthContext from "@/context/Auth/AuthContext";
 import PerfilContext from "@/context/Perfil/PerfilContext";
 import { router } from "expo-router";
 import React, { useContext } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import Toast from "react-native-toast-message";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import Icon from "react-native-vector-icons/Ionicons";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 const Menu = () => {
@@ -25,28 +28,28 @@ const Menu = () => {
     }
   };
 
-  const { userDetails } = useContext(PerfilContext);
-  console.log("userDetails");
-  console.log(userDetails);
-
   const userName = session?.nombre;
   const userInitial = userName?.charAt(0).toUpperCase();
 
   const modules = [
-    { name: "Vendedores", icon: "people" },
-    { name: "Clientes Mayoristas", icon: "people" },
-    { name: "Precios", icon: "dollar" },
-    { name: "Cupones", icon: "tags" },
-    { name: "Descuentos", icon: "percent" },
-    { name: "Dashboard", icon: "stats-chart" },
-    { name: "Notificaciones", icon: "notifications" },
+    { name: "Vendedores", icon: "people", route: "" },
+    { name: "Clientes Mayoristas", icon: "people", route: "" },
+    { name: "Precios", icon: "dollar", route: "/(crm)/(HistorialPrecios)" },
+    { name: "Cupones", icon: "tags", route: "" },
+    { name: "Descuentos", icon: "percent", route: "" },
+    { name: "Dashboard", icon: "stats-chart", route: "" },
+    { name: "Notificaciones", icon: "notifications", route: "" },
+    {
+      name: "Solicitud Asistencia",
+      icon: "happy",
+      route: "/(crm)/(agente)/solicitud-asistencia",
+    },
   ];
 
   return (
     <ScrollView style={styles.container}>
       {/* Header con título y botones de búsqueda y configuración */}
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Menu</Text>
         <View style={styles.headerIcons}>
           <TouchableOpacity>
             <Ionicons name="settings-outline" size={28} color="black" />
@@ -68,7 +71,11 @@ const Menu = () => {
 
       <View style={styles.modulesGrid}>
         {modules.map((module, index) => (
-          <TouchableOpacity key={module.name} style={styles.moduleCard}>
+          <TouchableOpacity
+            key={module.name}
+            style={styles.moduleCard}
+            onPress={() => router.push(module.route)}
+          >
             {/* Decide qué icono usar según el módulo */}
             {module.icon === "percent" ||
             module.icon === "tags" ||
@@ -82,9 +89,12 @@ const Menu = () => {
         ))}
       </View>
 
-      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-        <Text style={styles.logoutButtonText}>Cerrar Sesión</Text>
-      </TouchableOpacity>
+      <CustomButton
+        style={styles.customButton}
+        onPress={handleLogout}
+        title=" Cerrar sesión"
+        IconLeft={() => <Icon name="exit-outline" color="white" size={18} />}
+      />
     </ScrollView>
   );
 };
@@ -97,7 +107,7 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
     alignItems: "center",
     marginBottom: 20,
   },
@@ -175,6 +185,10 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     fontWeight: "bold",
+  },
+  customButton: {
+    marginTop: 10,
+    marginBottom: 50,
   },
 });
 
