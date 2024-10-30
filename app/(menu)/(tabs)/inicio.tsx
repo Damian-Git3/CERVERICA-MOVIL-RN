@@ -7,6 +7,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { useContext } from "react";
 import AuthContext from "@/context/Auth/AuthContext";
 
+
 const Inicio = () => {
   const { onLogout } = useContext(AuthContext);
 

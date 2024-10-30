@@ -2,7 +2,7 @@
  * Este archivo representa la definición del estado, aquí estará toda la información que se va a compartir
  */
 
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useMemo, useReducer, useState } from "react";
 import axios from "axios";
 import PerfilReducer from "./PerfilReducer";
 import * as SecureStore from "expo-secure-store";
@@ -136,22 +136,24 @@ export default function PerfilState({ children }: { children: any }) {
     }
   };
 
-  return (
-    <PerfilContext.Provider
-      value={{
-        session: state.session,
-        userDetails: state.userDetails,
-        userMayoristaDetails: state.userMayoristaDetails,
-        getUserDetails,
-        getUserMayoristaDetails,
-        obteniendoSession,
+  const contextValue = useMemo(
+    () => ({
+      session: state.session,
+      userDetails: state.userDetails,
+      userMayoristaDetails: state.userMayoristaDetails,
+      getUserDetails,
+      getUserMayoristaDetails,
+      obteniendoSession,
+      puntosFidelidad: state.puntosFidelidad,
+      transacciones: state.transacciones,
+      getTransacciones,
+      getPuntosFidelidad,
+    }),
+    [state, obteniendoSession]
+  );
 
-        puntosFidelidad: state.puntosFidelidad,
-        transacciones: state.transacciones,
-        getTransacciones,
-        getPuntosFidelidad,
-      }}
-    >
+  return (
+    <PerfilContext.Provider value={contextValue}>
       {children}
     </PerfilContext.Provider>
   );
