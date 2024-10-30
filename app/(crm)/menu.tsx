@@ -1,11 +1,14 @@
+import CustomButton from "@/components/CustomButton";
+import { icons } from "@/constants";
 import AuthContext from "@/context/Auth/AuthContext";
 import PerfilContext from "@/context/Perfil/PerfilContext";
 import { router } from "expo-router";
 import React, { useContext } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import Toast from "react-native-toast-message";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import Icon from "react-native-vector-icons/Ionicons";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 const Menu = () => {
@@ -46,7 +49,6 @@ const Menu = () => {
     <ScrollView style={styles.container}>
       {/* Header con título y botones de búsqueda y configuración */}
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Menu</Text>
         <View style={styles.headerIcons}>
           <TouchableOpacity>
             <Ionicons name="settings-outline" size={28} color="black" />
@@ -82,9 +84,11 @@ const Menu = () => {
         ))}
       </View>
 
-      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-        <Text style={styles.logoutButtonText}>Cerrar Sesión</Text>
-      </TouchableOpacity>
+      <CustomButton
+        onPress={handleLogout}
+        title=" Cerrar sesión"
+        IconLeft={() => <Icon name="exit-outline" color="white" size={18} />}
+      />
     </ScrollView>
   );
 };
@@ -97,7 +101,7 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
     alignItems: "center",
     marginBottom: 20,
   },

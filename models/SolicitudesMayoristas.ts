@@ -32,9 +32,9 @@ export const getEstatusSolicitudMayoristaColor = (
 ): string => {
   switch (estatus) {
     case EstatusSolicitudMayorista.Prospecto:
-      return "bg-yellow-400"; // Color amarillo vibrante
+      return "bg-yellow-400";
     case EstatusSolicitudMayorista.NuevoPedido:
-      return "bg-yellow-400"; // Color amarillo vibrante
+      return "bg-yellow-400";
     case EstatusSolicitudMayorista.Contactado:
       return "bg-orange-500"; // Color naranja vibrante
     case EstatusSolicitudMayorista.Cerrado:
@@ -54,4 +54,10 @@ export type SolicitudMayorista = {
   mayorista: Mayorista;
   idAgente: string;
   estatus: EstatusSolicitudMayorista;
+  tipo: number;
+};
+
+export type AvanzarSiguienteEstatusSolicitudMayoristaDTO = {
+  idSolicitud: number;
+  nuevoEstatus: number;
 };

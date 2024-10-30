@@ -9,7 +9,9 @@ const Page = () => {
 
   if (session) {
     if (session.rol == "Agente") {
-      return <Redirect href="/(crm)/(agente)/solicitudes-mayoristas" />;
+      return (
+        <Redirect href="/(crm)/(agente)/(solicitudes-mayoristas)/lista-solicitudes" />
+      );
     } else {
       return <Redirect href="/(crm)/(agente)/inicio" />;
     }

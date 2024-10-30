@@ -1,13 +1,14 @@
 import { icons } from "@/constants";
-import { useAuth } from "@/context/AuthContext";
 import { router } from "expo-router";
 import { View, Image, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { useContext } from "react";
+import AuthContext from "@/context/Auth/AuthContext";
 
 const Inicio = () => {
-  const { onLogout } = useAuth();
+  const { onLogout } = useContext(AuthContext);
 
   const handleLogout = async () => {
     const respuestaLogout = await onLogout!();
