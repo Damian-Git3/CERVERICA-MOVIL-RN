@@ -30,18 +30,15 @@ const Ventas = () => {
   return (
     <SafeAreaView style={styles.container}>
       <VentaState>
-          <Text>Desde ventas</Text>
+        <View style={styles.listContainer}>
+          <Text style={styles.resumenTitle}>Lista de ventas</Text>
+          <View style={styles.hr} />
           <ListVentas data={[]} />
-          <TableResumenVentas navigateToReporte={navigateToReporte} />
+        </View>
 
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              onPress={handleLogout}
-              style={styles.logoutButton}
-            >
-              <Image source={icons.out} style={styles.logoutIcon} />
-            </TouchableOpacity>
-          </View>
+        <Text style={styles.resumenTitle}>Resumen de tus ventas</Text>
+        <View style={styles.hr} />
+        <TableResumenVentas navigateToReporte={navigateToReporte} />
       </VentaState>
     </SafeAreaView>
   );
@@ -52,6 +49,15 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F5F5F5",
     padding: 16,
+  },
+  hr : {
+    borderBottomColor: '#ccc',
+    borderBottomWidth: 1,
+    marginBottom: 20
+  },
+  listContainer: {
+    flex: 1,
+    marginBottom: 16,
   },
   resumenContainer: {
     marginTop: 20,

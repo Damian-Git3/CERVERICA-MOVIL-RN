@@ -17,48 +17,19 @@ export default function VentaState({ children }: { children: any }) {
     ventas: null,
     ventaSeleccionada: null,
     resumenVentas: null,
-    reporteVentas: null
+    reporteVentas: null,
   };
 
   const [state, dispatch] = useReducer(VentaReducer, initialState);
   const [obteniendoVentas, setObteniendoVentas] = useState(true);
   const [obteniendoSession, setObteniendoSession] = useState(true);
 
-  useEffect(() => {
-    const loadSession = async () => {
-      try {
-        console.log("Cargando sesión");
-        const sessionSecureStore = await SecureStore.getItemAsync(SESSION_KEY);
-
-        if (sessionSecureStore) {
-          const session: Session = JSON.parse(sessionSecureStore);
-
-          axios.defaults.headers.common[
-            "Authorization"
-          ] = `Bearer ${session.token}`;
-
-          dispatch({
-            type: "UPDATE_SESSION",
-            payload: session,
-          });
-          console.log("Sesión cargada", session);
-        }
-      } catch (error) {
-        console.error("Error al cargar la sesión:", error);
-      } finally {
-        setObteniendoSession(false);
-      }
-    };
-
-    loadSession();
-  }, []);
-
   
 
   const getVentas = async () => {
     try {
-        console.log("Obteniendo ventas");
-        setObteniendoVentas(true);
+      console.log("Obteniendo ventas");
+      setObteniendoVentas(true);
       const result = await axios.get(`/Ventas`);
       console.log("Ventas obtenidas", result.data);
 
@@ -82,75 +53,70 @@ export default function VentaState({ children }: { children: any }) {
       }
 
       return null;
-    }
-    finally {
-        setObteniendoVentas(false);
+    } finally {
+      setObteniendoVentas(false);
     }
   };
 
   const getReporteVentas = async (param: string) => {
     try {
-        console.log("Obteniendo reporte de ventas");
-        setObteniendoVentas(true);
-        const result = await axios.get(`/Ventas/total-ventas${param}`);
-        console.log("Reporte de ventas obtenido", result.data);
-        dispatch({
-            type: GET_REPORTE_VENTAS,
-            payload: result.data,
-        });
+      console.log("Obteniendo reporte de ventas");
+      setObteniendoVentas(true);
+      const result = await axios.get(`/Ventas/total-ventas/${param}`);
+      console.log("Reporte de ventas obtenido", result.data);
+      dispatch({
+        type: GET_REPORTE_VENTAS,
+        payload: result.data,
+      });
 
-        return result;
-    }
-    catch (e: any) {
-        if (axios.isAxiosError(e)) {
-            if (e.response) {
-                return e.response.data;
-            } else if (e.request) {
-                console.log("Error request:", e.request);
-            } else {
-                console.log("Error message:", e.message);
-            }
+      return result;
+    } catch (e: any) {
+      if (axios.isAxiosError(e)) {
+        if (e.response) {
+          return e.response.data;
+        } else if (e.request) {
+          console.log("Error request:", e.request);
         } else {
-            console.log("Unexpected error:", e);
+          console.log("Error message:", e.message);
         }
+      } else {
+        console.log("Unexpected error:", e);
+      }
 
-        return null;
-    }
-    finally {
-        setObteniendoVentas(false);
+      return null;
+    } finally {
+      setObteniendoVentas(false);
     }
   };
 
   const getResumenVentas = async () => {
     try {
-        console.log("Obteniendo resumen de ventas");
-        setObteniendoVentas(true);
-        const result = await axios.get(`/Ventas/resumen-ventas`);
-        console.log("Resumen de ventas obtenido", result.data);
-        dispatch({
-            type: GET_RESUMEN_VENTAS,
-            payload: result.data,
-        });
+      console.log("Obteniendo resumen de ventas");
+      setObteniendoVentas(true);
+      const result = await axios.get(`/Ventas/resumen-ventas`);
+      console.log("Resumen de ventas obtenido", result.data);
+      dispatch({
+        type: GET_RESUMEN_VENTAS,
+        payload: result.data,
+      });
 
-        return result;
-    }
-    catch (e: any) {
-        if (axios.isAxiosError(e)) {
-            if (e.response) {
-                return e.response.data;
-            } else if (e.request) {
-                console.log("Error request:", e.request);
-            } else {
-                console.log("Error message:", e.message);
-            }
+      return result;
+    } catch (e: any) {
+      if (axios.isAxiosError(e)) {
+        if (e.response) {
+          return e.response.data;
+        } else if (e.request) {
+          console.log("Error request:", e.request);
         } else {
-            console.log("Unexpected error:", e);
+          console.log("Error message:", e.message);
         }
+      } else {
+        console.log("Unexpected error:", e);
+      }
 
-        return null;
-    }
-    finally {
-        setObteniendoVentas(false);
+      return null;
+    } finally {
+      setObteniendoVentas(false);
     }
   };
 
@@ -164,7 +130,7 @@ export default function VentaState({ children }: { children: any }) {
         obteniendoVentas,
         getVentas,
         getResumenVentas,
-        getReporteVentas
+        getReporteVentas,
       }}
     >
       {children}

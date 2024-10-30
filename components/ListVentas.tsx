@@ -49,10 +49,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    position: "relative", // Ensure the container is positioned relatively
-  },
-  list: {
-    padding: 10,
   },
   card: {
     backgroundColor: "#fff",
@@ -73,13 +69,24 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#666",
   },
-  loadingOverlay: {
-    ...StyleSheet.absoluteFillObject, // This will cover the entire screen
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 1,
-    top: 10,
-    backgroundColor: "transparent",
+  list: {
+    flexGrow: 1,
+    padding: 16,
+  },
+  item: {
+    backgroundColor: "#fff",
+    padding: 20,
+    marginVertical: 8,
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
+  },
+  itemText: {
+    fontSize: 18,
+    fontWeight: "bold",
   },
 });
 
@@ -176,7 +183,6 @@ const Card: React.FC<CardProps> = ({ venta }) => {
         />
       </Text>
       <Text style={styles.description}>Monto: ${venta.montoVenta}</Text>
-      {/* Puedes agregar más detalles de ProductosPedido si es necesario */}
     </View>
   );
 };

@@ -38,16 +38,18 @@ const TableResumenVentas: React.FC<TableResumenVentasProps> = ({
         }
         renderItem={({ item }) => (
           <View style={styles.listItem}>
-            <Text style={styles.semana}>{item.semana}</Text>
-            <Text style={styles.mes}>{item.mes}</Text>
-            <Text style={styles.anio}>{item.anio}</Text>
-            <Button
-              title="Ver detalle"
-              onPress={() => navigateToReporte("semana")}
-            />
+            <Text style={styles.semana}>${item.semana}</Text>
+            <Text style={styles.mes}>${item.mes}</Text>
+            <Text style={styles.anio}>${item.anio}</Text>
           </View>
         )}
       />
+      <View style={styles.button}>
+        <Button
+          title="Ver detalle"
+          onPress={() => navigateToReporte("semana")}
+        />
+      </View>
     </View>
   );
 };
@@ -93,6 +95,9 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     textAlign: "center",
+  },
+  button: {
+    marginTop: 16,
   },
   title: {
     fontSize: 18,

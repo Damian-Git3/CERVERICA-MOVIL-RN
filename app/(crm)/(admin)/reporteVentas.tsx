@@ -1,65 +1,55 @@
-import React, { useContext, useEffect } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import React, { useEffect } from "react";
+import { StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import VentaContext from "@/context/Venta/VentaContext";
-import { ReporteVentas } from "@/models/venta";
 import { SafeAreaView } from "react-native-safe-area-context";
 import VentaState from "@/context/Venta/VentaState";
+import { ListaReporteVentas } from "@/components/ListaReporteVentas";
+import { useIsFocused } from "@react-navigation/native";
+import Icon from "react-native-vector-icons/Ionicons"; // Importa los iconos
 
 const Tab = createBottomTabNavigator();
 
 const ReporteVentasScreen = () => {
-  const { reporteVentas, getReporteVentas } = useContext(VentaContext);
-
-  const fetchReporteVentas = (period: string) => {
-    if (getReporteVentas) {
-      getReporteVentas(period);
-    }
-    console.log("getReporteVentas for period:", period);
-  };
+  const isFocused = useIsFocused();
 
   useEffect(() => {
-    fetchReporteVentas("semana"); // Default tab
-  }, []);
-
-  const showReporteVentas = (reporteVentas: ReporteVentas) => {
-    if (reporteVentas) {
-      return (
-        <View style={styles.container}>
-          {reporteVentas?.data.map((item) => (
-            <View key={item.date} style={styles.item}>
-              <Text>{item.date}</Text>
-              <Text>Monto: {item.monto}</Text>
-            </View>
-          ))}
-        </View>
-      );
-    }
-  };
-
-  function Ventas({ period }: { period: string }) {
-    useEffect(() => {
-      fetchReporteVentas(period);
-    }, [period]);
-
-    return (
-      <View style={styles.container}>
-        <Text style={styles.title}>Detalle de Ventas por {period}</Text>
-        <Text style={styles.total}>Total: {reporteVentas?.total}</Text>
-        {reporteVentas && showReporteVentas(reporteVentas)}
-      </View>
-    );
-  }
+    // Logic to reload data when the tab is focused
+  }, [isFocused]);
 
   return (
     <VentaState>
       <SafeAreaView style={styles.container}>
         <Tab.Navigator>
-          <Tab.Screen name="Semana">
-            {() => <Ventas period="semana" />}
+          <Tab.Screen
+            name="Semana"
+            options={{
+              tabBarIcon: ({ color, size }) => (
+                <Icon name="calendar-outline" color={color} size={size} />
+              ),
+            }}
+          >
+            {() => <ListaReporteVentas param="semana" />}
           </Tab.Screen>
-          <Tab.Screen name="Mes">{() => <Ventas period="mes" />}</Tab.Screen>
-          <Tab.Screen name="Año">{() => <Ventas period="anio" />}</Tab.Screen>
+          <Tab.Screen
+            name="Mes"
+            options={{
+              tabBarIcon: ({ color, size }) => (
+                <Icon name="calendar-sharp" color={color} size={size} />
+              ),
+            }}
+          >
+            {() => <ListaReporteVentas param="mes" />}
+          </Tab.Screen>
+          <Tab.Screen
+            name="Año"
+            options={{
+              tabBarIcon: ({ color, size }) => (
+                <Icon name="calendar" color={color} size={size} />
+              ),
+            }}
+          >
+            {() => <ListaReporteVentas param="anio" />}
+          </Tab.Screen>
         </Tab.Navigator>
       </SafeAreaView>
     </VentaState>
