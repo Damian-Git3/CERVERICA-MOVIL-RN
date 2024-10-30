@@ -38,8 +38,6 @@ export default function useSolicitudesMayoristas() {
         `${END_POINT}/obtener-solicitudes-mayoristas`
       );
 
-      console.log(result);
-
       dispatch({
         type: "GET_SOLICITUDES_MAYORISTAS",
         payload: result.data,

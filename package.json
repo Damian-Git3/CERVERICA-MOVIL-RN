@@ -40,7 +40,6 @@
     "nativewind": "^2.0.11",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-form-stepper": "^2.0.3",
     "react-native": "0.74.5",
     "react-native-dotenv": "^3.4.11",
     "react-native-gesture-handler": "~2.16.1",

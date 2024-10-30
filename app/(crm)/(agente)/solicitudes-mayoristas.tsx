@@ -3,14 +3,7 @@ import { images } from "@/constants";
 import AuthContext from "@/context/Auth/AuthContext";
 import useSolicitudesMayoristas from "@/hooks/useSolicitudesMayoristas";
 import { useContext, useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  Image,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ActivityIndicator, FlatList, Image, Text, View } from "react-native";
 
 const SolicitudesMayoristas = () => {
   const { getSolicitudesMayoristas, solicitudesMayoristas, cargando } =

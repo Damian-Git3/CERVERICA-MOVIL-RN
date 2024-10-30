@@ -16,7 +16,7 @@ const Layout = () => {
     <Stack
       screenOptions={{
         headerLeft: () => (
-          <Link href="/(crm)/(perfil)/(tabs)/profile">
+          <Link href="/(crm)/perfil">
             <UserAvatar
               size={30}
               name={session?.nombre}
@@ -48,38 +48,26 @@ const Layout = () => {
     >
       <Stack.Screen name="(agente)" />
       <Stack.Screen
-        name="detalles-cuenta"
-        options={{
-          headerTitle: "",
-          headerLeft: undefined,
-          headerRight: undefined,
-          headerBackTitle: "Regresar",
-          headerTintColor: "black",
-        }}
-      />
-      <Stack.Screen
         name="menu"
         options={{
-          headerTitle: "",
+          headerTitle: "Menú",
           headerLeft: undefined,
           headerRight: undefined,
           headerBackTitle: "Regresar",
           headerTintColor: "black",
         }}
       />
-
-      <Stack.Screen name="(perfil)" />
       <Stack.Screen
         name="perfil"
         options={{
-          headerTitle: "",
+          headerTitle: "Perfil de usuario",
           headerLeft: undefined,
           headerRight: undefined,
           headerBackTitle: "Regresar",
           headerTintColor: "black",
         }}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="puntosFidelidad"
         options={{
           headerTitle: "",
@@ -98,7 +86,7 @@ const Layout = () => {
           headerBackTitle: "Regresar",
           headerTintColor: "black",
         }}
-      />
+      /> */}
     </Stack>
   );
 };

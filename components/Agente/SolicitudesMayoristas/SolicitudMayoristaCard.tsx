@@ -5,7 +5,6 @@ import {
 } from "@/models/SolicitudesMayoristas";
 import { Text, View } from "react-native";
 import React from "react";
-import { Stepper } from "react-form-stepper";
 
 export default function SolicitudMayoristaCard({
   solicitudMayorista,
@@ -53,11 +52,6 @@ export default function SolicitudMayoristaCard({
         Fecha de inicio:{" "}
         {new Date(solicitudMayorista.fechaInicio).toLocaleDateString()}
       </Text>
-
-      <Stepper
-        steps={[{ label: "Step 1" }, { label: "Step 2" }, { label: "Step 3" }]}
-        activeStep={2}
-      />
     </View>
   );
 }
