@@ -38,7 +38,7 @@ const Menu = () => {
     { name: "Cupones", icon: "tags", route: "/(admin)/ventas" },
     { name: "Descuentos", icon: "percent", route: "/(admin)/ventas" },
     { name: "Dashboard", icon: "stats-chart", route: "/(admin)/ventas" },
-    { name: "Notificaciones", icon: "notifications", route: "/(admin)/ventas" },
+    { name: "Notificaciones", icon: "notifications", route: "/(crm)/(notificacion)" },
     { name: "Ventas", icon: "cart", route: "/(admin)/ventas" },
     {
       name: "Solicitud Asistencia",
