@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Text, View, ScrollView, ActivityIndicator } from "react-native";
-import useNotificaciones from "@/hooks/useNotificaciones"; // Ajusta la ruta de importación si es necesario
+import useNotificaciones from "@/hooks/useNotificaciones";
+import { Notificacion } from "@/models/Notificacion"; 
 
 const Notificaciones = () => {
   const { notificaciones, cargando, getNotificaciones } = useNotificaciones();
@@ -9,16 +10,6 @@ const Notificaciones = () => {
   useEffect(() => {
     getNotificaciones();
   }, []);
-
-    interface Notificacion {
-    id: number;
-    idUsuario: string;
-    fecha: string; // Usa `Date` si el valor es un objeto de tipo fecha
-    tipo: number;
-    mensaje: string;
-    visto: boolean;
-    categoria: number; // Usa `Categoria` si tienes un enum para categorías
-    }
 
   return (
     <ScrollView>

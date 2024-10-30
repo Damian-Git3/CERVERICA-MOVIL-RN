@@ -1,12 +1,8 @@
 import { useEffect, useReducer, useState } from "react";
 import axios from "axios";
-import {
-    Notificacion,
-} from "@/models/Notificacion";
+import { Notificacion } from "@/models/Notificacion";
 
 const END_POINT = "/Notificacion";
-
-
 
 // Estado inicial
 const initialState = {
@@ -54,7 +50,14 @@ export default function useNotificaciones() {
     try {
       const result = await axios.get(`${END_POINT}`);
       console.log(result.data);
-      dispatch({ type: "GET_NOTIFICACIONES", payload: result.data });
+      
+      // Filtrar las notificaciones para eliminar el objeto usuario
+      const notificacionesSinUsuario = result.data.map((notificacion: any) => {
+        const { usuario, ...resto } = notificacion; // Extrae el objeto usuario y el resto de propiedades
+        return resto; // Retorna solo las propiedades necesarias
+      });
+
+      dispatch({ type: "GET_NOTIFICACIONES", payload: notificacionesSinUsuario });
     } catch (error) {
       console.error("Error al obtener notificaciones:", error);
     } finally {
