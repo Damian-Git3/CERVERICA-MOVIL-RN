@@ -143,7 +143,7 @@ const RegistroCliente = () => {
   };
 
   return (
-    <KeyboardAvoidingView behavior="padding" className="flex-1 bg-[#F5F5F5]">
+    <KeyboardAvoidingView behavior="padding" className="flex-1 bg-white">
       {/* Imagen en la parte superior, fija */}
       <View className="absolute top-0 left-0 right-0 z-2">
         <Image source={images.topVector} className="w-full h-[150]" />
@@ -293,6 +293,8 @@ const styles = StyleSheet.create({
     height: 50,
     elevation: 10,
     marginBottom: 20,
+    borderColor: "#ed9224",
+    borderWidth: 1,
   },
   inputIcon: {
     color: "#ed9224",

@@ -1,13 +1,15 @@
+import CustomButton from "@/components/CustomButton";
+import { icons } from "@/constants";
 import AuthContext from "@/context/Auth/AuthContext";
 import PerfilContext from "@/context/Perfil/PerfilContext";
 import { router } from "expo-router";
 import React, { useContext } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import Toast from "react-native-toast-message";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import Icon from "react-native-vector-icons/Ionicons";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import styles from "./menuStyle";
 
 const Menu = () => {
   const { onLogout, session } = useContext(AuthContext);
@@ -58,7 +60,6 @@ const Menu = () => {
           </TouchableOpacity>
         </View>
       </View>
-
       <TouchableOpacity onPress={() => router.push("/(perfil)/(tabs)/profile")}>
         <View style={styles.userInfo}>
           <View style={styles.circle}>
@@ -69,8 +70,12 @@ const Menu = () => {
       </TouchableOpacity>
 
       <View style={styles.modulesGrid}>
-        {modules.map((module) => (
-          <TouchableOpacity key={module.name} style={styles.moduleCard} onPress={() => router.push(module.route as any)}>
+        {modules.map((module, index) => (
+          <TouchableOpacity
+            key={module.name}
+            style={styles.moduleCard}
+            onPress={() => router.push(module.route)}
+          >
             {/* Decide qué icono usar según el módulo */}
             {module.icon === "percent" ||
             module.icon === "tags" ||
@@ -84,12 +89,15 @@ const Menu = () => {
         ))}
       </View>
 
-      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-        <Text style={styles.logoutButtonText}>Cerrar Sesión</Text>
-      </TouchableOpacity>
+      <CustomButton
+        onPress={handleLogout}
+        title=" Cerrar sesión"
+        IconLeft={() => <Icon name="exit-outline" color="white" size={18} />}
+      />
     </ScrollView>
   );
 };
+
 
 const menuAdmin = () => {
   return (
@@ -100,5 +108,95 @@ const menuAdmin = () => {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: "#f5f5f5",
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+  },
+  headerIcons: {
+    flexDirection: "row",
+  },
+  userInfo: {
+    backgroundColor: "#fff",
+    padding: 20,
+    marginBottom: 20,
+    borderRadius: 10,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 5,
+    flexDirection: "row",
+    marginVertical: 20,
+  },
+  circle: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: "#007bff", // Cambia este color según tu diseño
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 15,
+  },
+  initial: {
+    color: "#fff",
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  userName: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  modulesGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+  },
+  moduleCard: {
+    backgroundColor: "#fff",
+    width: "48%", // Dos columnas
+    padding: 20,
+    marginBottom: 15,
+    borderRadius: 10,
+    justifyContent: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  moduleName: {
+    marginTop: 10,
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  logoutButton: {
+    marginTop: 20,
+    paddingVertical: 12,
+    backgroundColor: "#212121", // Color rojo para el botón
+    borderRadius: 5,
+    alignItems: "center",
+    marginBottom: 60,
+  },
+  logoutButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+});
+
 
 export default Menu;

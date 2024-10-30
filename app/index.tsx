@@ -5,6 +5,8 @@ import { useContext } from "react";
 const Page = () => {
   const { session } = useContext(AuthContext);
 
+  console.log(session);
+
   if (session) {
     if (session.rol === "Agente") {
       return <Redirect href="/(crm)/(agente)/inicio" />;
