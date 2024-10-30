@@ -1,38 +1,29 @@
 import { icons } from "@/constants";
-import AuthContext from "@/context/Auth/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 import { router } from "expo-router";
-import { useContext } from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
-import Toast from "react-native-toast-message";
-import styles from "./menuStyle";
+import { View, Image, Text, TouchableOpacity } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import styles from "../../(crm)/menuStyle";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import { ScrollView } from "react-native-gesture-handler";
-import PerfilContext from "@/context/Perfil/PerfilContext";
 
-const Menu = () => {
-  const { onLogout, session } = useContext(AuthContext);
+const Inicio = () => {
+  const { onLogout } = useAuth();
 
   const handleLogout = async () => {
     const respuestaLogout = await onLogout!();
 
-    Toast.show({
-      type: "success",
-      text1: "Esperamos vuelvas pronto!",
-      text2: "Lamentamos que te tengas que ir:(",
-    });
+    //TODO: Generar toast para notificar salida
 
     if (respuestaLogout.data.isSuccess) {
       router.replace("/(auth)/login");
     }
+
+    //TODO: Mostrar porque no se pudo hacer logout
   };
 
-  const { userDetails } = useContext(PerfilContext);
-  console.log("userDetails");
-  console.log(userDetails);
-
-  const userName = session?.nombre;
-  const userInitial = userName?.charAt(0).toUpperCase();
+  const userName = "Nombre del Usuario";
+  const userInitial = userName.charAt(0).toUpperCase();
 
   const modules = [
     { name: "Vendedores", icon: "people" },
@@ -46,7 +37,18 @@ const Menu = () => {
 
   return (
     <>
-      <ScrollView style={styles.container}>
+      <SafeAreaView>
+        <Text>Desde inicio</Text>
+
+        <TouchableOpacity
+          onPress={handleLogout}
+          className="justify-center items-center w-10 h-10 rounded-full bg-white"
+        >
+          <Image source={icons.out} className="w-4 h-4" />
+        </TouchableOpacity>
+      </SafeAreaView>
+
+      <View style={styles.container}>
         {/* Header con título y botones de búsqueda y configuración */}
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Menu</Text>
@@ -60,16 +62,12 @@ const Menu = () => {
           </View>
         </View>
 
-        <TouchableOpacity
-          onPress={() => router.push("/(perfil)/(tabs)/profile")}
-        >
-          <View style={styles.userInfo}>
-            <View style={styles.circle}>
-              <Text style={styles.initial}>{userInitial}</Text>
-            </View>
-            <Text style={styles.userName}>{userName}</Text>
+        <View style={styles.userInfo}>
+          <View style={styles.circle}>
+            <Text style={styles.initial}>{userInitial}</Text>
           </View>
-        </TouchableOpacity>
+          <Text style={styles.userName}>{userName}</Text>
+        </View>
 
         <View style={styles.modulesGrid}>
           {modules.map((module, index) => (
@@ -87,12 +85,12 @@ const Menu = () => {
           ))}
         </View>
 
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+        <TouchableOpacity style={styles.logoutButton}>
           <Text style={styles.logoutButtonText}>Cerrar Sesión</Text>
         </TouchableOpacity>
-      </ScrollView>
+      </View>
     </>
   );
 };
 
-export default Menu;
+export default Inicio;
