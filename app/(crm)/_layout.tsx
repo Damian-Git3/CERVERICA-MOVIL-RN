@@ -1,10 +1,8 @@
-import { icons, images } from "@/constants";
+import { images } from "@/constants";
 import AuthContext from "@/context/Auth/AuthContext";
-import { Link, router, Stack } from "expo-router";
-import { useContext } from "react";
+import { Link, Stack } from "expo-router";
+import React, { useContext } from "react";
 import { Image } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/Ionicons";
 // @ts-ignore
 import UserAvatar from "react-native-user-avatar";
