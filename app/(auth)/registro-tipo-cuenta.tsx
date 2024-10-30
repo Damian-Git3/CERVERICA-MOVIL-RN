@@ -18,7 +18,7 @@ import * as Progress from "react-native-progress";
 
 const RegistroTipoCuenta = () => {
   return (
-    <View className="flex-1 bg-[#F5F5F5]">
+    <View className="flex-1 bg-white">
       {/* Imagen en la parte superior, fija */}
       <View className="absolute top-0 left-0 right-0 z-2">
         <Image source={images.topVector} className="w-full h-[150]" />

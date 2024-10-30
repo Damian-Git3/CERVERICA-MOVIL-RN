@@ -2,7 +2,7 @@ import { icons, images } from "@/constants";
 import AuthContext from "@/context/Auth/AuthContext";
 import { Link, router, Stack } from "expo-router";
 import { useContext } from "react";
-import { Image } from "react-native";
+import { Image, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -40,6 +40,9 @@ const Layout = () => {
         ),
         headerStyle: {
           backgroundColor: "#ed9224",
+        },
+        contentStyle: {
+          backgroundColor: "white",
         },
       }}
     >

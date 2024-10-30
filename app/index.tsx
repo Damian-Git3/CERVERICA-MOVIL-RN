@@ -5,8 +5,14 @@ import { useContext } from "react";
 const Page = () => {
   const { session } = useContext(AuthContext);
 
+  console.log(session);
+
   if (session) {
-    return <Redirect href="/(crm)/(agente)/inicio" />;
+    if (session.rol == "Agente") {
+      return <Redirect href="/(crm)/(agente)/solicitudes-mayoristas" />;
+    } else {
+      return <Redirect href="/(crm)/(agente)/inicio" />;
+    }
   }
 
   return <Redirect href="/(auth)/bienvenida" />;
