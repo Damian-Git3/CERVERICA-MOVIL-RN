@@ -1,9 +1,13 @@
-import { icons } from "@/constants";
 import AuthContext from "@/context/Auth/AuthContext";
+import PerfilContext from "@/context/Perfil/PerfilContext";
 import { router } from "expo-router";
-import { useContext } from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import React, { useContext } from "react";
+import { Text, TouchableOpacity, View } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import Toast from "react-native-toast-message";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import styles from "./menuStyle";
 
 const Menu = () => {
   const { onLogout, session } = useContext(AuthContext);
@@ -22,20 +26,68 @@ const Menu = () => {
     }
   };
 
+  const { userDetails } = useContext(PerfilContext);
+  console.log("userDetails");
+  console.log(userDetails);
+
+  const userName = session?.nombre;
+  const userInitial = userName?.charAt(0).toUpperCase();
+
+  const modules = [
+    { name: "Vendedores", icon: "people", route: "/(admin)/ventas" },
+    { name: "Clientes Mayoristas", icon: "people", route: "/(admin)/ventas" },
+    { name: "Precios", icon: "dollar", route: "/(admin)/ventas" },
+    { name: "Cupones", icon: "tags", route: "/(admin)/ventas" },
+    { name: "Descuentos", icon: "percent", route: "/(admin)/ventas" },
+    { name: "Dashboard", icon: "stats-chart", route: "/(admin)/ventas" },
+    { name: "Notificaciones", icon: "notifications", route: "/(admin)/ventas" },
+    { name: "Ventas", icon: "cart", route: "/(admin)/ventas" },
+  ];
+
   return (
-    <View>
-      <Text>Menu</Text>
-      <TouchableOpacity onPress={() => router.replace("/(crm)/detalles-cuenta")}>
-        <Image source={icons.profile} className="w-4 h-4" />
+    <ScrollView style={styles.container}>
+      {/* Header con título y botones de búsqueda y configuración */}
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Menu</Text>
+        <View style={styles.headerIcons}>
+          <TouchableOpacity>
+            <Ionicons name="settings-outline" size={28} color="black" />
+          </TouchableOpacity>
+          <TouchableOpacity style={{ marginLeft: 15 }}>
+            <Ionicons name="search" size={28} color="black" />
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      <TouchableOpacity onPress={() => router.push("/(perfil)/(tabs)/profile")}>
+        <View style={styles.userInfo}>
+          <View style={styles.circle}>
+            <Text style={styles.initial}>{userInitial}</Text>
+          </View>
+          <Text style={styles.userName}>{userName}</Text>
+        </View>
       </TouchableOpacity>
-      {session?.rol === "Admin" ? menuAdmin() : null}
 
+      <View style={styles.modulesGrid}>
+        {modules.map((module) => (
+          <TouchableOpacity key={module.name} style={styles.moduleCard} onPress={() => router.push(module.route as any)}>
+            {/* Decide qué icono usar según el módulo */}
+            {module.icon === "percent" ||
+            module.icon === "tags" ||
+            module.icon === "dollar" ? (
+              <FontAwesome name={module.icon} size={30} color="black" />
+            ) : (
+              <Ionicons name={module.icon} size={30} color="black" />
+            )}
+            <Text style={styles.moduleName}>{module.name}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
 
-
-      <TouchableOpacity onPress={handleLogout}>
-        <Image source={icons.out} className="w-4 h-4" />
+      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+        <Text style={styles.logoutButtonText}>Cerrar Sesión</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -43,10 +95,7 @@ const menuAdmin = () => {
   return (
     <>
       <TouchableOpacity onPress={() => router.replace("/(crm)/(admin)/inicio")}>
-        <Image source={icons.home} className="w-4 h-4" />
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => router.replace("/(crm)/(admin)/ventas")}>
-        <Image source={icons.dollar} className="w-4 h-4" />
+        <FontAwesome name="dollar" size={16} color="black" />
       </TouchableOpacity>
     </>
   );

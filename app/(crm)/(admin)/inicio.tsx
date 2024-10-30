@@ -6,7 +6,7 @@ const Inicio = () => {
 
   return (
     <View className="flex-1">
-      <Text>Inicio</Text>
+      <Text>Inicio Admin</Text>
     </View>
   );
 };

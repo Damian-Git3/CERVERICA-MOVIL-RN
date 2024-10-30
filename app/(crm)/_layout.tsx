@@ -1,10 +1,8 @@
-import { icons, images } from "@/constants";
+import { images } from "@/constants";
 import AuthContext from "@/context/Auth/AuthContext";
-import { Link, router, Stack } from "expo-router";
-import { useContext } from "react";
+import { Link, Stack } from "expo-router";
+import React, { useContext } from "react";
 import { Image } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/Ionicons";
 // @ts-ignore
 import UserAvatar from "react-native-user-avatar";
@@ -16,7 +14,7 @@ const Layout = () => {
     <Stack
       screenOptions={{
         headerLeft: () => (
-          <Link href="/(crm)/detalles-cuenta">
+          <Link href="/(crm)/(perfil)/(tabs)/profile">
             <UserAvatar
               size={30}
               name={session?.nombre}
@@ -56,6 +54,38 @@ const Layout = () => {
       />
       <Stack.Screen
         name="menu"
+        options={{
+          headerTitle: "",
+          headerLeft: undefined,
+          headerRight: undefined,
+          headerBackTitle: "Regresar",
+          headerTintColor: "black",
+        }}
+      />
+
+      <Stack.Screen name="(perfil)" />
+      <Stack.Screen
+        name="perfil"
+        options={{
+          headerTitle: "",
+          headerLeft: undefined,
+          headerRight: undefined,
+          headerBackTitle: "Regresar",
+          headerTintColor: "black",
+        }}
+      />
+      <Stack.Screen
+        name="puntosFidelidad"
+        options={{
+          headerTitle: "",
+          headerLeft: undefined,
+          headerRight: undefined,
+          headerBackTitle: "Regresar",
+          headerTintColor: "black",
+        }}
+      />
+      <Stack.Screen
+        name="agente"
         options={{
           headerTitle: "",
           headerLeft: undefined,
