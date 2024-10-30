@@ -28,10 +28,6 @@ const Menu = () => {
     }
   };
 
-  const { userDetails } = useContext(PerfilContext);
-  console.log("userDetails");
-  console.log(userDetails);
-
   const userName = session?.nombre;
   const userInitial = userName?.charAt(0).toUpperCase();
 
@@ -89,6 +85,7 @@ const Menu = () => {
       </View>
 
       <CustomButton
+        style={styles.customButton}
         onPress={handleLogout}
         title=" Cerrar sesión"
         IconLeft={() => <Icon name="exit-outline" color="white" size={18} />}
@@ -183,6 +180,10 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     fontWeight: "bold",
+  },
+  customButton: {
+    marginTop: 10,
+    marginBottom: 50,
   },
 });
 

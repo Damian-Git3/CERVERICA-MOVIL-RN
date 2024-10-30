@@ -16,7 +16,7 @@ const Layout = () => {
     <Stack
       screenOptions={{
         headerLeft: () => (
-          <Link href="/(crm)/perfil">
+          <Link href="/(crm)/(perfil)/(tabs)/profile">
             <UserAvatar
               size={30}
               name={session?.nombre}
