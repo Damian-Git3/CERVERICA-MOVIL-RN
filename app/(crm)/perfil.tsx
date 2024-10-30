@@ -18,8 +18,6 @@ const Perfil = () => {
   const { userDetails, userMayoristaDetails } = useContext(PerfilContext);
   const router = useRouter();
 
-  console.log(userDetails, userMayoristaDetails);
-
   const handleLogout = async () => {
     const respuestaLogout = await onLogout!();
 
@@ -70,10 +68,6 @@ const Perfil = () => {
       action: handleNavigateToAgente,
     },
   ];
-
-  useEffect(() => {
-    console.log("perfil", userDetails, userMayoristaDetails);
-  }, [userDetails, userMayoristaDetails]);
 
   const filteredModules =
     session?.rol === "Mayorista"

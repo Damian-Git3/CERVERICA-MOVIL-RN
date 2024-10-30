@@ -77,26 +77,6 @@ const Layout = () => {
           headerTintColor: "black",
         }}
       />
-      {/* <Stack.Screen
-        name="puntosFidelidad"
-        options={{
-          headerTitle: "",
-          headerLeft: undefined,
-          headerRight: undefined,
-          headerBackTitle: "Regresar",
-          headerTintColor: "black",
-        }}
-      />
-      <Stack.Screen
-        name="agente"
-        options={{
-          headerTitle: "",
-          headerLeft: undefined,
-          headerRight: undefined,
-          headerBackTitle: "Regresar",
-          headerTintColor: "black",
-        }}
-      /> */}
     </Stack>
   );
 };

@@ -6,8 +6,9 @@ import {
   FlatList,
   StyleSheet,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
-import useSolicitudesAsistencias from "@/hooks/useSolicitudesAsistencias";
+import useSolicitudesAsistencias from "@/hooks/solicitudesAsistencias/useSolicitudesAsistencias";
 
 const SolicitudAsistencia = () => {
   const {
@@ -29,7 +30,7 @@ const SolicitudAsistencia = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Solicitudes de Asistencia Asignadas</Text>
       <FlatList
         data={solicitudesAsistencias}
@@ -66,7 +67,8 @@ const SolicitudAsistencia = () => {
             </View>
           </View>
         )}
-        numColumns={2}
+        numColumns={1}
+        showsVerticalScrollIndicator={false}
       />
       <View style={styles.separator} />
       <Text style={styles.subtitle}>Categorías</Text>
@@ -82,13 +84,14 @@ const SolicitudAsistencia = () => {
       <TouchableOpacity style={styles.button}>
         <Text style={styles.buttonText}>Edición Categorías</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     padding: 16,
+    flexGrow: 1,
   },
   title: {
     fontSize: 24,

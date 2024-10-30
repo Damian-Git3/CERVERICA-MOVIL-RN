@@ -32,13 +32,14 @@ const Menu = () => {
   const userInitial = userName?.charAt(0).toUpperCase();
 
   const modules = [
-    { name: "Vendedores", icon: "people", route: "" },
-    { name: "Clientes Mayoristas", icon: "people", route: "" },
-    { name: "Precios", icon: "dollar", route: "/(crm)/(HistorialPrecios)" },
-    { name: "Cupones", icon: "tags", route: "" },
-    { name: "Descuentos", icon: "percent", route: "" },
-    { name: "Dashboard", icon: "stats-chart", route: "" },
-    { name: "Notificaciones", icon: "notifications", route: "" },
+    { name: "Vendedores", icon: "people", route: "/(admin)/ventas" },
+    { name: "Clientes Mayoristas", icon: "people", route: "/(admin)/ventas" },
+    { name: "Precios", icon: "dollar", route: "/(admin)/ventas" },
+    { name: "Cupones", icon: "tags", route: "/(admin)/ventas" },
+    { name: "Descuentos", icon: "percent", route: "/(admin)/ventas" },
+    { name: "Dashboard", icon: "stats-chart", route: "/(admin)/ventas" },
+    { name: "Notificaciones", icon: "notifications", route: "/(admin)/ventas" },
+    { name: "Ventas", icon: "cart", route: "/(admin)/ventas" },
     {
       name: "Solicitud Asistencia",
       icon: "happy",
@@ -59,7 +60,6 @@ const Menu = () => {
           </TouchableOpacity>
         </View>
       </View>
-
       <TouchableOpacity onPress={() => router.push("/(perfil)/(tabs)/profile")}>
         <View style={styles.userInfo}>
           <View style={styles.circle}>
@@ -90,12 +90,21 @@ const Menu = () => {
       </View>
 
       <CustomButton
-        style={styles.customButton}
         onPress={handleLogout}
         title=" Cerrar sesión"
         IconLeft={() => <Icon name="exit-outline" color="white" size={18} />}
       />
     </ScrollView>
+  );
+};
+
+const menuAdmin = () => {
+  return (
+    <>
+      <TouchableOpacity onPress={() => router.replace("/(crm)/(admin)/inicio")}>
+        <FontAwesome name="dollar" size={16} color="black" />
+      </TouchableOpacity>
+    </>
   );
 };
 

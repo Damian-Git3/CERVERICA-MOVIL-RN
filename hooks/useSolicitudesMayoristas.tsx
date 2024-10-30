@@ -1,6 +1,9 @@
 import { useEffect, useReducer, useState } from "react";
 import axios from "axios";
-import { SolicitudMayorista } from "@/models/SolicitudesMayoristas";
+import {
+  AvanzarSiguienteEstatusSolicitudMayoristaDTO,
+  SolicitudMayorista,
+} from "@/models/SolicitudesMayoristas";
 
 const END_POINT = "/SolicitudesMayoristas";
 
@@ -49,9 +52,29 @@ export default function useSolicitudesMayoristas() {
     }
   };
 
+  const avanzarSiguienteEstatus = async (
+    avanzarSiguienteEstatus: AvanzarSiguienteEstatusSolicitudMayoristaDTO
+  ) => {
+    setCargando(true);
+
+    try {
+      const result = await axios.post(
+        `${END_POINT}/avanzar-siguiente-estatus`,
+        avanzarSiguienteEstatus
+      );
+
+      console.log("Avanzo siguiente estatus");
+    } catch (error) {
+      console.error("Error al obtener solicitudes mayoristas:", error);
+    } finally {
+      setCargando(false);
+    }
+  };
+
   return {
     cargando,
     solicitudesMayoristas: state.solicitudesMayoristas,
     getSolicitudesMayoristas,
+    avanzarSiguienteEstatus,
   };
 }

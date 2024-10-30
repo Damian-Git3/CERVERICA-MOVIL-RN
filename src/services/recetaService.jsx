@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { API_URL } from '@env'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -204,3 +205,33 @@ export const obtenerRecetasConStock = (id) => {
 export const obtenerRecetasLanding = () => {
   return fetchGet("/obtener-recetas-landing");
 };
+=======
+import apiService from './apiService';
+
+const recetaService = () => {
+    const obtenerRecetas = async () => {
+        try {
+        const response = await apiService.get('/Recetas');
+        return response.data;
+        } catch (error) {
+        throw error;
+        }
+    };
+    
+    const siguienteEstatusReceta = async (id) => {
+        try {
+        const response = await apiService.put(`/Recetas/${id}/siguiente-estatus`);
+        return response.data;
+        } catch (error) {
+        throw error;
+        }
+    };
+    
+    return {
+        obtenerRecetas,
+        siguienteEstatusReceta,
+    };
+    };
+
+export default recetaService;
+>>>>>>> dev
