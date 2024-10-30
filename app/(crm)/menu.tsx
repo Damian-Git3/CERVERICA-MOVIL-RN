@@ -40,7 +40,7 @@ const Menu = () => {
     { name: "Cupones", icon: "tags", route: "" },
     { name: "Descuentos", icon: "percent", route: "" },
     { name: "Dashboard", icon: "stats-chart", route: "" },
-    { name: "Notificaciones", icon: "notifications", route: "" },
+    { name: "Notificaciones", icon: "notifications", route: "/(crm)/(notificacion)/(tabs)/notificaciones" },
   ];
 
   return (
