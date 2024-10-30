@@ -28,10 +28,6 @@ const Menu = () => {
     }
   };
 
-  const { userDetails } = useContext(PerfilContext);
-  console.log("userDetails");
-  console.log(userDetails);
-
   const userName = session?.nombre;
   const userInitial = userName?.charAt(0).toUpperCase();
 
@@ -44,13 +40,17 @@ const Menu = () => {
     { name: "Dashboard", icon: "stats-chart", route: "/(admin)/ventas" },
     { name: "Notificaciones", icon: "notifications", route: "/(crm)/(notificacion)" },
     { name: "Ventas", icon: "cart", route: "/(admin)/ventas" },
+    {
+      name: "Solicitud Asistencia",
+      icon: "happy",
+      route: "/(crm)/(agente)/solicitud-asistencia",
+    },
   ];
 
   return (
     <ScrollView style={styles.container}>
       {/* Header con título y botones de búsqueda y configuración */}
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Menu</Text>
         <View style={styles.headerIcons}>
           <TouchableOpacity>
             <Ionicons name="settings-outline" size={28} color="black" />
@@ -98,7 +98,6 @@ const Menu = () => {
   );
 };
 
-
 const menuAdmin = () => {
   return (
     <>
@@ -107,7 +106,7 @@ const menuAdmin = () => {
       </TouchableOpacity>
     </>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -196,7 +195,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
   },
+  customButton: {
+    marginTop: 10,
+    marginBottom: 50,
+  },
 });
-
 
 export default Menu;
