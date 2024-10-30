@@ -1,37 +1,12 @@
-import AuthContext from "@/context/Auth/AuthContext";
-import PerfilContext from "@/context/Perfil/PerfilContext";
-import { router } from "expo-router";
-import React, { useContext } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
-import Toast from "react-native-toast-message";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
+import React from "react";
+import { View, Text, TouchableOpacity } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import styles from "./menuStyle";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+import styles from "../(crm)/menuStyle";
 
-const Menu = () => {
-  const { onLogout, session } = useContext(AuthContext);
-
-  const handleLogout = async () => {
-    const respuestaLogout = await onLogout!();
-
-    Toast.show({
-      type: "success",
-      text1: "Esperamos vuelvas pronto!",
-      text2: "Lamentamos que te tengas que ir:(",
-    });
-
-    if (respuestaLogout.data.isSuccess) {
-      router.replace("/(auth)/login");
-    }
-  };
-
-  const { userDetails } = useContext(PerfilContext);
-  console.log("userDetails");
-  console.log(userDetails);
-
-  const userName = session?.nombre;
-  const userInitial = userName?.charAt(0).toUpperCase();
+const MenuScreen = () => {
+  const userName = "Nombre del Usuario";
+  const userInitial = userName.charAt(0).toUpperCase();
 
   const modules = [
     { name: "Vendedores", icon: "people" },
@@ -44,7 +19,7 @@ const Menu = () => {
   ];
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       {/* Header con título y botones de búsqueda y configuración */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Menu</Text>
@@ -58,18 +33,16 @@ const Menu = () => {
         </View>
       </View>
 
-      <TouchableOpacity onPress={() => router.push("/(perfil)/(tabs)/profile")}>
-        <View style={styles.userInfo}>
-          <View style={styles.circle}>
-            <Text style={styles.initial}>{userInitial}</Text>
-          </View>
-          <Text style={styles.userName}>{userName}</Text>
+      <View style={styles.userInfo}>
+        <View style={styles.circle}>
+          <Text style={styles.initial}>{userInitial}</Text>
         </View>
-      </TouchableOpacity>
+        <Text style={styles.userName}>{userName}</Text>
+      </View>
 
       <View style={styles.modulesGrid}>
         {modules.map((module, index) => (
-          <TouchableOpacity key={module.name} style={styles.moduleCard}>
+          <TouchableOpacity key={index} style={styles.moduleCard}>
             {/* Decide qué icono usar según el módulo */}
             {module.icon === "percent" ||
             module.icon === "tags" ||
@@ -83,11 +56,11 @@ const Menu = () => {
         ))}
       </View>
 
-      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+      <TouchableOpacity style={styles.logoutButton}>
         <Text style={styles.logoutButtonText}>Cerrar Sesión</Text>
       </TouchableOpacity>
-    </ScrollView>
+    </View>
   );
 };
 
-export default Menu;
+export default MenuScreen;

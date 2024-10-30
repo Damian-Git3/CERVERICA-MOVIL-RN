@@ -60,11 +60,18 @@ const LoginScreen = () => {
       console.log(respuestaLogin.data.rol);
 
       if (respuestaLogin.data.isSuccess) {
+        console.log("ROL");
+        console.log(respuestaLogin.data.rol);
+
         if (respuestaLogin.data.rol === "Agente") {
           router.replace("/(crm)/(agente)/solicitudes-mayoristas");
         } else if (respuestaLogin.data.rol === "Cliente") {
           router.replace("/(crm)/(agente)/inicio");
         } else if (respuestaLogin.data.rol === "Gestion") {
+          router.replace("/(crm)/(agente)/inicio");
+        } else if (respuestaLogin.data.rol === "Admin") {
+          router.replace("/(crm)/(agente)/inicio");
+        } else if (respuestaLogin.data.rol === "Mayorista") {
           router.replace("/(crm)/(agente)/inicio");
         }
       }
@@ -166,7 +173,7 @@ const LoginScreen = () => {
         </View>
 
         <View className="flex-1 justify-center items-center">
-          <Text className="text-center mt-28 text-lg">
+          <Text className="text-center mt-5 text-lg">
             No tienes una cuenta?{" "}
             <TouchableOpacity
               onPress={() => router.push("/(auth)/registro-tipo-cuenta")}
