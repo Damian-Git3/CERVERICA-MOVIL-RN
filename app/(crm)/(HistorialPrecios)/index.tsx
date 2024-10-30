@@ -1,48 +1,71 @@
-import React, { ReactNode, useState } from "react";
-import {
-  View,
-  StyleSheet,
-  TextInput,
-  Text,
-  FlatList,
-  Modal,
-} from "react-native";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import HistorialPreciosContext from "@/context/HistorialPrecios/HistorialPreciosContext";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import React, { ReactNode, useContext, useState, useEffect } from "react";
+import {
+  FlatList,
+  Image,
+  Modal,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 interface HistorialPreciosProps {
   children?: ReactNode;
 }
 
-interface Objeto {
+interface RecetaView {
   id: number;
   nombre: string;
-  precio: number;
-  fecha: string;
+  imagen: string | number;
+  activo: boolean;
 }
-
-const data: Objeto[] = Array.from({ length: 20 }).map((_, index) => ({
-  id: index,
-  nombre: "Coca Cola",
-  precio: 10,
-  fecha: "2021-09-01",
-}));
 
 const HistorialPrecios = ({ children }: HistorialPreciosProps) => {
   const [text, setText] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
+  const [selectedReceta, setSelectedReceta] = useState<RecetaView | null>(null);
+  const { listaRecetas } = useContext(HistorialPreciosContext);
+  const [filteredRecetas, setFilteredRecetas] = useState<RecetaView[]>([]);
 
-  const renderItem = ({ item }: { item: Objeto }) => (
-    <TouchableOpacity
-      onPress={() => {
-        setModalVisible(true);
-      }}
-    >
+  useEffect(() => {
+    setFilteredRecetas(listaRecetas);
+  }, [listaRecetas]);
+
+  const handleSearch = (text: string) => {
+    setText(text);
+    if (text) {
+      const filtered = listaRecetas.filter((receta) =>
+        receta.nombre.toLowerCase().includes(text.toLowerCase())
+      );
+      setFilteredRecetas(filtered);
+    } else {
+      setFilteredRecetas(listaRecetas);
+    }
+  };
+
+  const handleItemPress = (receta: RecetaView) => {
+    setSelectedReceta(receta);
+    setModalVisible(true);
+  };
+
+  const renderItem = ({ item }: { item: RecetaView }) => (
+    <TouchableOpacity onPress={() => handleItemPress(item)}>
       <View style={styles.item}>
-        <Text>{item.nombre}</Text>
-        <Text>{item.precio}</Text>
-        <Text>{item.fecha}</Text>
+        <Image
+          source={{ uri: item.imagen as string }}
+          style={styles.itemImage}
+        />
+        <View style={styles.itemTextContainer}>
+          <Text style={styles.itemText}>{item.id}</Text>
+          <Text style={styles.itemText}>{item.nombre}</Text>
+          <Text style={styles.itemStatus}>
+            {item.activo ? "Activo" : "Inactivo"}
+          </Text>
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -55,7 +78,7 @@ const HistorialPrecios = ({ children }: HistorialPreciosProps) => {
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
-          onChangeText={(text) => setText(text)}
+          onChangeText={handleSearch}
           value={text}
           placeholder="Buscar"
         />
@@ -65,15 +88,18 @@ const HistorialPrecios = ({ children }: HistorialPreciosProps) => {
       </View>
       <View style={styles.contentContainer}>
         <FlatList
-          data={data}
+          data={filteredRecetas}
           renderItem={renderItem}
           keyExtractor={(item) => item.id.toString()}
         />
       </View>
-      <ModalReceta
-        modalVisible={modalVisible}
-        setModalVisible={setModalVisible}
-      />
+      {selectedReceta && (
+        <ModalReceta
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+          receta={selectedReceta}
+        />
+      )}
     </View>
   );
 };
@@ -81,9 +107,11 @@ const HistorialPrecios = ({ children }: HistorialPreciosProps) => {
 const ModalReceta = ({
   modalVisible,
   setModalVisible,
+  receta,
 }: {
   modalVisible: boolean;
   setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  receta: RecetaView;
 }) => {
   return (
     <Modal
@@ -94,11 +122,24 @@ const ModalReceta = ({
         setModalVisible(!modalVisible);
       }}
     >
-      <View style={styles.modalContent}>
-        <Text>Hola</Text>
-        <TouchableOpacity onPress={() => setModalVisible(false)}>
-          <Text>Cerrar</Text>
-        </TouchableOpacity>
+      <View style={styles.modalOverlay}>
+        <View style={styles.modalContent}>
+          <Image
+            source={{ uri: receta.imagen as string }}
+            style={styles.modalImage}
+          />
+          <Text style={styles.modalTitle}>{receta.nombre}</Text>
+          <Text style={styles.modalText}>ID: {receta.id}</Text>
+          <Text style={styles.modalText}>
+            Estado: {receta.activo ? "Activo" : "Inactivo"}
+          </Text>
+          <TouchableOpacity
+            onPress={() => setModalVisible(false)}
+            style={styles.closeButton}
+          >
+            <Text style={styles.closeButtonText}>Cerrar</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </Modal>
   );
@@ -117,59 +158,122 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "center",
     backgroundColor: "white",
+    padding: 20,
   },
   contentContainer: {
-    borderWidth: 2,
-    borderColor: "black",
-    height: "85%",
-    maxHeight: "90%",
-    width: "90%",
+    flex: 1,
+    width: "100%",
+    marginTop: 10,
+    borderRadius: 10,
+    backgroundColor: "#f9f9f9",
+    padding: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   inputContainer: {
-    borderWidth: 2,
-    width: "90%",
+    flexDirection: "row",
+    alignItems: "center",
+    width: "100%",
     height: 40,
-    margin: 12,
+    marginVertical: 10,
     borderRadius: 10,
     borderColor: "gray",
-    flexDirection: "row",
+    borderWidth: 1,
     backgroundColor: "white",
+    paddingHorizontal: 10,
   },
   input: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    height: "100%",
     paddingLeft: 10,
-    width: "90%",
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
   },
   icon: {
-    width: "10%",
-    color: "black",
-    fontSize: 20,
-    display: "flex",
+    width: 30,
+    height: "100%",
     justifyContent: "center",
     alignItems: "center",
   },
   item: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
+    alignItems: "center",
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: "gray",
     height: "auto",
   },
-  modalContent: {
+  itemImage: {
+    width: 50,
+    height: 50,
+    marginRight: 10,
+    resizeMode: "contain",
+  },
+  itemTextContainer: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  itemText: {
+    fontSize: 16,
+    color: "black",
+  },
+  itemStatus: {
+    fontSize: 14,
+    color: "gray",
+  },
+  modalOverlay: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    width: "80%",
     backgroundColor: "white",
-    margin: 20,
-    padding: 20,
     borderRadius: 10,
-    borderWidth: 1,
-    borderColor: "gray",
+    padding: 20,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  modalImage: {
+    width: 100,
+    height: 100,
+    marginBottom: 20,
+    resizeMode: "contain",
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  modalText: {
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  closeButton: {
+    marginTop: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: "#2196F3",
+    borderRadius: 5,
+  },
+  closeButtonText: {
+    color: "white",
+    fontSize: 16,
   },
 });
 

@@ -8,6 +8,7 @@ import AuthReducer from "./AuthReducer";
 import * as SecureStore from "expo-secure-store";
 import AuthContext from "./AuthContext";
 import { Session } from "@/models/session";
+import { toastConfig } from "@/config/ToastConfig";
 
 const SESSION_KEY = "SESSION_KEY";
 
@@ -67,6 +68,7 @@ export default function AuthState({ children }: { children: any }) {
       return result;
     } catch (e: any) {
       if (axios.isAxiosError(e)) {
+        toastConfig;
         if (e.response) {
           return e.response.data;
         } else if (e.request) {
