@@ -166,7 +166,7 @@ const RegistroMayorista = () => {
         direccionEmpresa: nuevoMayorista.direccionEmpresa,
         telefonoEmpresa: nuevoMayorista.telefonoEmpresa,
         emailEmpresa: nuevoMayorista.emailEmpresa,
-        RFCEmpresa: nuevoMayorista.RFCEmpresa,
+        rfcEmpresa: nuevoMayorista.RFCEmpresa,
 
         rol: "Mayorista",
       });

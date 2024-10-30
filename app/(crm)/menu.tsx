@@ -11,10 +11,14 @@ import {
   TouchableHighlight,
 } from "react-native";
 import Toast from "react-native-toast-message";
+import styles from "./menuStyle";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { ScrollView } from "react-native-gesture-handler";
+import PerfilContext from "@/context/Perfil/PerfilContext";
 
 const Menu = () => {
-  const { onLogout } = useContext(AuthContext);
-  const [isPressed, setIsPressed] = useState(false);
+  const { onLogout, session } = useContext(AuthContext);
 
   const handleLogout = async () => {
     const respuestaLogout = await onLogout!();
@@ -30,28 +34,71 @@ const Menu = () => {
     }
   };
 
-  const handleNavigate = (ruta: string) => {
-    router.push(ruta as any); // Cambia "/ruta/destino" por la ruta real a la que deseas redirigir
-  };
+  const { userDetails } = useContext(PerfilContext);
+  console.log("userDetails");
+  console.log(userDetails);
+
+  const userName = session?.nombre;
+  const userInitial = userName?.charAt(0).toUpperCase();
+
+  const modules = [
+    { name: "Vendedores", icon: "people" },
+    { name: "Clientes Mayoristas", icon: "people" },
+    { name: "Precios", icon: "dollar" },
+    { name: "Cupones", icon: "tags" },
+    { name: "Descuentos", icon: "percent" },
+    { name: "Dashboard", icon: "stats-chart" },
+    { name: "Notificaciones", icon: "notifications" },
+  ];
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Menu</Text>
+    <>
+      <ScrollView style={styles.container}>
+        {/* Header con título y botones de búsqueda y configuración */}
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>Menu</Text>
+          <View style={styles.headerIcons}>
+            <TouchableOpacity>
+              <Ionicons name="settings-outline" size={28} color="black" />
+            </TouchableOpacity>
+            <TouchableOpacity style={{ marginLeft: 15 }}>
+              <Ionicons name="search" size={28} color="black" />
+            </TouchableOpacity>
+          </View>
+        </View>
 
-      <TouchableHighlight
-        style={isPressed ? styles.buttonPressed : styles.button}
-        onPressIn={() => setIsPressed(true)}
-        onPressOut={() => setIsPressed(false)}
-        onPress={() => handleNavigate("/(crm)/(HistorialPrecios)")}
-      >
-        <Text style={isPressed ? styles.buttonTextPressed : styles.buttonText}>
-          Historial de Precios
-        </Text>
-      </TouchableHighlight>
-      <TouchableOpacity style={styles.button} onPress={handleLogout}>
-        <Image source={icons.out} style={styles.icon} />
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity
+          onPress={() => router.push("/(perfil)/(tabs)/profile")}
+        >
+          <View style={styles.userInfo}>
+            <View style={styles.circle}>
+              <Text style={styles.initial}>{userInitial}</Text>
+            </View>
+            <Text style={styles.userName}>{userName}</Text>
+          </View>
+        </TouchableOpacity>
+
+        <View style={styles.modulesGrid}>
+          {modules.map((module, index) => (
+            <TouchableOpacity key={index} style={styles.moduleCard}>
+              {/* Decide qué icono usar según el módulo */}
+              {module.icon === "percent" ||
+              module.icon === "tags" ||
+              module.icon === "dollar" ? (
+                <FontAwesome name={module.icon} size={30} color="black" />
+              ) : (
+                <Ionicons name={module.icon} size={30} color="black" />
+              )}
+              <Text style={styles.moduleName}>{module.name}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+
+        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+          <Text style={styles.logoutButtonText}>Cerrar Sesión</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </>
   );
 };
 
