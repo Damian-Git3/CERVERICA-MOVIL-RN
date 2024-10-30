@@ -34,6 +34,7 @@ const Inicio = () => {
     { name: "Descuentos", icon: "percent" },
     { name: "Dashboard", icon: "stats-chart" },
     { name: "Notificaciones", icon: "notifications" },
+    { name: "Ventas", icon: "dollar" },
   ];
 
   return (
@@ -182,5 +183,4 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
-
 export default Inicio;

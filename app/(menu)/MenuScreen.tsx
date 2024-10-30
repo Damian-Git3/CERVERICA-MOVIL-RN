@@ -1,7 +1,8 @@
 import React from "react";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
+
 
 const MenuScreen = () => {
   const userName = "Nombre del Usuario";
@@ -15,6 +16,7 @@ const MenuScreen = () => {
     { name: "Descuentos", icon: "percent" },
     { name: "Dashboard", icon: "stats-chart" },
     { name: "Notificaciones", icon: "notifications" },
+    { name: "Ventas", icon: "cart" },
   ];
 
   return (

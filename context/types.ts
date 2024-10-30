@@ -1,0 +1,4 @@
+export const GET_VENTAS = "GET_VENTAS";
+export const GET_VENTA = "GET_VENTA";
+export const GET_RESUMEN_VENTAS = "GET_RESUMEN_VENTAS";
+export const GET_REPORTE_VENTAS = "GET_REPORTE_VENTAS";
