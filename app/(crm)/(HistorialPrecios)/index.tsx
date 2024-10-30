@@ -1,3 +1,4 @@
+
 import HistorialPreciosContext from "@/context/HistorialPrecios/HistorialPreciosContext";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";

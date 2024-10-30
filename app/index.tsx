@@ -8,12 +8,11 @@ const Page = () => {
   console.log(session);
 
   if (session) {
-    if (session.rol == "Agente") {
-      return (
-        <Redirect href="/(crm)/(agente)/(solicitudes-mayoristas)/lista-solicitudes" />
-      );
-    } else {
+    if (session.rol === "Agente") {
       return <Redirect href="/(crm)/(agente)/inicio" />;
+    }
+    if (session.rol === "Admin") {
+      return <Redirect href="/(crm)/(admin)/inicio" />;
     }
   }
 
