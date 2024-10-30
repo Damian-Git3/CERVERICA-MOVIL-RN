@@ -34,13 +34,13 @@ const Menu = () => {
   const userInitial = userName?.charAt(0).toUpperCase();
 
   const modules = [
-    { name: "Vendedores", icon: "people" },
-    { name: "Clientes Mayoristas", icon: "people" },
-    { name: "Precios", icon: "dollar" },
-    { name: "Cupones", icon: "tags" },
-    { name: "Descuentos", icon: "percent" },
-    { name: "Dashboard", icon: "stats-chart" },
-    { name: "Notificaciones", icon: "notifications" },
+    { name: "Vendedores", icon: "people", route: "" },
+    { name: "Clientes Mayoristas", icon: "people", route: "" },
+    { name: "Precios", icon: "dollar", route: "/(crm)/(HistorialPrecios)" },
+    { name: "Cupones", icon: "tags", route: "" },
+    { name: "Descuentos", icon: "percent", route: "" },
+    { name: "Dashboard", icon: "stats-chart", route: "" },
+    { name: "Notificaciones", icon: "notifications", route: "" },
   ];
 
   return (
@@ -69,7 +69,11 @@ const Menu = () => {
 
       <View style={styles.modulesGrid}>
         {modules.map((module, index) => (
-          <TouchableOpacity key={module.name} style={styles.moduleCard}>
+          <TouchableOpacity
+            key={module.name}
+            style={styles.moduleCard}
+            onPress={() => router.push(module.route)}
+          >
             {/* Decide qué icono usar según el módulo */}
             {module.icon === "percent" ||
             module.icon === "tags" ||

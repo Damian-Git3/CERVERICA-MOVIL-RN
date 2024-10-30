@@ -6,6 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "../../(crm)/menuStyle";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import React from "react";
 
 const Inicio = () => {
   const { onLogout } = useAuth();
