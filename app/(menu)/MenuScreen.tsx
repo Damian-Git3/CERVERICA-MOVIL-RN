@@ -1,9 +1,7 @@
 import React from "react";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import styles from "../(crm)/menuStyle";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 
 const MenuScreen = () => {
