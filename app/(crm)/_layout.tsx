@@ -16,7 +16,7 @@ const Layout = () => {
     <Stack
       screenOptions={{
         headerLeft: () => (
-          <Link href="/(crm)/perfil" className="ml-5">
+          <Link href="/(crm)/(perfil)/(tabs)/profile" className="ml-5">
             <UserAvatar
               size={40}
               name={session?.nombre}
@@ -60,7 +60,7 @@ const Layout = () => {
         }}
       />
       <Stack.Screen
-        name="perfil"
+        name="(perfil)"
         options={{
           headerTitle: "Perfil de usuario",
           headerLeft: undefined,

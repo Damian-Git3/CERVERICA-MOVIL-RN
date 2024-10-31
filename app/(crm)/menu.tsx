@@ -1,7 +1,6 @@
 import CustomButton from "@/components/CustomButton";
 import { icons } from "@/constants";
 import AuthContext from "@/context/Auth/AuthContext";
-import PerfilContext from "@/context/Perfil/PerfilContext";
 import { router } from "expo-router";
 import React, { useContext } from "react";
 import {
