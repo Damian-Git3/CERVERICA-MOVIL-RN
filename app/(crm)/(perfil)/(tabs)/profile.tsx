@@ -169,7 +169,10 @@ const Profile = () => {
             <TouchableOpacity
               key={index}
               style={styles.moduleCard}
-              onPress={module.action || (() => router.push(module.route))}
+              onPress={
+                module.action ||
+                (() => module.route && router.push(module.route as any))
+              }
             >
               {module.icon === "percent" ||
               module.icon === "tags" ||

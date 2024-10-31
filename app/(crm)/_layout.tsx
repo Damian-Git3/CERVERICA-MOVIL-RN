@@ -16,9 +16,9 @@ const Layout = () => {
     <Stack
       screenOptions={{
         headerLeft: () => (
-          <Link href="/(crm)/(perfil)/(tabs)/profile">
+          <Link href="/(crm)/(perfil)/(tabs)/profile" className="ml-5">
             <UserAvatar
-              size={30}
+              size={40}
               name={session?.nombre}
               bgColor="#f5d9ab"
               textColor="black"
@@ -26,17 +26,18 @@ const Layout = () => {
           </Link>
         ),
         headerRight: () => (
-          <Link href="/(crm)/menu">
+          <Link href="/(crm)/menu" className="mr-5">
             <Icon name="menu" size={30} />
           </Link>
         ),
+        headerTitleAlign: "center",
         headerTitle: () => (
           <>
             <Image
               source={images.iconoNavbar}
               style={{
                 width: "81%",
-                height: 35,
+                height: 50,
                 resizeMode: "contain",
               }}
             />
@@ -59,10 +60,11 @@ const Layout = () => {
           headerRight: undefined,
           headerBackTitle: "Regresar",
           headerTintColor: "black",
+          headerShown: false,
         }}
       />
       <Stack.Screen
-        name="perfil"
+        name="(perfil)"
         options={{
           headerTitle: "Perfil de usuario",
           headerLeft: undefined,
@@ -72,19 +74,9 @@ const Layout = () => {
         }}
       />
       {/* <Stack.Screen
-        name="puntosFidelidad"
+        name="solicitud-asistencia"
         options={{
-          headerTitle: "",
-          headerLeft: undefined,
-          headerRight: undefined,
-          headerBackTitle: "Regresar",
-          headerTintColor: "black",
-        }}
-      />
-      <Stack.Screen
-        name="agente"
-        options={{
-          headerTitle: "",
+          headerTitle: "Solicitud de asistencia",
           headerLeft: undefined,
           headerRight: undefined,
           headerBackTitle: "Regresar",

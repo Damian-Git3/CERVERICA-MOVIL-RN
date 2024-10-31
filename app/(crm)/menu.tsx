@@ -1,10 +1,16 @@
 import CustomButton from "@/components/CustomButton";
 import { icons } from "@/constants";
 import AuthContext from "@/context/Auth/AuthContext";
-import PerfilContext from "@/context/Perfil/PerfilContext";
 import { router } from "expo-router";
 import React, { useContext } from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import Toast from "react-native-toast-message";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
@@ -32,65 +38,83 @@ const Menu = () => {
   const userInitial = userName?.charAt(0).toUpperCase();
 
   const modules = [
-    { name: "Vendedores", icon: "people", route: "" },
-    { name: "Clientes Mayoristas", icon: "people", route: "" },
-    { name: "Precios", icon: "dollar", route: "/(crm)/(HistorialPrecios)" },
-    { name: "Cupones", icon: "tags", route: "" },
-    { name: "Descuentos", icon: "percent", route: "" },
-    { name: "Dashboard", icon: "stats-chart", route: "" },
-    { name: "Notificaciones", icon: "notifications", route: "" },
+    { name: "Vendedores", icon: "people", route: "/(admin)/ventas" },
+    { name: "Clientes Mayoristas", icon: "people", route: "/(admin)/ventas" },
+    { name: "Precios", icon: "dollar", route: "/(admin)/ventas" },
+    { name: "Cupones", icon: "tags", route: "/(admin)/ventas" },
+    { name: "Descuentos", icon: "percent", route: "/(admin)/ventas" },
+    { name: "Dashboard", icon: "stats-chart", route: "/(admin)/ventas" },
+    {
+      name: "Notificaciones",
+      icon: "notifications",
+      route: "/(crm)/(notificacion)",
+    },
+    { name: "Ventas", icon: "cart", route: "/(admin)/ventas" },
+    {
+      name: "Solicitud Asistencia",
+      icon: "happy",
+      route: "/(crm)/(agente)/solicitud-asistencia",
+    },
   ];
 
   return (
-    <ScrollView style={styles.container}>
-      {/* Header con título y botones de búsqueda y configuración */}
-      <View style={styles.header}>
-        <View style={styles.headerIcons}>
-          <TouchableOpacity>
-            <Ionicons name="settings-outline" size={28} color="black" />
-          </TouchableOpacity>
-          <TouchableOpacity style={{ marginLeft: 15 }}>
-            <Ionicons name="search" size={28} color="black" />
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      <TouchableOpacity onPress={() => router.push("/(perfil)/(tabs)/profile")}>
-        <View style={styles.userInfo}>
-          <View style={styles.circle}>
-            <Text style={styles.initial}>{userInitial}</Text>
+    <SafeAreaView>
+      <ScrollView style={styles.container}>
+        {/* Header con título y botones de búsqueda y configuración */}
+        <View style={styles.header}>
+          <View style={styles.headerIcons}>
+            <TouchableOpacity>
+              <Ionicons name="settings-outline" size={28} color="black" />
+            </TouchableOpacity>
+            <TouchableOpacity style={{ marginLeft: 15 }}>
+              <Ionicons name="search" size={28} color="black" />
+            </TouchableOpacity>
           </View>
-          <Text style={styles.userName}>{userName}</Text>
         </View>
+        <TouchableOpacity
+          onPress={() => router.push("/(perfil)/(tabs)/profile")}
+        >
+          <View style={styles.userInfo}>
+            <View style={styles.circle}>
+              <Text style={styles.initial}>{userInitial}</Text>
+            </View>
+            <Text style={styles.userName}>{userName}</Text>
+          </View>
+        </TouchableOpacity>
+
+        <View style={styles.modulesGrid}>
+          {modules.map((module, index) => (
+            <TouchableOpacity key={module.name} style={styles.moduleCard}>
+              {/* Decide qué icono usar según el módulo */}
+              {module.icon === "percent" ||
+              module.icon === "tags" ||
+              module.icon === "dollar" ? (
+                <FontAwesome name={module.icon} size={30} color="black" />
+              ) : (
+                <Ionicons name={module.icon} size={30} color="black" />
+              )}
+              <Text style={styles.moduleName}>{module.name}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+
+        <CustomButton
+          onPress={handleLogout}
+          title=" Cerrar sesión"
+          IconLeft={() => <Icon name="exit-outline" color="white" size={18} />}
+        />
+      </ScrollView>
+    </SafeAreaView>
+  );
+};
+
+const menuAdmin = () => {
+  return (
+    <>
+      <TouchableOpacity onPress={() => router.replace("/(crm)/(admin)/inicio")}>
+        <FontAwesome name="dollar" size={16} color="black" />
       </TouchableOpacity>
-
-      <View style={styles.modulesGrid}>
-        {modules.map((module, index) => (
-          <TouchableOpacity
-            key={module.name}
-            style={styles.moduleCard}
-            onPress={() => router.push(module.route)}
-          >
-            {/* Decide qué icono usar según el módulo */}
-            {module.icon === "percent" ||
-            module.icon === "tags" ||
-            module.icon === "dollar" ? (
-              <FontAwesome name={module.icon} size={30} color="black" />
-            ) : (
-              <Ionicons name={module.icon} size={30} color="black" />
-            )}
-            <Text style={styles.moduleName}>{module.name}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-
-      <CustomButton
-        style={styles.customButton}
-        onPress={handleLogout}
-        title=" Cerrar sesión"
-        IconLeft={() => <Icon name="exit-outline" color="white" size={18} />}
-      />
-    </ScrollView>
+    </>
   );
 };
 
@@ -98,11 +122,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: "#f5f5f5",
   },
   header: {
     flexDirection: "row",
-    justifyContent: "flex-end",
+    justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 20,
   },
