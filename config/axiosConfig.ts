@@ -8,6 +8,7 @@ axios.defaults.timeout = 5000;
 
 // EXPO_PUBLIC_BASE_URL se define en .env
 axios.defaults.baseURL = process.env.EXPO_PUBLIC_BASE_URL;
+console.log(process.env.EXPO_PUBLIC_BASE_URL);
 
 // Interceptor para token expirado
 axios.interceptors.response.use(
@@ -31,7 +32,5 @@ axios.interceptors.response.use(
         text2: "La solicitud excedió el tiempo de espera",
       });
     }
-
-    return Promise.reject(error);
   }
 );

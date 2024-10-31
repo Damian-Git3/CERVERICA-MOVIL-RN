@@ -68,26 +68,16 @@ const Layout = () => {
           headerTintColor: "black",
         }}
       />
-      {/* <Stack.Screen
-        name="puntosFidelidad"
+      <Stack.Screen
+        name="solicitud-asistencia"
         options={{
-          headerTitle: "",
+          headerTitle: "Solicitud de asistencia",
           headerLeft: undefined,
           headerRight: undefined,
           headerBackTitle: "Regresar",
           headerTintColor: "black",
         }}
       />
-      <Stack.Screen
-        name="agente"
-        options={{
-          headerTitle: "",
-          headerLeft: undefined,
-          headerRight: undefined,
-          headerBackTitle: "Regresar",
-          headerTintColor: "black",
-        }}
-      /> */}
     </Stack>
   );
 };

@@ -35,65 +35,62 @@ const Menu = () => {
     }
   };
 
-  const { userDetails } = useContext(PerfilContext);
-  console.log("userDetails");
-  console.log(userDetails);
-
   const userName = session?.nombre;
   const userInitial = userName?.charAt(0).toUpperCase();
 
   const modules = [
-    { name: "Vendedores", icon: "people" },
-    { name: "Clientes Mayoristas", icon: "people" },
-    { name: "Precios", icon: "dollar" },
-    { name: "Cupones", icon: "tags" },
-    { name: "Descuentos", icon: "percent" },
-    { name: "Dashboard", icon: "stats-chart" },
-    { name: "Notificaciones", icon: "notifications" },
+    { name: "Vendedores", icon: "people", route: "/(admin)/ventas" },
+    { name: "Clientes Mayoristas", icon: "people", route: "/(admin)/ventas" },
+    { name: "Precios", icon: "dollar", route: "/(admin)/ventas" },
+    { name: "Cupones", icon: "tags", route: "/(admin)/ventas" },
+    { name: "Descuentos", icon: "percent", route: "/(admin)/ventas" },
+    { name: "Dashboard", icon: "stats-chart", route: "/(admin)/ventas" },
+    { name: "Notificaciones", icon: "notifications", route: "/(crm)/(notificacion)" },
+    { name: "Ventas", icon: "cart", route: "/(admin)/ventas" },
+    {
+      name: "Solicitud Asistencia",
+      icon: "happy",
+      route: "/(crm)/(agente)/solicitud-asistencia",
+    },
   ];
 
   return (
-    <SafeAreaView className="flex-1">
-      <ScrollView style={styles.container}>
-        {/* Header con título y botones de búsqueda y configuración */}
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>Menu</Text>
-          <View style={styles.headerIcons}>
-            <TouchableOpacity>
-              <Ionicons name="settings-outline" size={28} color="black" />
-            </TouchableOpacity>
-            <TouchableOpacity style={{ marginLeft: 15 }}>
-              <Ionicons name="search" size={28} color="black" />
-            </TouchableOpacity>
-          </View>
+    <ScrollView style={styles.container}>
+      {/* Header con título y botones de búsqueda y configuración */}
+      <View style={styles.header}>
+        <View style={styles.headerIcons}>
+          <TouchableOpacity>
+            <Ionicons name="settings-outline" size={28} color="black" />
+          </TouchableOpacity>
+          <TouchableOpacity style={{ marginLeft: 15 }}>
+            <Ionicons name="search" size={28} color="black" />
+          </TouchableOpacity>
         </View>
-
-        <TouchableOpacity
-          onPress={() => router.push("/(perfil)/(tabs)/profile")}
-        >
-          <View style={styles.userInfo}>
-            <View style={styles.circle}>
-              <Text style={styles.initial}>{userInitial}</Text>
-            </View>
-            <Text style={styles.userName}>{userName}</Text>
+      </View>
+      <TouchableOpacity onPress={() => router.push("/(perfil)/(tabs)/profile")}>
+        <View style={styles.userInfo}>
+          <View style={styles.circle}>
+            <Text style={styles.initial}>{userInitial}</Text>
           </View>
-        </TouchableOpacity>
-
-        <View style={styles.modulesGrid}>
-          {modules.map((module, index) => (
-            <TouchableOpacity key={module.name} style={styles.moduleCard}>
-              {/* Decide qué icono usar según el módulo */}
-              {module.icon === "percent" ||
-              module.icon === "tags" ||
-              module.icon === "dollar" ? (
-                <FontAwesome name={module.icon} size={30} color="black" />
-              ) : (
-                <Ionicons name={module.icon} size={30} color="black" />
-              )}
-              <Text style={styles.moduleName}>{module.name}</Text>
-            </TouchableOpacity>
-          ))}
+          <Text style={styles.userName}>{userName}</Text>
         </View>
+      </TouchableOpacity>
+
+      <View style={styles.modulesGrid}>
+        {modules.map((module, index) => (
+          <TouchableOpacity key={module.name} style={styles.moduleCard}>
+            {/* Decide qué icono usar según el módulo */}
+            {module.icon === "percent" ||
+            module.icon === "tags" ||
+            module.icon === "dollar" ? (
+              <FontAwesome name={module.icon} size={30} color="black" />
+            ) : (
+              <Ionicons name={module.icon} size={30} color="black" />
+            )}
+            <Text style={styles.moduleName}>{module.name}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
 
         <CustomButton
           onPress={handleLogout}
@@ -102,6 +99,16 @@ const Menu = () => {
         />
       </ScrollView>
     </SafeAreaView>
+  );
+};
+
+const menuAdmin = () => {
+  return (
+    <>
+      <TouchableOpacity onPress={() => router.replace("/(crm)/(admin)/inicio")}>
+        <FontAwesome name="dollar" size={16} color="black" />
+      </TouchableOpacity>
+    </>
   );
 };
 
@@ -190,6 +197,10 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     fontWeight: "bold",
+  },
+  customButton: {
+    marginTop: 10,
+    marginBottom: 50,
   },
 });
 

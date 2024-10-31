@@ -7,6 +7,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { useContext } from "react";
 import AuthContext from "@/context/Auth/AuthContext";
 
+
 const Inicio = () => {
   const { onLogout } = useContext(AuthContext);
 
@@ -33,6 +34,7 @@ const Inicio = () => {
     { name: "Descuentos", icon: "percent" },
     { name: "Dashboard", icon: "stats-chart" },
     { name: "Notificaciones", icon: "notifications" },
+    { name: "Ventas", icon: "dollar" },
   ];
 
   return (
@@ -181,5 +183,4 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
-
 export default Inicio;

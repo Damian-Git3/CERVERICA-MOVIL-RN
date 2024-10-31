@@ -72,7 +72,7 @@ const LoginScreen = () => {
         } else if (respuestaLogin.data.rol === "Gestion") {
           router.replace("/(crm)/(agente)/inicio");
         } else if (respuestaLogin.data.rol === "Admin") {
-          router.replace("/(crm)/(agente)/inicio");
+          router.replace("/(crm)/(admin)/inicio");
         } else if (respuestaLogin.data.rol === "Mayorista") {
           router.replace("/(crm)/(agente)/inicio");
         }

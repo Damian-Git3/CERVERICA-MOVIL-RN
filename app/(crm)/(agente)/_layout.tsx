@@ -10,6 +10,13 @@ const AgenteLayout = () => {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name="solicitud-asistencia"
+        options={{
+          title: "Solicitudes Asistencias",
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 };
