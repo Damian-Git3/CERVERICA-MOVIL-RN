@@ -55,6 +55,7 @@ const Layout = () => {
           headerRight: undefined,
           headerBackTitle: "Regresar",
           headerTintColor: "black",
+          headerShown: false,
         }}
       />
       <Stack.Screen

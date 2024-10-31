@@ -122,10 +122,6 @@ export default function AuthState({ children }: { children: any }) {
   const onRegisterUsuarioMayorista = async (
     nuevoUsuarioMayorista: nuevoUsuarioMayorista
   ) => {
-    console.log("REGISTRAR MAYORISTA");
-
-    console.log(nuevoUsuarioMayorista);
-
     try {
       return (await axios.post(`/ClienteMayorista`, nuevoUsuarioMayorista))
         .data;
