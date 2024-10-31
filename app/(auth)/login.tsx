@@ -32,12 +32,16 @@ const LoginScreen = () => {
 
   const { onLogin } = useContext(AuthContext);
 
+  console.log(session);
+
   const handleLogin = async () => {
     setLoading(true);
     setErrores([]);
 
     try {
       const respuestaLogin = await onLogin!(email, password);
+
+      console.log("caca", respuestaLogin);
 
       if (respuestaLogin.errors) {
         const newErrors: string[] = [];
@@ -72,7 +76,7 @@ const LoginScreen = () => {
         } else if (respuestaLogin.data.rol === "Gestion") {
           router.replace("/(crm)/(agente)/inicio");
         } else if (respuestaLogin.data.rol === "Admin") {
-          router.replace("/(crm)/(admin)/inicio");
+          router.replace("/(crm)/(agente)/inicio");
         } else if (respuestaLogin.data.rol === "Mayorista") {
           router.replace("/(crm)/(agente)/inicio");
         }

@@ -13,6 +13,13 @@ import { useNavigation } from "expo-router";
 import PerfilState from "@/context/Perfil/PerfilState";
 import PerfilLoaded from "@/context/Perfil/PerfilLoaded";
 
+type Module = {
+  name: string;
+  icon: string;
+  route?: string;
+  action?: () => void;
+};
+
 const Perfil = () => {
   const { onLogout, session } = useContext(AuthContext);
   const { userDetails, userMayoristaDetails } = useContext(PerfilContext);
@@ -148,10 +155,9 @@ const Perfil = () => {
               <TouchableOpacity
                 key={index}
                 style={styles.moduleCard}
-                /* onPress={module.action || (() => router.push(module.route))} */
                 onPress={
                   module.action ||
-                  (() => router.push("/(agente)/solicitudes-mayoristas"))
+                  (() => module.route && router.push(module.route as any))
                 }
               >
                 {module.icon === "percent" ||

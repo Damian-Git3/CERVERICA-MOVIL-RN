@@ -5,10 +5,10 @@
 import { useEffect, useReducer, useState } from "react";
 import axios from "axios";
 import AuthReducer from "./AuthReducer";
-import * as SecureStore from "expo-secure-store";
 import AuthContext from "./AuthContext";
 import { Session } from "@/models/session";
 import { toastConfig } from "@/config/ToastConfig";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SESSION_KEY = "SESSION_KEY";
 
@@ -23,7 +23,7 @@ export default function AuthState({ children }: { children: any }) {
   useEffect(() => {
     const loadSession = async () => {
       try {
-        const sessionSecureStore = await SecureStore.getItemAsync(SESSION_KEY);
+        const sessionSecureStore = await AsyncStorage.getItem(SESSION_KEY);
 
         if (sessionSecureStore) {
           const session: Session = JSON.parse(sessionSecureStore);
@@ -63,14 +63,14 @@ export default function AuthState({ children }: { children: any }) {
         "Authorization"
       ] = `Bearer ${result.data.token}`;
 
-      await SecureStore.setItemAsync(SESSION_KEY, JSON.stringify(result.data));
+      await AsyncStorage.setItem(SESSION_KEY, JSON.stringify(result.data));
 
       return result;
     } catch (e: any) {
       if (axios.isAxiosError(e)) {
         toastConfig;
         if (e.response) {
-          return e.response.data;
+          return e.response;
         } else if (e.request) {
           console.log("Error request:", e.request);
         } else {
@@ -87,7 +87,7 @@ export default function AuthState({ children }: { children: any }) {
   const onLogout = async () => {
     const result = await axios.post(`/Account/logout`, {});
 
-    await SecureStore.deleteItemAsync(SESSION_KEY);
+    await AsyncStorage.removeItem(SESSION_KEY);
 
     axios.defaults.headers.common["Authorization"] = "";
 

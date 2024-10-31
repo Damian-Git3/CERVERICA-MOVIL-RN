@@ -45,7 +45,11 @@ const Menu = () => {
     { name: "Cupones", icon: "tags", route: "/(admin)/ventas" },
     { name: "Descuentos", icon: "percent", route: "/(admin)/ventas" },
     { name: "Dashboard", icon: "stats-chart", route: "/(admin)/ventas" },
-    { name: "Notificaciones", icon: "notifications", route: "/(crm)/(notificacion)" },
+    {
+      name: "Notificaciones",
+      icon: "notifications",
+      route: "/(crm)/(notificacion)",
+    },
     { name: "Ventas", icon: "cart", route: "/(admin)/ventas" },
     {
       name: "Solicitud Asistencia",
@@ -55,42 +59,45 @@ const Menu = () => {
   ];
 
   return (
-    <ScrollView style={styles.container}>
-      {/* Header con título y botones de búsqueda y configuración */}
-      <View style={styles.header}>
-        <View style={styles.headerIcons}>
-          <TouchableOpacity>
-            <Ionicons name="settings-outline" size={28} color="black" />
-          </TouchableOpacity>
-          <TouchableOpacity style={{ marginLeft: 15 }}>
-            <Ionicons name="search" size={28} color="black" />
-          </TouchableOpacity>
-        </View>
-      </View>
-      <TouchableOpacity onPress={() => router.push("/(perfil)/(tabs)/profile")}>
-        <View style={styles.userInfo}>
-          <View style={styles.circle}>
-            <Text style={styles.initial}>{userInitial}</Text>
+    <SafeAreaView>
+      <ScrollView style={styles.container}>
+        {/* Header con título y botones de búsqueda y configuración */}
+        <View style={styles.header}>
+          <View style={styles.headerIcons}>
+            <TouchableOpacity>
+              <Ionicons name="settings-outline" size={28} color="black" />
+            </TouchableOpacity>
+            <TouchableOpacity style={{ marginLeft: 15 }}>
+              <Ionicons name="search" size={28} color="black" />
+            </TouchableOpacity>
           </View>
-          <Text style={styles.userName}>{userName}</Text>
         </View>
-      </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => router.push("/(perfil)/(tabs)/profile")}
+        >
+          <View style={styles.userInfo}>
+            <View style={styles.circle}>
+              <Text style={styles.initial}>{userInitial}</Text>
+            </View>
+            <Text style={styles.userName}>{userName}</Text>
+          </View>
+        </TouchableOpacity>
 
-      <View style={styles.modulesGrid}>
-        {modules.map((module, index) => (
-          <TouchableOpacity key={module.name} style={styles.moduleCard}>
-            {/* Decide qué icono usar según el módulo */}
-            {module.icon === "percent" ||
-            module.icon === "tags" ||
-            module.icon === "dollar" ? (
-              <FontAwesome name={module.icon} size={30} color="black" />
-            ) : (
-              <Ionicons name={module.icon} size={30} color="black" />
-            )}
-            <Text style={styles.moduleName}>{module.name}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+        <View style={styles.modulesGrid}>
+          {modules.map((module, index) => (
+            <TouchableOpacity key={module.name} style={styles.moduleCard}>
+              {/* Decide qué icono usar según el módulo */}
+              {module.icon === "percent" ||
+              module.icon === "tags" ||
+              module.icon === "dollar" ? (
+                <FontAwesome name={module.icon} size={30} color="black" />
+              ) : (
+                <Ionicons name={module.icon} size={30} color="black" />
+              )}
+              <Text style={styles.moduleName}>{module.name}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
 
         <CustomButton
           onPress={handleLogout}

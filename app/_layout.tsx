@@ -1,6 +1,6 @@
 import { Stack } from "expo-router";
 import "../config/NativeWindConfig";
-import "../config/axiosConfig";
+import "../config/AxiosConfig";
 import "../config/ConfigGeneral";
 
 import "react-native-reanimated";

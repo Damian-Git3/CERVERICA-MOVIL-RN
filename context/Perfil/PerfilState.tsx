@@ -5,12 +5,12 @@
 import { useEffect, useMemo, useReducer, useState } from "react";
 import axios from "axios";
 import PerfilReducer from "./PerfilReducer";
-import * as SecureStore from "expo-secure-store";
 import { Session } from "@/models/session";
 import { UserDetailDto, UserMayoristaDetailDto } from "@/dtos/user";
 import PerfilContext from "./PerfilContext";
 import { PuntosFidelidadDto } from "../../dtos/puntosFidelidad";
 import { TransaccionPuntosDto } from "../../dtos/transaccionPuntos";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SESSION_KEY = "SESSION_KEY";
 
@@ -26,11 +26,9 @@ export default function PerfilState({ children }: { children: any }) {
   const [obteniendoSession, setObteniendoSession] = useState(true);
 
   useEffect(() => {
-    console.log("LOAD SESSION");
     const loadSession = async () => {
       try {
-        const sessionSecureStore = await SecureStore.getItemAsync(SESSION_KEY);
-        console.log("Valor de sessionSecureStore:", sessionSecureStore); // Esto debería mostrar el valor almacenado
+        const sessionSecureStore = await AsyncStorage.getItem(SESSION_KEY);
 
         if (sessionSecureStore) {
           const session: Session = JSON.parse(sessionSecureStore);

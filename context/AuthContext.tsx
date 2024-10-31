@@ -1,6 +1,6 @@
 import { Session } from "@/models/session";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import * as SecureStore from "expo-secure-store";
 import { createContext, useContext, useEffect, useState } from "react";
 
 type AuthProps = {
@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }: any) => {
   useEffect(() => {
     const loadSession = async () => {
       try {
-        const sessionSecureStore = await SecureStore.getItemAsync(SESSION_KEY);
+        const sessionSecureStore = await AsyncStorage.getItem(SESSION_KEY);
 
         if (sessionSecureStore) {
           const session: Session = JSON.parse(sessionSecureStore);
@@ -76,7 +76,7 @@ export const AuthProvider = ({ children }: any) => {
         "Authorization"
       ] = `Bearer ${result.data.token}`;
 
-      await SecureStore.setItemAsync(SESSION_KEY, JSON.stringify(result.data));
+      await AsyncStorage.setItem(SESSION_KEY, JSON.stringify(result.data));
 
       return result;
     } catch (e: any) {
@@ -105,7 +105,7 @@ export const AuthProvider = ({ children }: any) => {
       {}
     );
 
-    await SecureStore.deleteItemAsync(SESSION_KEY);
+    await AsyncStorage.removeItem(SESSION_KEY);
 
     axios.defaults.headers.common["Authorization"] = "";
 
