@@ -102,6 +102,69 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
   },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    width: "100%",
+    backgroundColor: "white",
+    borderRadius: 10,
+    padding: 20,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  modalText: {
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  closeButton: {
+    marginTop: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: "#2196F3",
+    borderRadius: 5,
+  },
+  closeButtonText: {
+    color: "white",
+    fontSize: 16,
+  },
+  submitButton: {
+    marginTop: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: "#2196F3",
+    borderRadius: 5,
+  },
+  submitButtonText: {
+    color: "white",
+    fontSize: 16,
+  },
+  input: {
+    height: 100, // Altura adecuada para un textarea
+    borderColor: "#cccccc", // Color del borde
+    borderWidth: 1, // Ancho del borde
+    borderRadius: 8, // Bordes redondeados
+    padding: 10, // Espacio interno para el texto
+    textAlignVertical: "top", // Alineación del texto al inicio
+    fontSize: 16, // Tamaño de la fuente
+    color: "#333333", // Color del texto
+    backgroundColor: "#f9f9f9", // Color de fondo
+  },
 });
 
 export default styles;

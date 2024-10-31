@@ -34,7 +34,11 @@ const Layout = () => {
           <>
             <Image
               source={images.iconoNavbar}
-              style={{ width: 100, height: 35, resizeMode: "contain" }}
+              style={{
+                width: "81%",
+                height: 35,
+                resizeMode: "contain",
+              }}
             />
           </>
         ),
