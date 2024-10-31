@@ -4,6 +4,14 @@ const AgenteLayout = () => {
   return (
     <Stack>
       <Stack.Screen
+        name="inicio"
+        options={{
+          title: "Inicio",
+          headerShown: false,
+        }}
+      />
+
+      <Stack.Screen
         name="(solicitudes-mayoristas)"
         options={{
           title: "Solicitudes mayoristas",

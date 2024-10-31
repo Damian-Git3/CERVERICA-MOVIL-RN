@@ -1,9 +1,7 @@
-import { icons } from "@/constants";
 import AuthContext from "@/context/Auth/AuthContext";
-import PerfilContext from "@/context/Perfil/PerfilContext";
 import { useRouter } from "expo-router"; // Cambiado a useRouter
-import { useContext } from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { useContext, useEffect, useState } from "react";
+import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -11,13 +9,27 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import styles from "./perfilStyle";
 import { ScrollView } from "react-native-gesture-handler";
 import { useNavigation } from "expo-router";
+import usePerfil from "@/hooks/usePerfil";
 
 const Profile = () => {
-  const navigation = useNavigation();
-  navigation.setOptions({ headerShown: false });
-
   const { onLogout, session } = useContext(AuthContext);
-  const { userDetails, userMayoristaDetails } = useContext(PerfilContext);
+
+  const {
+    getUserMayoristaDetails,
+    getUserDetails,
+    userMayoristaDetails,
+    userDetails,
+    cargando,
+  } = usePerfil();
+
+  useEffect(() => {
+    if (session?.rol === "Mayorista") {
+      getUserMayoristaDetails();
+    } else {
+      getUserDetails();
+    }
+  }, [session?.rol]);
+
   const router = useRouter(); // Inicializa el router aquí
 
   const handleLogout = async () => {
@@ -80,10 +92,6 @@ const Profile = () => {
   return (
     <ScrollView>
       <SafeAreaView style={styles.container}>
-        <View style={styles.profileHeader}>
-          <Text style={styles.profileTitle}>Perfil de Usuario</Text>
-        </View>
-
         {userMayoristaDetails ? (
           <>
             <View style={styles.userInfoContainer}>
@@ -154,7 +162,10 @@ const Profile = () => {
             <TouchableOpacity
               key={index}
               style={styles.moduleCard}
-              onPress={module.action || (() => router.push(module.route))}
+              onPress={
+                module.action ||
+                (() => module.route && router.push(module.route as any))
+              }
             >
               {module.icon === "percent" ||
               module.icon === "tags" ||

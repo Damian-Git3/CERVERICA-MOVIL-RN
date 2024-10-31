@@ -16,9 +16,9 @@ const Layout = () => {
     <Stack
       screenOptions={{
         headerLeft: () => (
-          <Link href="/(crm)/perfil">
+          <Link href="/(crm)/(perfil)/(tabs)/profile" className="ml-5">
             <UserAvatar
-              size={30}
+              size={40}
               name={session?.nombre}
               bgColor="#f5d9ab"
               textColor="black"
@@ -26,10 +26,11 @@ const Layout = () => {
           </Link>
         ),
         headerRight: () => (
-          <Link href="/(crm)/menu">
+          <Link href="/(crm)/menu" className="mr-5">
             <Icon name="menu" size={30} />
           </Link>
         ),
+        headerTitleAlign: "center",
         headerTitle: () => (
           <>
             <Image
@@ -55,10 +56,12 @@ const Layout = () => {
           headerRight: undefined,
           headerBackTitle: "Regresar",
           headerTintColor: "black",
+          headerShown: false,
         }}
       />
+      <Stack.Screen name="inicio" />
       <Stack.Screen
-        name="perfil"
+        name="(perfil)"
         options={{
           headerTitle: "Perfil de usuario",
           headerLeft: undefined,
@@ -67,7 +70,7 @@ const Layout = () => {
           headerTintColor: "black",
         }}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="solicitud-asistencia"
         options={{
           headerTitle: "Solicitud de asistencia",
@@ -76,7 +79,7 @@ const Layout = () => {
           headerBackTitle: "Regresar",
           headerTintColor: "black",
         }}
-      />
+      /> */}
     </Stack>
   );
 };
