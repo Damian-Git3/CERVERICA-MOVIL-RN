@@ -6,6 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import styles from "./perfilStyle";
 import { ScrollView } from "react-native-gesture-handler";
+import CustomButton from "@/components/CustomButton";
 
 const Agente = () => {
   const navigation = useNavigation();
@@ -71,14 +72,10 @@ const Agente = () => {
           <Text style={styles.userInfoText}>{agenteVenta.email}</Text>
         </View>
 
-        {/* Botón para solicitar cambio de agente */}
-        <View style={styles.buttonContainer}>
-          <Button
-            title="Solicitar cambio de agente"
-            color="#FF5733" // Color del botón
-            onPress={handleSolicitarCambio} // Acción al presionar el botón
-          />
-        </View>
+        <CustomButton
+          onPress={handleSolicitarCambio}
+          title="Solicitar cambio de agente"
+        />
       </SafeAreaView>
     </ScrollView>
   );

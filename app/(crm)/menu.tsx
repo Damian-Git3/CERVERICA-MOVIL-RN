@@ -55,13 +55,22 @@ const Menu = () => {
       icon: "happy",
       route: "/(crm)/(agente)/solicitud-asistencia",
     },
+    {
+      name: "Lista solicitudes mayoristas",
+      icon: "happy",
+      route: "/(crm)/(agente)/(solicitudes-mayoristas)/lista-solicitudes",
+    },
   ];
 
   return (
-    <SafeAreaView>
+    <View className="flex-1 mt-10">
       <ScrollView style={styles.container}>
         {/* Header con título y botones de búsqueda y configuración */}
         <View style={styles.header}>
+          <View>
+            <Text style={styles.headerTitle}>Menú</Text>
+          </View>
+
           <View style={styles.headerIcons}>
             <TouchableOpacity>
               <Ionicons name="settings-outline" size={28} color="black" />
@@ -84,7 +93,11 @@ const Menu = () => {
 
         <View style={styles.modulesGrid}>
           {modules.map((module, index) => (
-            <TouchableOpacity key={module.name} style={styles.moduleCard}>
+            <TouchableOpacity
+              key={module.name}
+              style={styles.moduleCard}
+              onPress={() => router.replace(module.route as any)}
+            >
               {/* Decide qué icono usar según el módulo */}
               {module.icon === "percent" ||
               module.icon === "tags" ||
@@ -104,7 +117,7 @@ const Menu = () => {
           IconLeft={() => <Icon name="exit-outline" color="white" size={18} />}
         />
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -121,7 +134,7 @@ const menuAdmin = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    padding: 15,
   },
   header: {
     flexDirection: "row",
@@ -142,9 +155,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     borderRadius: 10,
     alignItems: "center",
-    shadowColor: "#000",
+    shadowColor: "#ed9224",
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.5,
     shadowRadius: 4,
     elevation: 5,
     flexDirection: "row",
@@ -180,9 +193,9 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     borderRadius: 10,
     justifyContent: "center",
-    shadowColor: "#000",
+    shadowColor: "#ed9224",
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.5,
     shadowRadius: 4,
     elevation: 5,
   },

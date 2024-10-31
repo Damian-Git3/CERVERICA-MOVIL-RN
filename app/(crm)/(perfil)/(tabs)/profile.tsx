@@ -12,9 +12,6 @@ import { useNavigation } from "expo-router";
 import usePerfil from "@/hooks/usePerfil";
 
 const Profile = () => {
-  const navigation = useNavigation();
-  navigation.setOptions({ headerShown: false });
-
   const { onLogout, session } = useContext(AuthContext);
 
   const {
@@ -95,10 +92,6 @@ const Profile = () => {
   return (
     <ScrollView>
       <SafeAreaView style={styles.container}>
-        <View style={styles.profileHeader}>
-          <Text style={styles.profileTitle}>Perfil de Usuario</Text>
-        </View>
-
         {userMayoristaDetails ? (
           <>
             <View style={styles.userInfoContainer}>

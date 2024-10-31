@@ -35,7 +35,7 @@ const Layout = () => {
           <>
             <Image
               source={images.iconoNavbar}
-              style={{ width: 100, height: 50, resizeMode: "contain" }}
+              style={{ width: 100, height: 35, resizeMode: "contain" }}
             />
           </>
         ),
@@ -59,6 +59,7 @@ const Layout = () => {
           headerShown: false,
         }}
       />
+      <Stack.Screen name="inicio" />
       <Stack.Screen
         name="(perfil)"
         options={{
