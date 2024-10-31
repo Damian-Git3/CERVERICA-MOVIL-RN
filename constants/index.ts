@@ -8,6 +8,7 @@ import leftVectorSignUp from "@/assets/images/left_vector_sign_up.png";
 
 import iconoNavbar from "@/assets/images/icono_navbar.png";
 import iconoCompleto from "@/assets/images/icono_completo.png";
+import noResult from "@/assets/images/no-result.png";
 
 import arrowDown from "@/assets/icons/arrow-down.png";
 import arrowUp from "@/assets/icons/arrow-up.png";
@@ -45,6 +46,7 @@ export const images = {
   topVector,
   leftVectorLogin,
   leftVectorSignUp,
+  noResult,
 };
 
 export const keyboardVerticalOffset = Platform.OS === "ios" ? 40 : 0;
@@ -100,3 +102,7 @@ export const icons = {
   target,
   to,
 };
+
+export const listHeaders = {
+  ventas: ["Fecha de venta", "Total de cervezas", "Metodo de envio", "Metodo de pago", "Estatus", "Total de venta"],
+}

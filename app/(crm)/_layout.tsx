@@ -1,8 +1,8 @@
-import { icons, images } from "@/constants";
+import { images } from "@/constants";
 import AuthContext from "@/context/Auth/AuthContext";
 import { Link, router, Stack } from "expo-router";
 import { useContext } from "react";
-import { Image } from "react-native";
+import { Image, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -16,9 +16,9 @@ const Layout = () => {
     <Stack
       screenOptions={{
         headerLeft: () => (
-          <Link href="/(crm)/(perfil)/(tabs)/profile">
+          <Link href="/(crm)/(perfil)/(tabs)/profile" className="ml-5">
             <UserAvatar
-              size={30}
+              size={40}
               name={session?.nombre}
               bgColor="#f5d9ab"
               textColor="black"
@@ -26,10 +26,11 @@ const Layout = () => {
           </Link>
         ),
         headerRight: () => (
-          <Link href="/(crm)/menu">
+          <Link href="/(crm)/menu" className="mr-5">
             <Icon name="menu" size={30} />
           </Link>
         ),
+        headerTitleAlign: "center",
         headerTitle: () => (
           <>
             <Image
@@ -41,61 +42,44 @@ const Layout = () => {
         headerStyle: {
           backgroundColor: "#ed9224",
         },
+        contentStyle: {
+          backgroundColor: "white",
+        },
       }}
     >
       <Stack.Screen name="(agente)" />
       <Stack.Screen
-        name="detalles-cuenta"
-        options={{
-          headerTitle: "",
-          headerLeft: undefined,
-          headerRight: undefined,
-          headerBackTitle: "Regresar",
-          headerTintColor: "black",
-        }}
-      />
-      <Stack.Screen
         name="menu"
         options={{
-          headerTitle: "",
+          headerTitle: "Menú",
           headerLeft: undefined,
           headerRight: undefined,
           headerBackTitle: "Regresar",
           headerTintColor: "black",
+          headerShown: false,
         }}
       />
-
-      <Stack.Screen name="(perfil)" />
+      <Stack.Screen name="inicio" />
       <Stack.Screen
-        name="perfil"
+        name="(perfil)"
         options={{
-          headerTitle: "",
+          headerTitle: "Perfil de usuario",
           headerLeft: undefined,
           headerRight: undefined,
           headerBackTitle: "Regresar",
           headerTintColor: "black",
         }}
       />
-      <Stack.Screen
-        name="puntosFidelidad"
+      {/* <Stack.Screen
+        name="solicitud-asistencia"
         options={{
-          headerTitle: "",
+          headerTitle: "Solicitud de asistencia",
           headerLeft: undefined,
           headerRight: undefined,
           headerBackTitle: "Regresar",
           headerTintColor: "black",
         }}
-      />
-      <Stack.Screen
-        name="agente"
-        options={{
-          headerTitle: "",
-          headerLeft: undefined,
-          headerRight: undefined,
-          headerBackTitle: "Regresar",
-          headerTintColor: "black",
-        }}
-      />
+      /> */}
     </Stack>
   );
 };

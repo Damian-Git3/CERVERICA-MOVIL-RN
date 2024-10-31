@@ -1,14 +1,21 @@
+import CustomButton from "@/components/CustomButton";
 import { icons } from "@/constants";
 import AuthContext from "@/context/Auth/AuthContext";
 import { router } from "expo-router";
-import { useContext } from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
-import Toast from "react-native-toast-message";
-import styles from "./menuStyle";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
+import React, { useContext } from "react";
+import {
+  Image,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import PerfilContext from "@/context/Perfil/PerfilContext";
+import Toast from "react-native-toast-message";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+import Icon from "react-native-vector-icons/Ionicons";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 const Menu = () => {
   const { onLogout, session } = useContext(AuthContext);
@@ -27,29 +34,43 @@ const Menu = () => {
     }
   };
 
-  const { userDetails } = useContext(PerfilContext);
-  console.log("userDetails");
-  console.log(userDetails);
-
   const userName = session?.nombre;
   const userInitial = userName?.charAt(0).toUpperCase();
 
   const modules = [
-    { name: "Vendedores", icon: "people" },
-    { name: "Clientes Mayoristas", icon: "people" },
-    { name: "Precios", icon: "dollar" },
-    { name: "Cupones", icon: "tags" },
-    { name: "Descuentos", icon: "percent" },
-    { name: "Dashboard", icon: "stats-chart" },
-    { name: "Notificaciones", icon: "notifications" },
+    { name: "Vendedores", icon: "people", route: "/(admin)/ventas" },
+    { name: "Clientes Mayoristas", icon: "people", route: "/(admin)/ventas" },
+    { name: "Precios", icon: "dollar", route: "/(admin)/ventas" },
+    { name: "Cupones", icon: "tags", route: "/(admin)/ventas" },
+    { name: "Descuentos", icon: "percent", route: "/(admin)/ventas" },
+    { name: "Dashboard", icon: "stats-chart", route: "/(admin)/ventas" },
+    {
+      name: "Notificaciones",
+      icon: "notifications",
+      route: "/(crm)/(notificacion)",
+    },
+    { name: "Ventas", icon: "cart", route: "/(admin)/ventas" },
+    {
+      name: "Solicitud Asistencia",
+      icon: "happy",
+      route: "/(crm)/(agente)/solicitud-asistencia",
+    },
+    {
+      name: "Lista solicitudes mayoristas",
+      icon: "happy",
+      route: "/(crm)/(agente)/(solicitudes-mayoristas)/lista-solicitudes",
+    },
   ];
 
   return (
-    <>
+    <View className="flex-1 mt-10">
       <ScrollView style={styles.container}>
         {/* Header con título y botones de búsqueda y configuración */}
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>Menu</Text>
+          <View>
+            <Text style={styles.headerTitle}>Menú</Text>
+          </View>
+
           <View style={styles.headerIcons}>
             <TouchableOpacity>
               <Ionicons name="settings-outline" size={28} color="black" />
@@ -59,7 +80,6 @@ const Menu = () => {
             </TouchableOpacity>
           </View>
         </View>
-
         <TouchableOpacity
           onPress={() => router.push("/(perfil)/(tabs)/profile")}
         >
@@ -73,7 +93,11 @@ const Menu = () => {
 
         <View style={styles.modulesGrid}>
           {modules.map((module, index) => (
-            <TouchableOpacity key={index} style={styles.moduleCard}>
+            <TouchableOpacity
+              key={module.name}
+              style={styles.moduleCard}
+              onPress={() => router.replace(module.route as any)}
+            >
               {/* Decide qué icono usar según el módulo */}
               {module.icon === "percent" ||
               module.icon === "tags" ||
@@ -87,12 +111,116 @@ const Menu = () => {
           ))}
         </View>
 
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Text style={styles.logoutButtonText}>Cerrar Sesión</Text>
-        </TouchableOpacity>
+        <CustomButton
+          onPress={handleLogout}
+          title=" Cerrar sesión"
+          IconLeft={() => <Icon name="exit-outline" color="white" size={18} />}
+        />
       </ScrollView>
+    </View>
+  );
+};
+
+const menuAdmin = () => {
+  return (
+    <>
+      <TouchableOpacity onPress={() => router.replace("/(crm)/(admin)/inicio")}>
+        <FontAwesome name="dollar" size={16} color="black" />
+      </TouchableOpacity>
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 15,
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+  },
+  headerIcons: {
+    flexDirection: "row",
+  },
+  userInfo: {
+    backgroundColor: "#fff",
+    padding: 20,
+    marginBottom: 20,
+    borderRadius: 10,
+    alignItems: "center",
+    shadowColor: "#ed9224",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
+    elevation: 5,
+    flexDirection: "row",
+    marginVertical: 20,
+  },
+  circle: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: "#007bff", // Cambia este color según tu diseño
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 15,
+  },
+  initial: {
+    color: "#fff",
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  userName: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  modulesGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+  },
+  moduleCard: {
+    backgroundColor: "#fff",
+    width: "48%", // Dos columnas
+    padding: 20,
+    marginBottom: 15,
+    borderRadius: 10,
+    justifyContent: "center",
+    shadowColor: "#ed9224",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  moduleName: {
+    marginTop: 10,
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  logoutButton: {
+    marginTop: 20,
+    paddingVertical: 12,
+    backgroundColor: "#212121", // Color rojo para el botón
+    borderRadius: 5,
+    alignItems: "center",
+    marginBottom: 60,
+  },
+  logoutButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  customButton: {
+    marginTop: 10,
+    marginBottom: 50,
+  },
+});
 
 export default Menu;
