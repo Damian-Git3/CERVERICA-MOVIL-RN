@@ -30,10 +30,10 @@ export const AuthProvider = ({ children }: any) => {
   useEffect(() => {
     const loadSession = async () => {
       try {
-        const sessionSecureStore = await AsyncStorage.getItem(SESSION_KEY);
+        const sessionAsyncStorage = await AsyncStorage.getItem(SESSION_KEY);
 
-        if (sessionSecureStore) {
-          const session: Session = JSON.parse(sessionSecureStore);
+        if (sessionAsyncStorage) {
+          const session: Session = JSON.parse(sessionAsyncStorage);
 
           axios.defaults.headers.common[
             "Authorization"
