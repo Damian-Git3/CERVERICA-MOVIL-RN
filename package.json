@@ -55,6 +55,7 @@
     "react-native-svg": "^15.8.0",
     "react-native-swiper": "^1.6.0",
     "react-native-tab-view": "^3.5.2",
+    "react-native-timeline-flatlist": "^0.8.0",
     "react-native-toast-message": "^2.2.1",
     "react-native-ui-lib": "^7.32.0",
     "react-native-user-avatar": "^1.0.8",

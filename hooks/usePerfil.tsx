@@ -9,8 +9,6 @@ const END_POINT = "/perfil";
 const initialState = {
   session: null,
   userDetails: null as UserDetailDto | null,
-  puntosFidelidad: null as PuntosFidelidadDto | null,
-  transacciones: [] as TransaccionPuntosDto[],
 };
 
 const PerfilReducer = (state: any, action: any) => {
@@ -28,13 +26,6 @@ const PerfilReducer = (state: any, action: any) => {
     case "UPDATE_USER_MAYORISTA_DETAILS":
       console.log("UPDATE_USER_MAYORISTA_DETAILS payload:", payload);
       return { ...state, userMayoristaDetails: action.payload };
-    case "UPDATE_PUNTOS_FIDELIDAD":
-      console.log("UPDATE_PUNTOS_FIDELIDAD payload:", payload);
-      return { ...state, puntosFidelidad: payload };
-
-    case "UPDATE_TRANSACCIONES":
-      console.log("UPDATE_TRANSACCIONES payload:", payload);
-      return { ...state, transacciones: payload };
     default:
       return state;
   }
@@ -81,42 +72,6 @@ export default function usePerfil() {
     }
   };
 
-  // Método para obtener puntos de fidelidad
-  const getPuntosFidelidad = async () => {
-    try {
-      const response = await axios.get<PuntosFidelidadDto>(
-        `/PuntosFidelidad/obtener-puntos-fidelidad`
-      );
-
-      dispatch({
-        type: "UPDATE_PUNTOS_FIDELIDAD",
-        payload: response.data,
-      });
-      return response.data;
-    } catch (error) {
-      console.error("Error al obtener puntos de fidelidad:", error);
-      return null;
-    }
-  };
-
-  // Método para obtener transacciones
-  const getTransacciones = async () => {
-    try {
-      const response = await axios.get<TransaccionPuntosDto[]>(
-        `/PuntosFidelidad/obtener-transacciones`
-      );
-
-      dispatch({
-        type: "UPDATE_TRANSACCIONES",
-        payload: response.data,
-      });
-      return response.data;
-    } catch (error) {
-      console.error("Error al obtener transacciones:", error);
-      return [];
-    }
-  };
-
   return {
     cargando,
     session: state.session,
@@ -124,9 +79,5 @@ export default function usePerfil() {
     userMayoristaDetails: state.userMayoristaDetails,
     getUserDetails,
     getUserMayoristaDetails,
-    puntosFidelidad: state.puntosFidelidad,
-    transacciones: state.transacciones,
-    getTransacciones,
-    getPuntosFidelidad,
   };
 }

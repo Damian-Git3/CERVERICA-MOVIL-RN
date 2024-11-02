@@ -56,14 +56,14 @@ const Menu = () => {
       route: "/(crm)/(agente)/solicitud-asistencia",
     },
     {
-      name: "Lista solicitudes mayoristas",
-      icon: "happy",
-      route: "/(crm)/(agente)/(solicitudes-mayoristas)/lista-solicitudes",
+      name: "Solicitud Cambio Agente",
+      icon: "swap-horizontal-outline",
+      route: "/(admin)/solicitudesCambioAgente",
     },
   ];
 
   return (
-    <View className="flex-1 mt-10">
+    <SafeAreaView className="flex-1">
       <ScrollView style={styles.container}>
         {/* Header con título y botones de búsqueda y configuración */}
         <View style={styles.header}>
@@ -96,7 +96,7 @@ const Menu = () => {
             <TouchableOpacity
               key={module.name}
               style={styles.moduleCard}
-              onPress={() => router.replace(module.route as any)}
+              onPress={() => router.push(module.route)} // Agrega la navegación aquí
             >
               {/* Decide qué icono usar según el módulo */}
               {module.icon === "percent" ||
@@ -112,12 +112,13 @@ const Menu = () => {
         </View>
 
         <CustomButton
+          style={styles.customButton}
           onPress={handleLogout}
           title=" Cerrar sesión"
           IconLeft={() => <Icon name="exit-outline" color="white" size={18} />}
         />
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 

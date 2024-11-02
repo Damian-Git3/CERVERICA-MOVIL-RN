@@ -35,7 +35,11 @@ const Layout = () => {
           <>
             <Image
               source={images.iconoNavbar}
-              style={{ width: 100, height: 35, resizeMode: "contain" }}
+              style={{
+                width: "81%",
+                height: 50,
+                resizeMode: "contain",
+              }}
             />
           </>
         ),
@@ -70,16 +74,6 @@ const Layout = () => {
           headerTintColor: "black",
         }}
       />
-      {/* <Stack.Screen
-        name="solicitud-asistencia"
-        options={{
-          headerTitle: "Solicitud de asistencia",
-          headerLeft: undefined,
-          headerRight: undefined,
-          headerBackTitle: "Regresar",
-          headerTintColor: "black",
-        }}
-      /> */}
     </Stack>
   );
 };
