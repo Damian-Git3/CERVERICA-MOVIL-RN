@@ -67,6 +67,10 @@ const Menu = () => {
       <ScrollView style={styles.container}>
         {/* Header con título y botones de búsqueda y configuración */}
         <View style={styles.header}>
+          <View>
+            <Text style={styles.headerTitle}>Menú</Text>
+          </View>
+
           <View style={styles.headerIcons}>
             <TouchableOpacity>
               <Ionicons name="settings-outline" size={28} color="black" />
@@ -131,7 +135,7 @@ const menuAdmin = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    padding: 15,
   },
   header: {
     flexDirection: "row",
@@ -152,9 +156,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     borderRadius: 10,
     alignItems: "center",
-    shadowColor: "#000",
+    shadowColor: "#ed9224",
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.5,
     shadowRadius: 4,
     elevation: 5,
     flexDirection: "row",
@@ -190,9 +194,9 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     borderRadius: 10,
     justifyContent: "center",
-    shadowColor: "#000",
+    shadowColor: "#ed9224",
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.5,
     shadowRadius: 4,
     elevation: 5,
   },

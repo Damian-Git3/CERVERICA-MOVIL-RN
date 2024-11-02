@@ -63,6 +63,7 @@ const Layout = () => {
           headerShown: false,
         }}
       />
+      <Stack.Screen name="inicio" />
       <Stack.Screen
         name="(perfil)"
         options={{
