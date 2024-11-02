@@ -32,6 +32,7 @@ const LoginScreen = () => {
 
   const { onLogin } = useContext(AuthContext);
 
+  console.log("SESIOOOOOOOOOOOOOOOON");
   console.log(session);
 
   const handleLogin = async () => {
@@ -41,7 +42,9 @@ const LoginScreen = () => {
     try {
       const respuestaLogin = await onLogin!(email, password);
 
-      console.log("caca", respuestaLogin);
+      console.log("caca");
+      console.log(respuestaLogin);
+      console.log(respuestaLogin.rol);
 
       if (respuestaLogin.errors) {
         const newErrors: string[] = [];

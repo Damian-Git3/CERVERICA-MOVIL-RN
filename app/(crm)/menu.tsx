@@ -55,10 +55,15 @@ const Menu = () => {
       icon: "happy",
       route: "/(crm)/(agente)/solicitud-asistencia",
     },
+    {
+      name: "Solicitud Cambio Agente",
+      icon: "swap-horizontal-outline",
+      route: "/(admin)/solicitudesCambioAgente",
+    },
   ];
 
   return (
-    <SafeAreaView>
+    <SafeAreaView className="flex-1">
       <ScrollView style={styles.container}>
         {/* Header con título y botones de búsqueda y configuración */}
         <View style={styles.header}>
@@ -84,7 +89,11 @@ const Menu = () => {
 
         <View style={styles.modulesGrid}>
           {modules.map((module, index) => (
-            <TouchableOpacity key={module.name} style={styles.moduleCard}>
+            <TouchableOpacity
+              key={module.name}
+              style={styles.moduleCard}
+              onPress={() => router.push(module.route)} // Agrega la navegación aquí
+            >
               {/* Decide qué icono usar según el módulo */}
               {module.icon === "percent" ||
               module.icon === "tags" ||
@@ -99,6 +108,7 @@ const Menu = () => {
         </View>
 
         <CustomButton
+          style={styles.customButton}
           onPress={handleLogout}
           title=" Cerrar sesión"
           IconLeft={() => <Icon name="exit-outline" color="white" size={18} />}

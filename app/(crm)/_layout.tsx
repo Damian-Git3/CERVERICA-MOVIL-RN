@@ -73,16 +73,6 @@ const Layout = () => {
           headerTintColor: "black",
         }}
       />
-      {/* <Stack.Screen
-        name="solicitud-asistencia"
-        options={{
-          headerTitle: "Solicitud de asistencia",
-          headerLeft: undefined,
-          headerRight: undefined,
-          headerBackTitle: "Regresar",
-          headerTintColor: "black",
-        }}
-      /> */}
     </Stack>
   );
 };

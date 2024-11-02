@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    backgroundColor: "#2196F3",
+    backgroundColor: "gray",
     borderRadius: 5,
   },
   closeButtonText: {
@@ -164,6 +164,21 @@ const styles = StyleSheet.create({
     fontSize: 16, // Tamaño de la fuente
     color: "#333333", // Color del texto
     backgroundColor: "#f9f9f9", // Color de fondo
+  },
+  disabledButton: {
+    backgroundColor: "lightgray", // Cambiar color cuando está deshabilitado
+  },
+  submitButtonText: {
+    color: "white",
+    fontWeight: "bold",
+  },
+  closeButtonText: {
+    color: "black",
+    fontWeight: "bold",
+  },
+  errorText: {
+    color: "red",
+    marginBottom: 10,
   },
 });
 
