@@ -29,7 +29,7 @@ const Ventas = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <VentaState>
+      
         <View style={styles.listContainer}>
           <Text style={styles.resumenTitle}>Lista de ventas</Text>
           <View style={styles.hr} />
@@ -39,7 +39,7 @@ const Ventas = () => {
         <Text style={styles.resumenTitle}>Resumen de tus ventas</Text>
         <View style={styles.hr} />
         <TableResumenVentas navigateToReporte={navigateToReporte} />
-      </VentaState>
+      
     </SafeAreaView>
   );
 };

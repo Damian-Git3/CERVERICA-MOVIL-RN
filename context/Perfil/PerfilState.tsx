@@ -26,7 +26,6 @@ export default function PerfilState({ children }: { children: any }) {
   const [obteniendoSession, setObteniendoSession] = useState(true);
 
   useEffect(() => {
-    console.log("LOAD SESSION");
     const loadSession = async () => {
       try {
         const sessionSecureStore = await SecureStore.getItemAsync(SESSION_KEY);

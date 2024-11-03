@@ -1,15 +1,15 @@
 import CustomButton from "@/components/CustomButton";
-import { icons } from "@/constants";
 import AuthContext from "@/context/Auth/AuthContext";
-import PerfilContext from "@/context/Perfil/PerfilContext";
 import { router } from "expo-router";
 import React, { useContext } from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import Toast from "react-native-toast-message";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import Icon from "react-native-vector-icons/Ionicons";
-import Ionicons from "react-native-vector-icons/Ionicons";
+import {
+  default as Icon,
+  default as Ionicons,
+} from "react-native-vector-icons/Ionicons";
 
 const Menu = () => {
   const { onLogout, session } = useContext(AuthContext);
@@ -34,11 +34,15 @@ const Menu = () => {
   const modules = [
     { name: "Vendedores", icon: "people", route: "/(admin)/ventas" },
     { name: "Clientes Mayoristas", icon: "people", route: "/(admin)/ventas" },
-    { name: "Precios", icon: "dollar", route: "/(admin)/ventas" },
+    { name: "Precios", icon: "dollar", route: "/(admin)/HistorialPrecios" },
     { name: "Cupones", icon: "tags", route: "/(admin)/ventas" },
     { name: "Descuentos", icon: "percent", route: "/(admin)/ventas" },
     { name: "Dashboard", icon: "stats-chart", route: "/(admin)/ventas" },
-    { name: "Notificaciones", icon: "notifications", route: "/(crm)/(notificacion)" },
+    {
+      name: "Notificaciones",
+      icon: "notifications",
+      route: "/(crm)/(notificacion)",
+    },
     { name: "Ventas", icon: "cart", route: "/(admin)/ventas" },
     {
       name: "Solicitud Asistencia",
@@ -100,11 +104,9 @@ const Menu = () => {
 
 const menuAdmin = () => {
   return (
-    <>
-      <TouchableOpacity onPress={() => router.replace("/(crm)/(admin)/inicio")}>
-        <FontAwesome name="dollar" size={16} color="black" />
-      </TouchableOpacity>
-    </>
+    <TouchableOpacity onPress={() => router.replace("/(crm)/(admin)/inicio")}>
+      <FontAwesome name="dollar" size={16} color="black" />
+    </TouchableOpacity>
   );
 };
 

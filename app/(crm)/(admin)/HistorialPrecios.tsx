@@ -1,12 +1,12 @@
-
-import HistorialPreciosContext from "@/context/HistorialPrecios/HistorialPreciosContext";
+import useHistorialPrecios from "@/hooks/historialPrecios/useHistorialPrecios";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import React, { ReactNode, useContext, useState, useEffect } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import {
   FlatList,
   Image,
   Modal,
+  Pressable,
   StyleSheet,
   Text,
   TextInput,
@@ -29,8 +29,12 @@ const HistorialPrecios = ({ children }: HistorialPreciosProps) => {
   const [text, setText] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedReceta, setSelectedReceta] = useState<RecetaView | null>(null);
-  const { listaRecetas } = useContext(HistorialPreciosContext);
   const [filteredRecetas, setFilteredRecetas] = useState<RecetaView[]>([]);
+  const { listaRecetas, getListaRecetas } = useHistorialPrecios();
+
+  useEffect(() => {
+    getListaRecetas();
+  }, []);
 
   useEffect(() => {
     setFilteredRecetas(listaRecetas);
@@ -39,7 +43,7 @@ const HistorialPrecios = ({ children }: HistorialPreciosProps) => {
   const handleSearch = (text: string) => {
     setText(text);
     if (text) {
-      const filtered = listaRecetas.filter((receta) =>
+      const filtered = listaRecetas.filter((receta: { nombre: string }) =>
         receta.nombre.toLowerCase().includes(text.toLowerCase())
       );
       setFilteredRecetas(filtered);
@@ -49,26 +53,23 @@ const HistorialPrecios = ({ children }: HistorialPreciosProps) => {
   };
 
   const handleItemPress = (receta: RecetaView) => {
+    console.log("Modal abierto:", receta);
     setSelectedReceta(receta);
     setModalVisible(true);
+    // Verifica que se active
   };
 
   const renderItem = ({ item }: { item: RecetaView }) => (
-    <TouchableOpacity onPress={() => handleItemPress(item)}>
-      <View style={styles.item}>
-        <Image
-          source={{ uri: item.imagen as string }}
-          style={styles.itemImage}
-        />
-        <View style={styles.itemTextContainer}>
-          <Text style={styles.itemText}>{item.id}</Text>
-          <Text style={styles.itemText}>{item.nombre}</Text>
-          <Text style={styles.itemStatus}>
-            {item.activo ? "Activo" : "Inactivo"}
-          </Text>
-        </View>
+    <Pressable onPress={() => handleItemPress(item)} style={styles.item}>
+      <Image source={{ uri: item.imagen as string }} style={styles.itemImage} />
+      <View style={styles.itemTextContainer}>
+        <Text style={styles.itemText}>{item.id}</Text>
+        <Text style={styles.itemText}>{item.nombre}</Text>
+        <Text style={styles.itemStatus}>
+          {item.activo ? "Activo" : "Inactivo"}
+        </Text>
       </View>
-    </TouchableOpacity>
+    </Pressable>
   );
 
   return (
@@ -116,11 +117,11 @@ const ModalReceta = ({
 }) => {
   return (
     <Modal
-      animationType="slide"
+      animationType="fade"
       transparent={true}
       visible={modalVisible}
       onRequestClose={() => {
-        setModalVisible(!modalVisible);
+        setModalVisible(false);
       }}
     >
       <View style={styles.modalOverlay}>
@@ -134,12 +135,12 @@ const ModalReceta = ({
           <Text style={styles.modalText}>
             Estado: {receta.activo ? "Activo" : "Inactivo"}
           </Text>
-          <TouchableOpacity
+          <Pressable
             onPress={() => setModalVisible(false)}
             style={styles.closeButton}
           >
             <Text style={styles.closeButtonText}>Cerrar</Text>
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </View>
     </Modal>
@@ -176,6 +177,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    height: "100%",
   },
   inputContainer: {
     flexDirection: "row",
@@ -209,7 +211,6 @@ const styles = StyleSheet.create({
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: "gray",
-    height: "auto",
   },
   itemImage: {
     width: 50,
