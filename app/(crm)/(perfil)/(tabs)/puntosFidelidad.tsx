@@ -1,13 +1,25 @@
-import { useContext } from "react";
-import PerfilContext from "@/context/Perfil/PerfilContext";
+import { useContext, useEffect } from "react";
 import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "expo-router";
+import usePuntosFidelidad from "@/hooks/usePuntosFidelidad";
 
 const Puntosfidelidad = () => {
   const navigation = useNavigation();
   navigation.setOptions({ headerShown: false });
-  const { puntosFidelidad, transacciones } = useContext(PerfilContext);
+
+  const {
+    getPuntosFidelidad,
+    getTransacciones,
+    puntosFidelidad,
+    transacciones,
+    cargando,
+  } = usePuntosFidelidad();
+
+  useEffect(() => {
+    getPuntosFidelidad();
+    getTransacciones();
+  }, []);
 
   return (
     <SafeAreaView>
@@ -47,7 +59,7 @@ const Puntosfidelidad = () => {
       <View>
         <Text style={{ fontSize: 24, fontWeight: "bold" }}>Transacciones</Text>
         {transacciones && transacciones.length > 0 ? (
-          transacciones.map((transaccion) => (
+          transacciones.map((transaccion: any) => (
             <View key={transaccion.id} style={{ marginBottom: 10 }}>
               <Text>ID Transacción: {transaccion.id}</Text>
               <Text>Puntos: {transaccion.puntos}</Text>

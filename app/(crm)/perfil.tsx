@@ -1,9 +1,7 @@
 import AuthContext from "@/context/Auth/AuthContext";
-import PerfilContext from "@/context/Perfil/PerfilContext";
-import PerfilLoaded from "@/context/Perfil/PerfilLoaded";
 import PerfilState from "@/context/Perfil/PerfilState";
 import { useRouter } from "expo-router"; // Cambiado a useRouter
-import { useContext } from "react";
+import React, { useContext } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import Toast from "react-native-toast-message";

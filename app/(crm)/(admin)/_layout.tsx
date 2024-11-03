@@ -24,6 +24,20 @@ const AdminLayout = () => {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name="solicitudesCambioAgente"
+        options={{
+          title: "Solicitudes de cambio de agente",
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="detalleSolicitudCambioAgente"
+        options={{
+          title: "Detalles de solicitud de cambio de agente",
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 };

@@ -2,7 +2,14 @@ import CustomButton from "@/components/CustomButton";
 import AuthContext from "@/context/Auth/AuthContext";
 import { router } from "expo-router";
 import React, { useContext } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+ 
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import Toast from "react-native-toast-message";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
@@ -49,56 +56,70 @@ const Menu = () => {
       icon: "happy",
       route: "/(crm)/(agente)/solicitud-asistencia",
     },
+    {
+      name: "Solicitud Cambio Agente",
+      icon: "swap-horizontal-outline",
+      route: "/(admin)/solicitudesCambioAgente",
+    },
   ];
 
   return (
-    <ScrollView style={styles.container}>
-      {/* Header con título y botones de búsqueda y configuración */}
-      <View style={styles.header}>
-        <View style={styles.headerIcons}>
-          <TouchableOpacity>
-            <Ionicons name="settings-outline" size={28} color="black" />
-          </TouchableOpacity>
-          <TouchableOpacity style={{ marginLeft: 15 }}>
-            <Ionicons name="search" size={28} color="black" />
-          </TouchableOpacity>
-        </View>
-      </View>
-      <TouchableOpacity onPress={() => router.push("/(perfil)/(tabs)/profile")}>
-        <View style={styles.userInfo}>
-          <View style={styles.circle}>
-            <Text style={styles.initial}>{userInitial}</Text>
+    <SafeAreaView className="flex-1">
+      <ScrollView style={styles.container}>
+        {/* Header con título y botones de búsqueda y configuración */}
+        <View style={styles.header}>
+          <View>
+            <Text style={styles.headerTitle}>Menú</Text>
           </View>
-          <Text style={styles.userName}>{userName}</Text>
+
+          <View style={styles.headerIcons}>
+            <TouchableOpacity>
+              <Ionicons name="settings-outline" size={28} color="black" />
+            </TouchableOpacity>
+            <TouchableOpacity style={{ marginLeft: 15 }}>
+              <Ionicons name="search" size={28} color="black" />
+            </TouchableOpacity>
+          </View>
         </View>
-      </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => router.push("/(perfil)/(tabs)/profile")}
+        >
+          <View style={styles.userInfo}>
+            <View style={styles.circle}>
+              <Text style={styles.initial}>{userInitial}</Text>
+            </View>
+            <Text style={styles.userName}>{userName}</Text>
+          </View>
+        </TouchableOpacity>
 
-      <View style={styles.modulesGrid}>
-        {modules.map((module, index) => (
-          <TouchableOpacity
-            key={module.name}
-            style={styles.moduleCard}
-            onPress={() => router.push(module.route)}
-          >
-            {/* Decide qué icono usar según el módulo */}
-            {module.icon === "percent" ||
-            module.icon === "tags" ||
-            module.icon === "dollar" ? (
-              <FontAwesome name={module.icon} size={30} color="black" />
-            ) : (
-              <Ionicons name={module.icon} size={30} color="black" />
-            )}
-            <Text style={styles.moduleName}>{module.name}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+        <View style={styles.modulesGrid}>
+          {modules.map((module, index) => (
+            <TouchableOpacity
+              key={module.name}
+              style={styles.moduleCard}
+              onPress={() => router.push(module.route)} // Agrega la navegación aquí
+            >
+              {/* Decide qué icono usar según el módulo */}
+              {module.icon === "percent" ||
+              module.icon === "tags" ||
+              module.icon === "dollar" ? (
+                <FontAwesome name={module.icon} size={30} color="black" />
+              ) : (
+                <Ionicons name={module.icon} size={30} color="black" />
+              )}
+              <Text style={styles.moduleName}>{module.name}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
 
-      <CustomButton
-        onPress={handleLogout}
-        title=" Cerrar sesión"
-        IconLeft={() => <Icon name="exit-outline" color="white" size={18} />}
-      />
-    </ScrollView>
+        <CustomButton
+          style={styles.customButton}
+          onPress={handleLogout}
+          title=" Cerrar sesión"
+          IconLeft={() => <Icon name="exit-outline" color="white" size={18} />}
+        />
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
@@ -113,12 +134,11 @@ const menuAdmin = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: "#f5f5f5",
+    padding: 15,
   },
   header: {
     flexDirection: "row",
-    justifyContent: "flex-end",
+    justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 20,
   },
@@ -135,9 +155,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     borderRadius: 10,
     alignItems: "center",
-    shadowColor: "#000",
+    shadowColor: "#ed9224",
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.5,
     shadowRadius: 4,
     elevation: 5,
     flexDirection: "row",
@@ -173,9 +193,9 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     borderRadius: 10,
     justifyContent: "center",
-    shadowColor: "#000",
+    shadowColor: "#ed9224",
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.5,
     shadowRadius: 4,
     elevation: 5,
   },

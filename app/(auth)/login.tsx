@@ -35,7 +35,6 @@ const LoginScreen = () => {
   const handleLogin = async () => {
     setLoading(true);
     setErrores([]);
-
     try {
       const respuestaLogin = await onLogin!(email, password);
 
@@ -60,20 +59,7 @@ const LoginScreen = () => {
       console.log(respuestaLogin.data.rol);
 
       if (respuestaLogin.data.isSuccess) {
-        console.log("ROL");
-        console.log(respuestaLogin.data.rol);
-
-        if (respuestaLogin.data.rol === "Agente") {
-          router.replace("/(crm)/(agente)/solicitudes-mayoristas");
-        } else if (respuestaLogin.data.rol === "Cliente") {
-          router.replace("/(crm)/(agente)/inicio");
-        } else if (respuestaLogin.data.rol === "Gestion") {
-          router.replace("/(crm)/(agente)/inicio");
-        } else if (respuestaLogin.data.rol === "Admin") {
-          router.replace("/(crm)/(admin)/inicio");
-        } else if (respuestaLogin.data.rol === "Mayorista") {
-          router.replace("/(crm)/(agente)/inicio");
-        }
+        router.replace("/(crm)/inicio");
       }
     } catch (error: any) {
       console.log("login", error);
