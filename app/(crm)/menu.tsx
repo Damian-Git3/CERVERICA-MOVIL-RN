@@ -3,7 +3,6 @@ import AuthContext from "@/context/Auth/AuthContext";
 import { router } from "expo-router";
 import React, { useContext } from "react";
 import {
- 
   SafeAreaView,
   StyleSheet,
   Text,
