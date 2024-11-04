@@ -1,45 +1,64 @@
 import { icons } from "@/constants";
 import { router } from "expo-router";
-import { Image, Text, TouchableOpacity, StyleSheet, View, FlatList, Button } from "react-native";
+import {
+  Image,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  View,
+  FlatList,
+  Button,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ListVentas } from "@/components/ListVentas";
-import { useContext } from "react";
+import { ListVentas } from "@/components/admin/ventas/ListVentas";
+import { useContext, useEffect, useState } from "react";
 import AuthContext from "@/context/Auth/AuthContext";
 import VentaState from "@/context/Venta/VentaState";
-import TableResumenVentas from "@/components/TableResumenVentas";
-import VentaLoaded from "@/context/Venta/VentaLoaded";
+import TableResumenVentas from "@/components/admin/ventas/TableResumenVentas";
+import useVentas from "@/hooks/useVentas";
+import { Venta } from "@/models/venta";
+import useVentaStore from "@/stores/VentasStore";
 
 const Ventas = () => {
-  const { onLogout } = useContext(AuthContext);
+  const { ventas, resumenVentas, getVentas, getResumenVentas } = useVentas();
+  const { session } = useContext(AuthContext);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const handleLogout = async () => {
-    const respuestaLogout = await onLogout!();
-    router.replace("/(auth)/login");
+  useEffect(() => {
+    getVentas!();
+    getResumenVentas!();
+  }, []);
+
+  const onRefresh = async () => {
+    setIsRefreshing(true);
+    await getVentas!();
+    await getResumenVentas!();
+    setIsRefreshing(false);
+  };
+
+  const handlePressVenta = (venta: Venta) => {
+    const setVentaSeleccionada = useVentaStore.getState().setVenta;
+    setVentaSeleccionada(venta);
+    router.push("/(crm)/(admin)/(ventas)/detalle-venta");
   };
 
   const navigateToReporte = (param: string) => {
-    router.push(`/(crm)/(admin)/reporteVentas?param=${param}`);
+    router.push(`/(crm)/(admin)/(ventas)/reporte-ventas?param=${param}`);
   };
-
-  const ventas = [
-    { mes: 'Enero', total: 1000 },
-    { mes: 'Febrero', total: 2000 },
-    // Agrega más datos según sea necesario
-  ];
 
   return (
     <SafeAreaView style={styles.container}>
-      <VentaState>
         <View style={styles.listContainer}>
           <Text style={styles.resumenTitle}>Lista de ventas</Text>
           <View style={styles.hr} />
-          <ListVentas data={[]} />
+          <ListVentas data={ventas} />
         </View>
 
-        <Text style={styles.resumenTitle}>Resumen de tus ventas</Text>
-        <View style={styles.hr} />
-        <TableResumenVentas navigateToReporte={navigateToReporte} />
-      </VentaState>
+        <View style={styles.resumenContainer}>
+          <Text style={styles.resumenTitle}>Resumen de tus ventas</Text>
+          <View style={styles.hr} />
+          <TableResumenVentas navigateToReporte={navigateToReporte} />
+        </View>
     </SafeAreaView>
   );
 };
@@ -50,17 +69,17 @@ const styles = StyleSheet.create({
     backgroundColor: "#F5F5F5",
     padding: 16,
   },
-  hr : {
-    borderBottomColor: '#ccc',
+  hr: {
+    borderBottomColor: "#ccc",
     borderBottomWidth: 1,
-    marginBottom: 20
+    marginBottom: 20,
   },
   listContainer: {
-    flex: 1,
+    flex: 2, // Ocupa más espacio
     marginBottom: 16,
   },
   resumenContainer: {
-    marginTop: 20,
+    flex: 1, // Ocupa menos espacio
   },
   resumenTitle: {
     fontSize: 18,
@@ -117,7 +136,5 @@ const styles = StyleSheet.create({
     color: "#888",
   },
 });
-
-
 
 export default Ventas;

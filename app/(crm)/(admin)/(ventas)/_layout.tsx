@@ -1,19 +1,23 @@
 import { Stack } from "expo-router";
 
-const AdminLayout = () => {
+const VentasLayout = () => {
   return (
     <Stack>
       <Stack.Screen
-        name="inicio"
+        name="ventas"
         options={{
-          title: "Inicio Admin",
           headerShown: false,
         }}
       />
       <Stack.Screen
-        name="(ventas)"
+        name="reporte-ventas"
         options={{
-          title: "Ventas",
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="detalle-venta"
+        options={{
           headerShown: false,
         }}
       />
@@ -21,4 +25,4 @@ const AdminLayout = () => {
   );
 };
 
-export default AdminLayout;
+export default VentasLayout;

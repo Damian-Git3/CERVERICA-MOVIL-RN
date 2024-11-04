@@ -49,7 +49,7 @@ const Menu = () => {
       icon: "notifications",
       route: "/(crm)/(notificacion)",
     },
-    { name: "Ventas", icon: "cart", route: "/(admin)/ventas" },
+    { name: "Ventas", icon: "cart", route: "/(admin)/(ventas)" },
     {
       name: "Solicitud Asistencia",
       icon: "happy",
@@ -124,7 +124,7 @@ const Menu = () => {
 const menuAdmin = () => {
   return (
     <>
-      <TouchableOpacity onPress={() => router.replace("/(crm)/(admin)/inicio")}>
+      <TouchableOpacity onPress={() => router.replace("/(crm)/(admin)")}>
         <FontAwesome name="dollar" size={16} color="black" />
       </TouchableOpacity>
     </>

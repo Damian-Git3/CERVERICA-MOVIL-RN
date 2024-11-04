@@ -1,15 +1,24 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   FlatList,
   StyleSheet,
   Text,
-  Button,
+  TextInput,
   ActivityIndicator,
+  TouchableOpacity,
+  Image,
 } from "react-native";
 import { Badge } from "react-native-elements";
 import { Venta } from "@/models/venta";
 import VentaContext from "@/context/Venta/VentaContext";
+import AuthContext from "@/context/Auth/AuthContext";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { images } from "@/constants";
+import useVentas from "@/hooks/useVentas";
+import useVentaStore from "@/stores/VentasStore";
+import { router } from "expo-router";
 
 interface ListVentasProps {
   data: Venta[];
@@ -20,26 +29,95 @@ interface CardProps {
 }
 
 export const ListVentas: React.FC<ListVentasProps> = () => {
-  const { ventas, getVentas } = useContext(VentaContext);
+  const { ventas, getVentas, cargando } = useVentas();
+  const { session } = useContext(AuthContext);
+  const [searchText, setSearchText] = useState("");
+  const [filteredVentas, setFilteredVentas] = useState<Venta[]>([]);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   useEffect(() => {
     if (getVentas) {
       getVentas();
     }
-    console.log("getVentas");
-    console.log("ventas", ventas);
   }, []);
 
-  const renderItem = ({ item }: { item: Venta }) => <Card venta={item} />;
+  useEffect(() => {
+    setFilteredVentas(ventas);
+  }, [ventas]);
+
+  const handleSearch = (text: string) => {
+    setSearchText(text);
+    if (text) {
+      const filtered: Venta[] = ventas.filter((venta: Venta) =>
+        Object.values(venta).some((value: any) =>
+          typeof value === 'string' && value.toLowerCase().includes(text.toLowerCase())
+        )
+      );
+      setFilteredVentas(filtered);
+    } else {
+      setFilteredVentas(ventas);
+    }
+  };
+
+  const onRefresh = async () => {
+    setIsRefreshing(true);
+    await getVentas();
+    setIsRefreshing(false);
+  };
+
+  const handlePressVenta = (venta: Venta) => {
+    const setVentaSeleccionada = useVentaStore.getState().setVenta;
+    setVentaSeleccionada(venta);
+    router.push("/(crm)/(admin)/(ventas)/detalle-venta");
+  }
+
+  const renderItem = ({ item }: { item: Venta }) => (
+    <TouchableOpacity onPress={() => handlePressVenta(item)}>
+      <Card venta={item} />
+    </TouchableOpacity>
+  );
 
   return (
     <View style={styles.container}>
-      <Button title="Recargar" onPress={getVentas} />
+      <TextInput
+        style={styles.searchInput}
+        placeholder="Buscar"
+        value={searchText}
+        onChangeText={handleSearch}
+      />
       <FlatList
-        data={ventas}
+        data={filteredVentas}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={styles.list}
+        refreshing={isRefreshing}
+        onRefresh={onRefresh}
+        ListEmptyComponent={() => (
+          <View style={styles.emptyContainer}>
+            {cargando ? (
+              <ActivityIndicator size="small" color="#000" />
+            ) : (
+              <>
+                <Image
+                  source={images.noResult}
+                  style={styles.noResultImage}
+                  alt="No se encontraron ventas"
+                  resizeMode="contain"
+                />
+                <Text style={styles.noResultText}>
+                  No se encontraron ventas
+                </Text>
+              </>
+            )}
+          </View>
+        )}
+        ListHeaderComponent={() => (
+          <View style={styles.headerContainer}>
+            <Text style={styles.headerText}>
+              Bienvenido {session?.nombre} 👋
+            </Text>
+          </View>
+        )}
       />
     </View>
   );
@@ -49,6 +127,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
+  },
+  searchInput: {
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    marginBottom: 10,
   },
   card: {
     backgroundColor: "#fff",
@@ -88,6 +174,26 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
   },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  noResultImage: {
+    width: 100,
+    height: 100,
+  },
+  noResultText: {
+    fontSize: 16,
+    color: "#666",
+  },
+  headerContainer: {
+    marginBottom: 20,
+  },
+  headerText: {
+    fontSize: 24,
+    fontWeight: "bold",
+  },
 });
 
 const obtenerMetodoEnvio = (metodoEnvio: number): string => {
@@ -115,28 +221,28 @@ const obtenerMetodoPago = (metodoPago: number): string => {
 const obtenerNombreEstatusVenta = (estatusVenta: number) => {
   switch (estatusVenta) {
     case 1:
-      return 'Recibido ✅';
+      return "Recibido ✅";
     case 2:
-      return 'Empaquetando 📦';
+      return "Empaquetando 📦";
     case 3:
-      return 'Listo 🚚';
+      return "Listo 🚚";
     default:
-      return 'Estatus desconocido';
+      return "Estatus desconocido";
   }
 };
 
 const obtenerSeverityEstatusVenta = (
-  estatusVenta: number,
+  estatusVenta: number
 ): keyof typeof severityColors => {
   switch (estatusVenta) {
     case 1:
-      return 'info';
+      return "info";
     case 2:
-      return 'warning';
+      return "warning";
     case 3:
-      return 'success';
+      return "success";
     default:
-      return 'default';
+      return "default";
   }
 };
 
@@ -178,7 +284,9 @@ const Card: React.FC<CardProps> = ({ venta }) => {
         Estatus:
         <Badge
           value={nombreEstatus}
-          badgeStyle={{ backgroundColor: severityColors[severity] || severityColors.default }}
+          badgeStyle={{
+            backgroundColor: severityColors[severity] || severityColors.default,
+          }}
           textStyle={{ color: "white" }}
         />
       </Text>
