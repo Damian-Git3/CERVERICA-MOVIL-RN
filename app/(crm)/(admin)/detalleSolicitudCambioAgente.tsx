@@ -179,7 +179,7 @@ const DetalleSolicitudCambioAgente = () => {
       idAdministrador: session?.idUsuario,
       idAgenteActual: solicitud.idAgenteVentaActual,
       fechaRespuesta: fechaFormatoAPI,
-      IdAgenteNuevo: selectedAgente,
+      idAgenteNuevo: selectedAgente,
       motivoRechazo: motivoRechazo,
     };
 

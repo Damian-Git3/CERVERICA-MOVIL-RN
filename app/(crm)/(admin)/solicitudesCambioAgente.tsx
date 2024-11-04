@@ -1,5 +1,6 @@
 import React, { useEffect, useContext, useState, useCallback } from "react";
-import { Text, View, Button, ScrollView } from "react-native";
+import { images } from "@/constants";
+import { Text, View, Button, ScrollView, Image } from "react-native";
 import Toast from "react-native-toast-message";
 import AuthContext from "@/context/Auth/AuthContext";
 import { StyleSheet } from "react-native";
@@ -52,7 +53,17 @@ const SolicitudesCambioAgente = () => {
         <Text style={styles.header}>Solicitudes de Cambio de Agente</Text>
         {cargando && <Text>Cargando solicitudes...</Text>}
         {noSolicitudes ? (
-          <Text>No se encontraron solicitudes de cambio de agente.</Text> // Mensaje cuando no hay solicitudes
+          <View style={styles.containerDatos}>
+            <Image
+              source={images.noResult}
+              className="w-40 h-40"
+              alt="No se encontraron solicitudes de mayoristas"
+              resizeMode="contain"
+            />
+            <Text className="text-center">
+              No se encontraron solicitudes de cambio de agente
+            </Text>
+          </View>
         ) : (
           solicitudesCambioAgente.map((solicitud) => (
             <View key={solicitud.id} style={styles.solicitudContainer}>
@@ -75,10 +86,19 @@ const SolicitudesCambioAgente = () => {
 };
 
 const styles = StyleSheet.create({
+  containerDatos: {
+    flex: 1,
+    padding: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#F8F8F8",
+  },
   container: {
     flex: 1,
     padding: 20,
     backgroundColor: "#F8F8F8",
+    justifyContent: "center",
+    alignItems: "center",
   },
   header: {
     fontSize: 24,

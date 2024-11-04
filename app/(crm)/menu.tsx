@@ -94,7 +94,7 @@ const Menu = () => {
       roles: ["Admin"],
     },
     {
-      name: "Solicitud Cambio Agente",
+      name: "Solicitudes de Cambio de Agente",
       icon: "swap-horizontal-outline",
       route: "/(admin)/solicitudesCambioAgente",
       roles: ["Admin"],

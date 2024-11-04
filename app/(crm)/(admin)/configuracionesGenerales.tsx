@@ -5,10 +5,12 @@ import {
   Button,
   ActivityIndicator,
   StyleSheet,
+  Image,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useFocusEffect } from "expo-router";
 import useConfiguracionesGenerales from "@/hooks/useConfiguracionesGenerales";
+import { images } from "@/constants";
 
 const ConfiguracionesGenerales = () => {
   const navigation = useNavigation();
@@ -110,9 +112,18 @@ const ConfiguracionesGenerales = () => {
         </View>
       ) : (
         <>
-          <Text style={styles.text}>
-            No se encontró la configuración general
-          </Text>
+          <View style={styles.containerDatos}>
+            <Image
+              source={images.noResult}
+              className="w-40 h-40"
+              alt="No se encontraron datos"
+              resizeMode="contain"
+            />
+            <Text className="text-center">
+              No exista la configuración general
+            </Text>
+          </View>
+
           <Button title="Registrar Configuración" onPress={handleButtonClick} />
         </>
       )}
@@ -121,6 +132,13 @@ const ConfiguracionesGenerales = () => {
 };
 
 const styles = StyleSheet.create({
+  containerDatos: {
+    flex: 1,
+    padding: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#F8F8F8",
+  },
   container: {
     flex: 1,
     padding: 20,
