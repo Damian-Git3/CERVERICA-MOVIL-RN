@@ -1,13 +1,5 @@
-import React, { useState, useEffect, Fragment } from "react";
-import {
-  View,
-  Text,
-  Button,
-  FlatList,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
-import useSolicitudesAsistencias from "@/hooks/solicitudesAsistencias/useSolicitudesAsistencias";
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
 
 const SolicitudAsistencia = () => {
   <View>
