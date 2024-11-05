@@ -1,8 +1,10 @@
 import CustomButton from "@/components/CustomButton";
+import { icons } from "@/constants";
 import AuthContext from "@/context/Auth/AuthContext";
 import { router } from "expo-router";
 import React, { useContext } from "react";
 import {
+  Image,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -12,12 +14,10 @@ import {
 import { ScrollView } from "react-native-gesture-handler";
 import Toast from "react-native-toast-message";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import {
-  default as Icon,
-  default as Ionicons,
-} from "react-native-vector-icons/Ionicons";
+import Icon from "react-native-vector-icons/Ionicons";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
-const Menu = () => {
+const MenuCondiguraciones = () => {
   const { onLogout, session } = useContext(AuthContext);
 
   const handleLogout = async () => {
@@ -34,83 +34,23 @@ const Menu = () => {
     }
   };
 
-  const userName = session?.nombre;
-  const userInitial = userName?.charAt(0).toUpperCase();
-
-  // Lista de módulos, incluyendo restricciones de roles
   const modules = [
     {
-      name: "Vendedores",
-      icon: "people",
-      route: "/(admin)/ventas",
-      roles: ["Admin"],
+      name: "Configuraciones Generales",
+      icon: "settings-outline", // Icono de configuración general
+      route: "/(admin)/configuracionesGenerales",
     },
     {
-      name: "Clientes Mayoristas",
-      icon: "people",
-      route: "/(admin)/ventas",
-      roles: ["Admin"],
+      name: "Configuración de Ventas Mayoreo",
+      icon: "business-outline", // Icono de ventas o negocio
+      route: "/(admin)/configuracionVentasMayoreo",
     },
     {
-      name: "Precios",
-      icon: "dollar",
-      route: "/(admin)/ventas",
-      roles: ["Admin", "Mayorista"],
-    },
-    {
-      name: "Cupones",
-      icon: "tags",
-      route: "/(admin)/ventas",
-      roles: ["Admin"],
-    },
-    {
-      name: "Descuentos",
-      icon: "percent",
-      route: "/(admin)/ventas",
-      roles: ["Mayorista"],
-    },
-    {
-      name: "Dashboard",
-      icon: "stats-chart",
-      route: "/(admin)/ventas",
-      roles: ["Admin"],
-    },
-    {
-      name: "Notificaciones",
-      icon: "notifications",
-      route: "/(crm)/(notificacion)",
-      roles: ["Admin", "Mayorista"],
-    },
-    {
-      name: "Ventas",
-      icon: "cart",
-      route: "/(admin)/ventas",
-      roles: ["Admin"],
-    },
-    {
-      name: "Solicitud Asistencia",
-      icon: "happy",
-      route: "/(crm)/(agente)/solicitud-asistencia",
-      roles: ["Admin"],
-    },
-    {
-      name: "Solicitudes de Cambio de Agente",
-      icon: "swap-horizontal-outline",
-      route: "/(admin)/solicitudesCambioAgente",
-      roles: ["Admin"],
-    },
-    {
-      name: "Gestión de Configuraciones",
-      icon: "settings-outline",
-      route: "/(admin)/menuConfiguraciones",
-      roles: ["Admin"],
+      name: "Reglas de Puntos",
+      icon: "cash-outline", // Icono de dinero o puntos
+      route: "/(admin)/reglaPuntos",
     },
   ];
-
-  // Filtramos los módulos basados en el rol de la sesión
-  const filteredModules = modules.filter((module) =>
-    module.roles.includes(session.rol)
-  );
 
   return (
     <SafeAreaView className="flex-1">
@@ -118,36 +58,18 @@ const Menu = () => {
         {/* Header con título y botones de búsqueda y configuración */}
         <View style={styles.header}>
           <View>
-            <Text style={styles.headerTitle}>Menú</Text>
-          </View>
-
-          <View style={styles.headerIcons}>
-            <TouchableOpacity>
-              <Ionicons name="settings-outline" size={28} color="black" />
-            </TouchableOpacity>
-            <TouchableOpacity style={{ marginLeft: 15 }}>
-              <Ionicons name="search" size={28} color="black" />
-            </TouchableOpacity>
+            <Text style={styles.headerTitle}>Menú de Configuraciones</Text>
           </View>
         </View>
-        <TouchableOpacity
-          onPress={() => router.push("/(perfil)/(tabs)/profile")}
-        >
-          <View style={styles.userInfo}>
-            <View style={styles.circle}>
-              <Text style={styles.initial}>{userInitial}</Text>
-            </View>
-            <Text style={styles.userName}>{userName}</Text>
-          </View>
-        </TouchableOpacity>
 
         <View style={styles.modulesGrid}>
-          {filteredModules.map((module) => (
+          {modules.map((module, index) => (
             <TouchableOpacity
               key={module.name}
               style={styles.moduleCard}
               onPress={() => router.push(module.route)} // Agrega la navegación aquí
             >
+              {/* Decide qué icono usar según el módulo */}
               {module.icon === "percent" ||
               module.icon === "tags" ||
               module.icon === "dollar" ? (
@@ -173,9 +95,11 @@ const Menu = () => {
 
 const menuAdmin = () => {
   return (
-    <TouchableOpacity onPress={() => router.replace("/(crm)/(admin)/inicio")}>
-      <FontAwesome name="dollar" size={16} color="black" />
-    </TouchableOpacity>
+    <>
+      <TouchableOpacity onPress={() => router.replace("/(crm)/(admin)/inicio")}>
+        <FontAwesome name="dollar" size={16} color="black" />
+      </TouchableOpacity>
+    </>
   );
 };
 
@@ -271,4 +195,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Menu;
+export default MenuCondiguraciones;

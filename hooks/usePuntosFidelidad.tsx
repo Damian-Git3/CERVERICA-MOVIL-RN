@@ -1,7 +1,7 @@
 import { useEffect, useReducer, useState } from "react";
 import axios from "axios";
 import { UserDetailDto, UserMayoristaDetailDto } from "@/dtos/user";
-import { PuntosFidelidadDto } from "@/dtos/puntosFidelidad";
+import { PuntosFidelidadDto, ReglasPuntosDto } from "@/dtos/puntosFidelidad";
 import { TransaccionPuntosDto } from "@/dtos/transaccionPuntos";
 
 const END_POINT = "/perfil";
@@ -9,18 +9,26 @@ const END_POINT = "/perfil";
 const initialState = {
   puntosFidelidad: null as PuntosFidelidadDto | null,
   transacciones: [] as TransaccionPuntosDto[],
+  reglasPuntos: null as ReglasPuntosDto | null,
 };
 
 const PuntosFidelidadReducer = (state: any, action: any) => {
   const { payload, type } = action;
 
   switch (type) {
+    case "REGISTRAR_REGLAS_PUNTOS":
+      return { ...state, reglasPuntos: payload };
+
+    case "ACTUALIZAR_REGLAS_PUNTOS":
+      return { ...state, reglasPuntos: payload };
+
+    case "FETCH_REGLAS_PUNTOS":
+      return { ...state, reglasPuntos: payload };
+
     case "UPDATE_PUNTOS_FIDELIDAD":
-      console.log("UPDATE_PUNTOS_FIDELIDAD payload:", payload);
       return { ...state, puntosFidelidad: payload };
 
     case "UPDATE_TRANSACCIONES":
-      console.log("UPDATE_TRANSACCIONES payload:", payload);
       return { ...state, transacciones: payload };
     default:
       return state;
@@ -30,6 +38,70 @@ const PuntosFidelidadReducer = (state: any, action: any) => {
 export default function usePuntosFidelidad() {
   const [state, dispatch] = useReducer(PuntosFidelidadReducer, initialState);
   const [cargando, setCargando] = useState(false);
+
+  const registrarReglasPuntos = async (reglasPuntos: ReglasPuntosDto) => {
+    setCargando(true);
+    try {
+      const response = await axios.post(
+        `/PuntosFidelidad/registrar-regla-puntos`,
+        reglasPuntos
+      );
+      dispatch({
+        type: "REGISTRAR_REGLAS_PUNTOS",
+        payload: response.data,
+      });
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Error al registrar las reglas de puntos de fidelidad:",
+        error
+      );
+      return null;
+    } finally {
+      setCargando(false);
+    }
+  };
+
+  const actualizarReglasPuntos = async (reglasPuntos: ReglasPuntosDto) => {
+    setCargando(true);
+    try {
+      const response = await axios.put(
+        `/PuntosFidelidad/actualizar-regla-puntos`,
+        reglasPuntos
+      );
+      dispatch({
+        type: "ACTUALIZAR_REGLAS_PUNTOS",
+        payload: response.data,
+      });
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Error al actualizar las reglas de puntos de fidelidad:",
+        error
+      );
+      return null;
+    } finally {
+      setCargando(false);
+    }
+  };
+
+  // Método para obtener las reglas de puntos de fidelidad
+  const getReglasPuntos = async () => {
+    try {
+      const response = await axios.get<ReglasPuntosDto>(
+        `/PuntosFidelidad/obtener-regla-puntos`
+      );
+
+      dispatch({
+        type: "FETCH_REGLAS_PUNTOS",
+        payload: response.data,
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error al obtener puntos de fidelidad:", error);
+      return null;
+    }
+  };
 
   // Método para obtener puntos de fidelidad
   const getPuntosFidelidad = async () => {
@@ -71,7 +143,11 @@ export default function usePuntosFidelidad() {
     cargando,
     puntosFidelidad: state.puntosFidelidad,
     transacciones: state.transacciones,
+    reglasPuntos: state.reglasPuntos,
     getTransacciones,
     getPuntosFidelidad,
+    getReglasPuntos,
+    registrarReglasPuntos,
+    actualizarReglasPuntos,
   };
 }
