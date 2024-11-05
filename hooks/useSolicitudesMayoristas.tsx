@@ -1,5 +1,6 @@
 import { useEffect, useReducer, useState } from "react";
 import axios from "axios";
+import { CancelarSolicitudMayoristaDTO } from "../models/SolicitudesMayoristas";
 import {
   AvanzarSiguienteEstatusSolicitudMayoristaDTO,
   SolicitudMayorista,
@@ -71,10 +72,28 @@ export default function useSolicitudesMayoristas() {
     }
   };
 
+  const cancelarSolicitudMayorista = async (
+    cancelarSolicitudMayoristaDTO: CancelarSolicitudMayoristaDTO
+  ) => {
+    setCargando(true);
+
+    try {
+      return await axios.post(
+        `${END_POINT}/cancelar-solicitud`,
+        cancelarSolicitudMayoristaDTO
+      );
+    } catch (error) {
+      console.error("Error al obtener solicitudes mayoristas:", error);
+    } finally {
+      setCargando(false);
+    }
+  };
+
   return {
     cargando,
     solicitudesMayoristas: state.solicitudesMayoristas,
     getSolicitudesMayoristas,
     avanzarSiguienteEstatus,
+    cancelarSolicitudMayorista,
   };
 }

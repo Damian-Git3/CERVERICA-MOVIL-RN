@@ -1,9 +1,8 @@
 import CustomButton from "@/components/CustomButton";
 import AuthContext from "@/context/Auth/AuthContext";
-import { router } from "expo-router";
+import { Href, router } from "expo-router";
 import React, { useContext } from "react";
 import {
- 
   SafeAreaView,
   StyleSheet,
   Text,
@@ -30,15 +29,13 @@ const Menu = () => {
       text2: "Lamentamos que te tengas que ir:(",
     });
 
-    if (respuestaLogout.data.isSuccess) {
-      router.replace("/(auth)/login");
-    }
+    router.replace("/(auth)/login");
   };
 
   const userName = session?.nombre;
   const userInitial = userName?.charAt(0).toUpperCase();
 
-  const modules = [
+  const modules: { name: string; icon: string; route: Href }[] = [
     { name: "Vendedores", icon: "people", route: "/(admin)/ventas" },
     { name: "Clientes Mayoristas", icon: "people", route: "/(admin)/ventas" },
     { name: "Precios", icon: "dollar", route: "/(admin)/HistorialPrecios" },
@@ -60,6 +57,16 @@ const Menu = () => {
       name: "Solicitud Cambio Agente",
       icon: "swap-horizontal-outline",
       route: "/(admin)/solicitudesCambioAgente",
+    },
+    {
+      name: "Solicitud Cambio Agente",
+      icon: "swap-horizontal-outline",
+      route: "/(admin)/solicitudesCambioAgente",
+    },
+    {
+      name: "Solicitudes mayoristas",
+      icon: "swap-horizontal-outline",
+      route: "/(agente)/(solicitudes-mayoristas)/lista-solicitudes",
     },
   ];
 
@@ -95,7 +102,7 @@ const Menu = () => {
         <View style={styles.modulesGrid}>
           {modules.map((module, index) => (
             <TouchableOpacity
-              key={module.name}
+              key={index}
               style={styles.moduleCard}
               onPress={() => router.push(module.route)} // Agrega la navegación aquí
             >
@@ -123,13 +130,13 @@ const Menu = () => {
   );
 };
 
-const menuAdmin = () => {
+/* const menuAdmin = () => {
   return (
     <TouchableOpacity onPress={() => router.replace("/(crm)/(admin)/inicio")}>
       <FontAwesome name="dollar" size={16} color="black" />
     </TouchableOpacity>
   );
-};
+}; */
 
 const styles = StyleSheet.create({
   container: {
