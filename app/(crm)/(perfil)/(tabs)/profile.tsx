@@ -84,10 +84,13 @@ const Profile = () => {
   ];
 
   // Filtrar módulos según el rol
+  // Filtrar módulos según el rol
   const filteredModules =
     session?.rol === "Mayorista"
       ? modules.filter((module) => module.name === "Mi Agente")
-      : modules.filter((module) => module.name !== "Mi Agente");
+      : session?.rol !== "Admin"
+      ? modules.filter((module) => module.name !== "Mi Agente")
+      : [];
 
   return (
     <ScrollView>

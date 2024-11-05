@@ -90,6 +90,15 @@ const DetalleSolicitudCambioAgente = () => {
   }, []);
 
   const handleAceptar = async () => {
+    if (selectedAgente === solicitud.idAgenteVentaActual) {
+      Toast.show({
+        type: "error",
+        text1: "Error: Mismo agente",
+        text2: "El agente nuevo no puede ser el mismo que el agente actual.",
+      });
+      return; // Detener ejecución si son iguales
+    }
+
     const fechaSolicitud = new Date();
 
     // Obtener componentes de la fecha
@@ -114,7 +123,7 @@ const DetalleSolicitudCambioAgente = () => {
       idAdministrador: session?.idUsuario,
       idAgenteActual: solicitud.idAgenteVentaActual,
       fechaRespuesta: fechaFormatoAPI,
-      IdAgenteNuevo: selectedAgente,
+      idAgenteNuevo: selectedAgente,
       motivoRechazo: null,
     };
 
@@ -170,7 +179,7 @@ const DetalleSolicitudCambioAgente = () => {
       idAdministrador: session?.idUsuario,
       idAgenteActual: solicitud.idAgenteVentaActual,
       fechaRespuesta: fechaFormatoAPI,
-      IdAgenteNuevo: selectedAgente,
+      idAgenteNuevo: selectedAgente,
       motivoRechazo: motivoRechazo,
     };
 
