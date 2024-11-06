@@ -35,7 +35,6 @@ const LoginScreen = () => {
   const handleLogin = async () => {
     setLoading(true);
     setErrores([]);
-
     try {
       const respuestaLogin = await onLogin!(email, password);
 
