@@ -1,10 +1,8 @@
 import { images } from "@/constants";
 import AuthContext from "@/context/Auth/AuthContext";
-import { Link, router, Stack } from "expo-router";
+import { Link, Stack } from "expo-router";
 import { useContext } from "react";
-import { Image, View } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import Toast from "react-native-toast-message";
+import { Image } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 // @ts-ignore
 import UserAvatar from "react-native-user-avatar";
@@ -32,16 +30,14 @@ const Layout = () => {
         ),
         headerTitleAlign: "center",
         headerTitle: () => (
-          <>
-            <Image
-              source={images.iconoNavbar}
-              style={{
-                width: "81%",
-                height: 50,
-                resizeMode: "contain",
-              }}
-            />
-          </>
+          <Image
+            source={images.iconoNavbar}
+            style={{
+              width: "81%",
+              height: 50,
+              resizeMode: "contain",
+            }}
+          />
         ),
         headerStyle: {
           backgroundColor: "#ed9224",
@@ -51,7 +47,7 @@ const Layout = () => {
         },
       }}
     >
-      <Stack.Screen name="(agente)" />
+      <Stack.Screen name="(agente)" options={{ headerShown: false }} />
       <Stack.Screen
         name="menu"
         options={{
@@ -72,6 +68,7 @@ const Layout = () => {
           headerRight: undefined,
           headerBackTitle: "Regresar",
           headerTintColor: "black",
+          headerShown: false,
         }}
       />
     </Stack>
