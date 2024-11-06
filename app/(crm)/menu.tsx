@@ -60,8 +60,8 @@ const Menu = () => {
     {
       name: "Cupones",
       icon: "tags",
-      route: "/(admin)/ventas",
-      roles: ["Admin"],
+      route: "",
+      roles: ["Mayorista"],
     },
     {
       name: "Descuentos",
@@ -109,6 +109,12 @@ const Menu = () => {
       name: "Gestión de Configuraciones",
       icon: "settings-outline",
       route: "/(admin)/menuConfiguraciones",
+      roles: ["Admin"],
+    },
+    {
+      name: "Cupones",
+      icon: "tags",
+      route: "/(admin)/cupones",
       roles: ["Admin"],
     },
   ];

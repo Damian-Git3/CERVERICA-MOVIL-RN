@@ -72,6 +72,7 @@ const FormularioReglasPuntos: React.FC = () => {
 
     try {
       if (reglasPuntos) {
+        console.log(dataToSend);
         await actualizarReglasPuntos(dataToSend);
         Toast.show({
           text1: "Actualización Exitosa",
