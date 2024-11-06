@@ -11,7 +11,7 @@ const AdminLayout = () => {
         }}
       />
       <Stack.Screen
-        name="ventas"
+        name="(ventas)"
         options={{
           title: "Ventas",
           headerShown: false,

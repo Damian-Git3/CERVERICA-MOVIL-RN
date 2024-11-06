@@ -17,56 +17,30 @@ import Toast from "react-native-toast-message";
 
 const SolicitudAsistencia = () => {
   const {
-    cambiarAgente,
-    cancelarSolicitud,
-    cancelarSolicitudAsistencia,
     solicitudAsistencia,
     getSolicitudAsistencia,
+    cerrarSolicitudAsistencia,
   } = useSolicitudesAsistencias();
 
-  const [isModalVisible, setModalVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
   const router = useRouter();
   const { solicitudId } = useLocalSearchParams();
-  const [modalChangeAgentVisible, setModalChangeAgentVisible] = useState(false);
 
-  const handleCambiarAgente = () => {
-    // Lógica para manejar el motivo
-    setModalChangeAgentVisible(true);
-  };
-  const confirmCambiarAgente = async (reason: string) => {
-    const id = solicitudId;
-    // Lógica para manejar el motivo
-    setModalChangeAgentVisible(false);
-    const res = await cambiarAgente({
-      IdSolicitudAsistencia: Number(id),
-      Mensaje: reason,
-      Valoracion: 0,
-    });
-
-    if (res?.status == 200) {
-      Toast.show({
-        type: "success",
-        text1: "Éxito! 🎉",
-        text2: "Cambio de agente exitoso",
-      });
-      handleVolver();
-    } else {
-      Toast.show({
-        type: "error",
-        text1: "Error ❌",
-        text2: "No se pudo valorar",
-      });
-    }
-  };
   useEffect(() => {
     getSolicitudAsistencia(Number(solicitudId));
   }, []);
 
+  const handleSeguimientoSolicitud = () => {
+    router.push({
+      pathname: "/seguimiento-solicitud-asistencia",
+      params: { solicitudId: solicitudId },
+    });
+  };
   const handleEliminarSolicitud = () => setModalVisible(true);
 
   const confirmEliminarSolicitud = async (descripcion: string) => {
     // Aquí iría la lógica para eliminar la solicitud
-    await cancelarSolicitudAsistencia(Number(solicitudId), descripcion);
+    await cerrarSolicitudAsistencia(Number(solicitudId), descripcion);
     setModalVisible(false);
     router.push("/solicitud-asistencia");
     Toast.show({
@@ -80,11 +54,6 @@ const SolicitudAsistencia = () => {
 
   return (
     <ScrollView style={styles.card}>
-      <ChangeAgentModal
-        visible={modalChangeAgentVisible}
-        onClose={() => setModalChangeAgentVisible(false)}
-        onSubmit={confirmCambiarAgente}
-      />
       <TouchableOpacity onPress={handleVolver} style={styles.backButton}>
         <Text style={styles.backButtonText}>⬅ Volver</Text>
       </TouchableOpacity>
@@ -112,22 +81,15 @@ const SolicitudAsistencia = () => {
 
       {/* Información del Agente */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Datos del Agente</Text>
+        <Text style={styles.sectionTitle}>Datos del Cliente</Text>
         <Text style={styles.cardText}>
-          <strong>Nombre del Agente:</strong>{" "}
+          <strong>Nombre del Cliente:</strong>{" "}
           {solicitudAsistencia?.solicitud.agenteVenta?.fullName}
         </Text>
         <Text style={styles.cardText}>
-          <strong>Email del Agente:</strong>{" "}
+          <strong>Email del Cliente:</strong>{" "}
           {solicitudAsistencia?.solicitud.agenteVenta?.email}
         </Text>
-        <View style={styles.separator} />
-        <TouchableOpacity
-          style={styles.changeAgentButton}
-          onPress={handleCambiarAgente}
-        >
-          <Text style={styles.buttonText}>Cambiar de Agente</Text>
-        </TouchableOpacity>
       </View>
       <View style={styles.separator} />
       {/* Información de la Categoría */}
@@ -170,6 +132,31 @@ const SolicitudAsistencia = () => {
       <View style={styles.separator} />
       {/* Botón de eliminación */}
       <TouchableOpacity
+        style={styles.changeAgentButton}
+        onPress={handleSeguimientoSolicitud}
+      >
+        <Text style={styles.buttonText}>Registrar Seguimiento</Text>
+      </TouchableOpacity>
+      {/* Modal de Confirmación */}
+      <Modal visible={modalVisible} transparent animationType="fade">
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Confirmar Envío</Text>
+            <Text>¿Estás seguro de que deseas enviar este seguimiento?</Text>
+            <View style={styles.modalActions}>
+              <Button title="Cancelar" onPress={() => setModalVisible(false)} />
+              <Button
+                title="Confirmar"
+                onPress={handleEliminarSolicitud}
+                color="#28a745"
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
+      <View style={styles.separator} />
+      {/* Botón de eliminación */}
+      <TouchableOpacity
         style={styles.deleteButton}
         onPress={handleEliminarSolicitud}
       >
@@ -177,52 +164,12 @@ const SolicitudAsistencia = () => {
       </TouchableOpacity>
 
       <EliminarSolicitudModal
-        modalVisible={isModalVisible}
+        modalVisible={modalVisible}
         setModalVisible={setModalVisible}
         onConfirmDelete={confirmEliminarSolicitud}
         solicitudId={Number(solicitudId)}
       />
     </ScrollView>
-  );
-};
-
-const ChangeAgentModal = ({ visible, onClose, onSubmit }) => {
-  const [reason, setReason] = useState("");
-
-  return (
-    <Modal
-      visible={visible}
-      transparent={true}
-      onRequestClose={onClose}
-      animationType="fade"
-    >
-      <View style={styles.overlay}>
-        <View style={styles.modalContainer}>
-          <Text style={styles.title}>Motivo para cambiar de agente</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Escribe el motivo aquí"
-            value={reason}
-            onChangeText={setReason}
-          />
-          <View style={styles.buttonContainer}>
-            <Pressable style={styles.cancelButton} onPress={onClose}>
-              <Text style={styles.buttonText}>Cancelar</Text>
-            </Pressable>
-            <Pressable
-              style={[
-                styles.confirmButton,
-                reason === "" && styles.disabledButton, // Aplica estilo de deshabilitado
-              ]}
-              onPress={() => onSubmit(reason)}
-              disabled={reason == ""}
-            >
-              <Text style={styles.buttonTextModal}>Cambiar</Text>
-            </Pressable>
-          </View>
-        </View>
-      </View>
-    </Modal>
   );
 };
 
@@ -295,6 +242,30 @@ const EliminarSolicitudModal: React.FC<EliminarSolicitudModalProps> = ({
 };
 
 const styles = StyleSheet.create({
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
+  },
+  modalContent: {
+    width: 300,
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 20,
+    alignItems: "center",
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  modalActions: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    marginTop: 20,
+  },
   card: {
     backgroundColor: "#fff", // Fondo blanco para la tarjeta
     borderRadius: 10, // Bordes redondeados
@@ -357,24 +328,6 @@ const styles = StyleSheet.create({
     color: "#333", // Color de texto oscuro para buen contraste
     fontSize: 16,
     fontWeight: "bold",
-  },
-  modalOverlay: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-  modalContent: {
-    width: "80%",
-    padding: 20,
-    backgroundColor: "#fff",
-    borderRadius: 8,
-    alignItems: "center",
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 10,
   },
   modalText: {
     fontSize: 16,

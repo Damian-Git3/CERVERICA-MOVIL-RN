@@ -2,127 +2,212 @@ import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
-  Button,
+  TouchableOpacity,
   FlatList,
   StyleSheet,
-  TouchableOpacity,
-  ScrollView,
+  TextInput,
 } from "react-native";
+import { useRouter } from "expo-router";
 import useSolicitudesAsistencias from "@/hooks/solicitudesAsistencias/useSolicitudesAsistencias";
 
 const SolicitudAsistencia = () => {
   const {
-    solicitudesAsistencias,
-    categoriasAsistencias,
-    getSolicitudesAsistencias,
-    getCategoriasAsistencias,
+    solicitudesAsistenciasAgente,
+    getSolicitudesAsistenciasAgente,
     cargando,
   } = useSolicitudesAsistencias();
 
+  const [showActive, setShowActive] = useState(true);
+  const [searchText, setSearchText] = useState("");
+  const [filteredSolicitudes, setFilteredSolicitudes] = useState([]);
+
   useEffect(() => {
-    getSolicitudesAsistencias();
-    getCategoriasAsistencias();
-  }, []);
+    getSolicitudesAsistenciasAgente(showActive);
+    console.log(solicitudesAsistenciasAgente);
+  }, [showActive]);
+
+  useEffect(() => {
+    filterSolicitudes(searchText);
+  }, [searchText, solicitudesAsistenciasAgente]);
+
+  const router = useRouter();
 
   const handleDetalles = (solicitud) => {
-    // Implementa la lógica para mostrar detalles
-    console.log(solicitud);
+    if (solicitud.estatus === 3) {
+      router.push({
+        pathname: "/detalle-solicitud-asistencia-historico",
+        params: { solicitudId: solicitud.id },
+      });
+    } else {
+      router.push({
+        pathname: "/detalle-solicitud-asistencia",
+        params: { solicitudId: solicitud.id },
+      });
+    }
   };
 
+  const filterSolicitudes = (text) => {
+    if (!text) {
+      setFilteredSolicitudes(solicitudesAsistenciasAgente);
+    } else {
+      const filtered = solicitudesAsistenciasAgente.filter(
+        (item) =>
+          item.nombreCategoria.toLowerCase().includes(text.toLowerCase()) ||
+          item.descripcion.toLowerCase().includes(text.toLowerCase()) ||
+          item.nombreAgente.toLowerCase().includes(text.toLowerCase())
+      );
+      setFilteredSolicitudes(filtered);
+    }
+  };
+
+  const renderItem = ({ item }) => (
+    <View style={styles.card}>
+      <View style={styles.cardBody}>
+        <Text style={styles.cardTitle}>{item.nombreCategoria}</Text>
+        <Text style={styles.cardText}>
+          <strong>Descripción:</strong> {item.descripcion}
+        </Text>
+        <Text style={styles.cardText}>
+          <strong>Fecha de Solicitud:</strong>{" "}
+          {new Date(item.fechaSolicitud).toLocaleString()}
+        </Text>
+        <Text style={styles.cardText}>
+          <strong>Cliente:</strong> {item.nombreCliente} ({item.emailCliente})
+        </Text>
+        <Text style={styles.cardText}>
+          <strong>Estatus:</strong>{" "}
+          {item.estatus === 1
+            ? "Enviado"
+            : item.estatus === 3
+            ? "Cerrado"
+            : "Seguimiento"}
+        </Text>
+        <TouchableOpacity
+          style={styles.detailButton}
+          onPress={() => handleDetalles(item)}
+        >
+          <Text style={styles.buttonText}>Detalles</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Solicitudes de Asistencia Asignadas</Text>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>Solicitudes de Asistencia</Text>
+        <View style={styles.toggleContainer}>
+          <TouchableOpacity
+            style={[
+              styles.toggleButton,
+              showActive ? styles.activeButton : styles.inactiveButton,
+            ]}
+            onPress={() => setShowActive(true)}
+          >
+            <Text style={styles.toggleButtonText}>Activas</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.toggleButton,
+              !showActive ? styles.activeButton : styles.inactiveButton,
+            ]}
+            onPress={() => setShowActive(false)}
+          >
+            <Text style={styles.toggleButtonText}>Históricas</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      <TextInput
+        style={styles.searchInput}
+        placeholder="Buscar solicitud..."
+        value={searchText}
+        onChangeText={(text) => setSearchText(text)}
+      />
+
       <FlatList
-        data={solicitudesAsistencias}
+        data={filteredSolicitudes}
+        renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <View style={styles.card}>
-            <View style={styles.cardBody}>
-              <Text style={styles.cardTitle}>{item.nombreCategoria}</Text>
-              <Text style={styles.cardText}>
-                <Text style={styles.bold}>Descripción:</Text> {item.descripcion}
-              </Text>
-              <Text style={styles.cardText}>
-                <Text style={styles.bold}>Fecha de Solicitud:</Text>{" "}
-                {new Date(item.fechaSolicitud).toLocaleString()}
-              </Text>
-              <Text style={styles.cardText}>
-                <Text style={styles.bold}>Cliente:</Text> {item.nombreAgente} (
-                {item.emailAgente})
-              </Text>
-              <Text style={styles.cardText}>
-                <Text style={styles.bold}>Estatus:</Text>{" "}
-                {item.estatus === 1
-                  ? "Enviado"
-                  : item.estatus === 2
-                  ? "Atendido"
-                  : "Cerrada"}
-              </Text>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => handleDetalles(item)}
-              >
-                <Text style={styles.buttonText}>Detalles</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
         numColumns={1}
-        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.flatListContent}
       />
-      <View style={styles.separator} />
-      <Text style={styles.subtitle}>Categorías</Text>
-      <FlatList
-        data={categoriasAsistencias}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <Text style={styles.categoryItem} key={item.id}>
-            {item.nombre}
-          </Text>
-        )}
-      />
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Edición Categorías</Text>
-      </TouchableOpacity>
-    </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
-    flexGrow: 1,
+    flex: 1,
+    paddingHorizontal: 10,
+    paddingTop: 10,
+  },
+  newRequestButton: {
+    backgroundColor: "#28a745",
+    padding: 10,
+    borderRadius: 5,
+    marginVertical: 8,
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 10,
   },
   title: {
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: "bold",
   },
+  toggleContainer: {
+    flexDirection: "row",
+  },
+  toggleButton: {
+    paddingVertical: 5,
+    paddingHorizontal: 15,
+    borderRadius: 5,
+    marginLeft: 5,
+  },
+  activeButton: {
+    backgroundColor: "#007bff",
+  },
+  inactiveButton: {
+    backgroundColor: "#ddd",
+  },
+  toggleButtonText: {
+    color: "#fff",
+  },
+  searchInput: {
+    height: 40,
+    borderColor: "#ddd",
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+  },
+  flatListContent: {
+    paddingBottom: 20,
+  },
   card: {
-    backgroundColor: "#fff",
-    borderRadius: 8,
-    padding: 16,
-    marginVertical: 8,
-    marginHorizontal: 4,
-    elevation: 2,
     flex: 1,
-    marginBottom: 16,
+    marginVertical: 8,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 5,
+    backgroundColor: "#fff",
   },
   cardBody: {
-    // Add any additional styling if needed
+    padding: 10,
   },
   cardTitle: {
     fontSize: 18,
     fontWeight: "bold",
   },
   cardText: {
-    fontSize: 16,
-    marginBottom: 4,
+    marginVertical: 5,
   },
-  bold: {
-    fontWeight: "bold",
-  },
-  button: {
-    backgroundColor: "#007BFF",
+  detailButton: {
+    backgroundColor: "#007bff",
     padding: 10,
     borderRadius: 5,
     alignItems: "center",
@@ -130,21 +215,27 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "#fff",
+    textAlign: "center",
+  },
+  searchContainer: {
+    marginBottom: 10,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 5,
+    backgroundColor: "#f9f9f9",
+  },
+  searchButton: {
+    marginTop: 10,
+    backgroundColor: "#007bff",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
+  },
+  searchButtonText: {
+    color: "#fff",
     fontSize: 16,
-  },
-  separator: {
-    height: 1,
-    backgroundColor: "#ccc",
-    marginVertical: 16,
-  },
-  subtitle: {
-    fontSize: 20,
     fontWeight: "bold",
-    marginTop: 16,
-  },
-  categoryItem: {
-    fontSize: 16,
-    marginBottom: 8,
   },
 });
 

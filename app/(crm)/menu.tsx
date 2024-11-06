@@ -91,13 +91,18 @@ const Menu = () => {
       roles: ["Admin"],
     },
     {
-      name: "Solicitud Asistencia",
+      name: "Solicitud Asistencia Agente",
       icon: "happy",
       route: "/(crm)/(agente)/solicitud-asistencia",
       roles: ["Admin"],
     },
     {
-      name: "Solicitudes de Cambio de Agente",
+      name: "Solicitud Asistencia Cliente",
+      icon: "happy",
+      route: "/(crm)/(cliente)/solicitud-asistencia",
+    },
+    {
+      name: "Solicitud Cambio Agente",
       icon: "swap-horizontal-outline",
       route: "/(admin)/solicitudesCambioAgente",
       roles: ["Admin"],
@@ -109,7 +114,12 @@ const Menu = () => {
       roles: ["Admin"],
     },
     {
-      name: "Solicitudes de Cambio de Agente",
+      name: "Solicitud Asistencia Cliente",
+      icon: "happy",
+      route: "/(crm)/(cliente)/solicitud-asistencia",
+    },
+    {
+      name: "Solicitud Cambio Agente",
       icon: "swap-horizontal-outline",
       route: "/(admin)/solicitudesCambioAgente",
       roles: ["Admin"],
