@@ -63,8 +63,8 @@ const Menu = () => {
     {
       name: "Cupones",
       icon: "tags",
-      route: "/(admin)/ventas",
-      roles: ["Admin"],
+      route: "",
+      roles: ["Mayorista"],
     },
     {
       name: "Descuentos",
@@ -94,29 +94,13 @@ const Menu = () => {
       name: "Solicitud Asistencia Agente",
       icon: "happy",
       route: "/(crm)/(agente)/solicitud-asistencia",
-      roles: ["Admin"],
+      roles: ["Admin", "Agente"],
     },
     {
       name: "Solicitud Asistencia Cliente",
       icon: "happy",
       route: "/(crm)/(cliente)/solicitud-asistencia",
-    },
-    {
-      name: "Solicitud Cambio Agente",
-      icon: "swap-horizontal-outline",
-      route: "/(admin)/solicitudesCambioAgente",
-      roles: ["Admin"],
-    },
-    {
-      name: "Gestión de Configuraciones",
-      icon: "settings-outline",
-      route: "/(admin)/menuConfiguraciones",
-      roles: ["Admin"],
-    },
-    {
-      name: "Solicitud Asistencia Cliente",
-      icon: "happy",
-      route: "/(crm)/(cliente)/solicitud-asistencia",
+      roles: ["Cliente", "Mayorista"],
     },
     {
       name: "Solicitud Cambio Agente",
@@ -135,6 +119,11 @@ const Menu = () => {
       icon: "swap-horizontal-outline",
       route: "/(agente)/(solicitudes-mayoristas)/lista-solicitudes",
       roles: ["Agente"],
+    },
+      name: "Cupones",
+      icon: "tags",
+      route: "/(admin)/cupones",
+      roles: ["Admin"],
     },
   ];
 

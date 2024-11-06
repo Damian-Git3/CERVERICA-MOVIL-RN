@@ -81,13 +81,6 @@ const MenuCondiguraciones = () => {
             </TouchableOpacity>
           ))}
         </View>
-
-        <CustomButton
-          style={styles.customButton}
-          onPress={handleLogout}
-          title=" Cerrar sesión"
-          IconLeft={() => <Icon name="exit-outline" color="white" size={18} />}
-        />
       </ScrollView>
     </SafeAreaView>
   );
