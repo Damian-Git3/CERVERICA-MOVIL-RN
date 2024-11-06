@@ -171,14 +171,6 @@ const Menu = () => {
   );
 };
 
-const menuAdmin = () => {
-  return (
-    <TouchableOpacity onPress={() => router.replace("/(crm)/(admin)/inicio")}>
-      <FontAwesome name="dollar" size={16} color="black" />
-    </TouchableOpacity>
-  );
-};
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

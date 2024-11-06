@@ -48,9 +48,13 @@ export const ListVentas: React.FC<ListVentasProps> = () => {
     setSearchText(text);
     if (text) {
       const filtered: Venta[] = ventas.filter((venta: Venta) =>
-        Object.values(venta).some((value: any) =>
-          typeof value === 'string' && value.toLowerCase().includes(text.toLowerCase())
-        )
+        venta.id.toString().includes(text) ||
+        venta.fechaVenta.toLowerCase().includes(text.toLowerCase()) ||
+        venta.totalCervezas.toString().includes(text) ||
+        obtenerMetodoEnvio(venta.metodoEnvio).toLowerCase().includes(text.toLowerCase()) ||
+        obtenerMetodoPago(venta.metodoPago).toLowerCase().includes(text.toLowerCase()) ||
+        obtenerNombreEstatusVenta(venta.estatusVenta).toLowerCase().includes(text.toLowerCase()) ||
+        venta.montoVenta.toString().includes(text)
       );
       setFilteredVentas(filtered);
     } else {
