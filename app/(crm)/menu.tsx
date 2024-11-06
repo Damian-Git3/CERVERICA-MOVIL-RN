@@ -91,12 +91,13 @@ const Menu = () => {
       name: "Solicitud Asistencia Agente",
       icon: "happy",
       route: "/(crm)/(agente)/solicitud-asistencia",
-      roles: ["Admin"],
+      roles: ["Admin", "Agente"],
     },
     {
       name: "Solicitud Asistencia Cliente",
       icon: "happy",
       route: "/(crm)/(cliente)/solicitud-asistencia",
+      roles: ["Cliente", "Mayorista"],
     },
     {
       name: "Solicitud Cambio Agente",
