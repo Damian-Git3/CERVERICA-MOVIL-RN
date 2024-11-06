@@ -1,6 +1,6 @@
 import CustomButton from "@/components/CustomButton";
 import AuthContext from "@/context/Auth/AuthContext";
-import { router } from "expo-router";
+import { Href, router } from "expo-router";
 import React, { useContext } from "react";
 import {
   SafeAreaView,
@@ -29,16 +29,19 @@ const Menu = () => {
       text2: "Lamentamos que te tengas que ir:(",
     });
 
-    if (respuestaLogout.data.isSuccess) {
-      router.replace("/(auth)/login");
-    }
+    router.replace("/(auth)/login");
   };
 
   const userName = session?.nombre;
   const userInitial = userName?.charAt(0).toUpperCase();
 
   // Lista de módulos, incluyendo restricciones de roles
-  const modules = [
+  const modules: {
+    name: string;
+    icon: string;
+    route: Href;
+    roles: string[];
+  }[] = [
     {
       name: "Vendedores",
       icon: "people",
@@ -112,6 +115,11 @@ const Menu = () => {
       roles: ["Admin"],
     },
     {
+      name: "Solicitudes mayoristas",
+      icon: "swap-horizontal-outline",
+      route: "/(agente)/(solicitudes-mayoristas)/lista-solicitudes",
+      roles: ["Agente"],
+    },
       name: "Cupones",
       icon: "tags",
       route: "/(admin)/cupones",
@@ -121,7 +129,7 @@ const Menu = () => {
 
   // Filtramos los módulos basados en el rol de la sesión
   const filteredModules = modules.filter((module) =>
-    module.roles.includes(session.rol)
+    module.roles.includes(session!.rol)
   );
 
   return (
@@ -154,9 +162,9 @@ const Menu = () => {
         </TouchableOpacity>
 
         <View style={styles.modulesGrid}>
-          {filteredModules.map((module) => (
+          {filteredModules.map((module, index) => (
             <TouchableOpacity
-              key={module.name}
+              key={index}
               style={styles.moduleCard}
               onPress={() => router.push(module.route)} // Agrega la navegación aquí
             >
@@ -182,6 +190,14 @@ const Menu = () => {
     </SafeAreaView>
   );
 };
+
+/* const menuAdmin = () => {
+  return (
+    <TouchableOpacity onPress={() => router.replace("/(crm)/(admin)/inicio")}>
+      <FontAwesome name="dollar" size={16} color="black" />
+    </TouchableOpacity>
+  );
+}; */
 
 const styles = StyleSheet.create({
   container: {

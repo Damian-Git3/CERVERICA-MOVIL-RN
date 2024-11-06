@@ -1,20 +1,29 @@
-export interface Receta {
+type Receta = {
   id: number;
+  litrosEstimados: number;
+  precioUnitarioMinimoMayoreo?: number;
+  precioUnitarioBaseMayoreo?: number;
+  porcentajeDescuento?: number;
+  precioLitro?: number;
+  precioPaquete1?: number;
+  precioPaquete6?: number;
+  precioPaquete12?: number;
+  precioPaquete24?: number;
+  lotesMinimos?: number;
+  lotesMaximos?: number;
+  puntuacion?: number;
+  especificaciones?: string;
+  descripcion?: string;
   nombre: string;
-  especificaciones: string;
-  precioPaquete1: number;
-  precioPaquete6: number;
-  precioPaquete12: number;
-  precioPaquete24: number;
-  puntuacion: number;
-  lotesMinimos: number;
-  lotesMaximos: number;
+  costoProduccion: number;
   imagen: string;
-  rutaFondo: string;
+  rutaFondo?: string;
+  tiempoVida: number;
+  activo: boolean;
+  fechaRegistrado: string;
   fecha_registrado: string;
   favorito: boolean;
   nuevo: boolean;
   cantidadEnStock: number;
   estaEnCarrito: boolean;
-  descripcion: string;
-}
+};
