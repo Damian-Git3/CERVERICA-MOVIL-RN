@@ -5,6 +5,7 @@ import VentaContext from "@/context/Venta/VentaContext";
 import { ReporteVentas } from "@/models/venta";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FlatList } from "react-native-gesture-handler";
+import useVentas from "@/hooks/useVentas";
 
 interface ReporteVentasProps {
   param: string;
@@ -18,7 +19,7 @@ interface CardProps {
 }
 
 export const ListaReporteVentas: React.FC<ReporteVentasProps> = ({ param }) => {
-  const { reporteVentas, getReporteVentas } = useContext(VentaContext);
+  const { reporteVentas, getReporteVentas } = useVentas();
 
   useFocusEffect(
     React.useCallback(() => {

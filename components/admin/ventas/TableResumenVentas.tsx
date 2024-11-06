@@ -1,4 +1,5 @@
 import VentaContext from "@/context/Venta/VentaContext";
+import useVentas from "@/hooks/useVentas";
 import { ResumenVentas } from "@/models/venta";
 import React, { useContext, useEffect } from "react";
 import { View, Text, FlatList, Button, StyleSheet } from "react-native";
@@ -14,7 +15,7 @@ interface CardProps {
 const TableResumenVentas: React.FC<TableResumenVentasProps> = ({
   navigateToReporte,
 }) => {
-  const { resumenVentas, getResumenVentas } = useContext(VentaContext);
+  const { resumenVentas, getResumenVentas } = useVentas();
 
   useEffect(() => {
     if (getResumenVentas) {
