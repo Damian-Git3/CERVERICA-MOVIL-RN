@@ -1,5 +1,7 @@
+import { Receta } from "./Receta";
+
 export interface Stock {
   Id: number;
   IdReceta: number;
-  Receta: string; // Asumiendo que Receta es un string, ajusta según sea necesario
+  receta: Receta; // Asumiendo que Receta es un string, ajusta según sea necesario
 }

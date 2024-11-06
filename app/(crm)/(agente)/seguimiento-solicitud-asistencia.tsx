@@ -6,36 +6,26 @@ import {
   TextInput,
   StyleSheet,
   Modal,
-  Dimensions,
-  Button,
-  Alert,
   ScrollView,
+  Button,
 } from "react-native";
-import { router } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import AuthContext from "@/context/Auth/AuthContext";
 import Toast from "react-native-toast-message";
 import useSolicitudesAsistencias from "@/hooks/solicitudesAsistencias/useSolicitudesAsistencias";
 
-const SolicitudAsistencia = () => {
+const SeguimientoSolicitud = () => {
   const { session } = useContext(AuthContext);
-  const {
-    nuevaSolicitud,
-    crearSolicitudAsistencia,
-    categoriasAsistencias,
-    getCategoriasAsistencias,
-  } = useSolicitudesAsistencias();
+  const router = useRouter();
+  const { solicitudId } = useLocalSearchParams(); // Id de la solicitud
 
-  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState(null);
+  const { crearSeguimientoAsistencia } = useSolicitudesAsistencias();
+
+  const [mensaje, setMensaje] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
-  const [dropdownVisible, setDropdownVisible] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
 
-  const formValido = categoriaSeleccionada && descripcion.trim().length > 0;
-
-  useEffect(() => {
-    getCategoriasAsistencias();
-  }, []);
+  const formValido = mensaje.trim().length > 0 && descripcion.trim().length > 0;
 
   const handleVolver = () => {
     router.push("/solicitud-asistencia");
@@ -43,12 +33,10 @@ const SolicitudAsistencia = () => {
 
   const handleConfirmSubmit = async () => {
     if (formValido) {
-      const mayoreo = session.rol == "Cliente" ? false : true;
-      const res = await crearSolicitudAsistencia({
-        idCategoriaAsistencia: Number(categoriaSeleccionada),
-        mayoreo: mayoreo,
-        descripcion: descripcion,
-        tipo: 0,
+      const res = await crearSeguimientoAsistencia({
+        IdSolicitudAsistencia: Number(solicitudId),
+        Mensaje: mensaje,
+        Descripcion: descripcion,
       });
 
       setModalVisible(false);
@@ -57,35 +45,24 @@ const SolicitudAsistencia = () => {
         Toast.show({
           type: "success",
           text1: "Éxito! 🎉",
-          text2: "Espera la respuesta de nuestros agentes",
+          text2: "Seguimiento añadido correctamente",
         });
-        router.push("/solicitud-asistencia");
+        handleVolver();
       } else {
         Toast.show({
           type: "error",
           text1: "Error ❌",
-          text2: "No se pudo enviar la Solicitud",
+          text2: "No se pudo añadir el seguimiento",
         });
       }
     } else {
       Toast.show({
         type: "info",
         text1: "Formulario incompleto!",
-        text2: "Por favor selecciona una categoría y escribe una descripción.",
+        text2: "Por favor ingresa mensaje y descripción.",
       });
     }
   };
-
-  const handleCategoriaSeleccion = (categoria) => {
-    setCategoriaSeleccionada(categoria.id);
-    setDropdownVisible(false);
-  };
-
-  const filteredCategorias = categoriasAsistencias
-    ? categoriasAsistencias.filter((categoria) =>
-        categoria.nombre.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : [];
 
   return (
     <View style={styles.scrollContainer}>
@@ -95,55 +72,19 @@ const SolicitudAsistencia = () => {
           <Text style={styles.backButtonText}>⬅ Volver</Text>
         </TouchableOpacity>
 
-        <Text style={styles.title}>Nueva Solicitud de Asistencia</Text>
+        <Text style={styles.title}>Seguimiento de Solicitud</Text>
 
-        {/* Selector de Categoría */}
+        {/* Campo de Mensaje */}
         <View style={styles.field}>
-          <Text style={styles.label}>Categoría de Asistencia</Text>
-          <TouchableOpacity
-            style={styles.dropdown}
-            onPress={() => setDropdownVisible(true)}
-          >
-            <Text>
-              {categoriaSeleccionada
-                ? categoriasAsistencias.find(
-                    (cat) => cat.id === categoriaSeleccionada
-                  )?.nombre
-                : "Selecciona una categoría"}
-            </Text>
-          </TouchableOpacity>
-
-          {/* Modal para el Selector */}
-          <Modal visible={dropdownVisible} transparent animationType="fade">
-            <View style={styles.modalOverlay}>
-              <View style={styles.dropdownContent}>
-                <TextInput
-                  style={styles.searchInput}
-                  placeholder="Buscar categoría..."
-                  value={searchQuery}
-                  onChangeText={setSearchQuery}
-                />
-                <ScrollView
-                  style={styles.dropdownList}
-                  contentContainerStyle={{ paddingBottom: 10 }}
-                >
-                  {filteredCategorias.map((categoria) => (
-                    <TouchableOpacity
-                      key={categoria.id}
-                      style={styles.dropdownItem}
-                      onPress={() => handleCategoriaSeleccion(categoria)}
-                    >
-                      <Text>{categoria.nombre}</Text>
-                    </TouchableOpacity>
-                  ))}
-                </ScrollView>
-                <Button
-                  title="Cerrar"
-                  onPress={() => setDropdownVisible(false)}
-                />
-              </View>
-            </View>
-          </Modal>
+          <Text style={styles.label}>Mensaje</Text>
+          <TextInput
+            style={styles.textArea}
+            multiline
+            numberOfLines={4}
+            value={mensaje}
+            onChangeText={setMensaje}
+            placeholder="Escribe el mensaje de seguimiento"
+          />
         </View>
 
         {/* Campo de Descripción */}
@@ -155,7 +96,7 @@ const SolicitudAsistencia = () => {
             numberOfLines={4}
             value={descripcion}
             onChangeText={setDescripcion}
-            placeholder="Describe tu solicitud"
+            placeholder="Escribe la descripción del seguimiento"
           />
         </View>
 
@@ -168,7 +109,7 @@ const SolicitudAsistencia = () => {
           ]}
           disabled={!formValido}
         >
-          <Text style={styles.buttonText}>Enviar Solicitud</Text>
+          <Text style={styles.buttonText}>Enviar Seguimiento</Text>
         </TouchableOpacity>
 
         {/* Modal de Confirmación */}
@@ -176,7 +117,7 @@ const SolicitudAsistencia = () => {
           <View style={styles.modalOverlay}>
             <View style={styles.modalContent}>
               <Text style={styles.modalTitle}>Confirmar Envío</Text>
-              <Text>¿Estás seguro de que deseas enviar esta solicitud?</Text>
+              <Text>¿Estás seguro de que deseas enviar este seguimiento?</Text>
               <View style={styles.modalActions}>
                 <Button
                   title="Cancelar"
@@ -222,13 +163,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 5,
   },
-  dropdown: {
-    borderColor: "#ddd",
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 10,
-    backgroundColor: "#fff",
-  },
   textArea: {
     height: 100,
     borderColor: "#ddd",
@@ -254,29 +188,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(0,0,0,0.5)",
-  },
-  dropdownContent: {
-    width: "80%",
-    maxHeight: 300,
-    backgroundColor: "#fff",
-    borderRadius: 8,
-    padding: 16,
-  },
-  searchInput: {
-    height: 40,
-    borderColor: "#ddd",
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    marginBottom: 10,
-  },
-  dropdownList: {
-    maxHeight: 200,
-  },
-  dropdownItem: {
-    padding: 10,
-    borderBottomColor: "#ddd",
-    borderBottomWidth: 1,
   },
   modalContent: {
     width: 300,
@@ -315,4 +226,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SolicitudAsistencia;
+export default SeguimientoSolicitud;

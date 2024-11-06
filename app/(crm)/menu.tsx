@@ -1,10 +1,8 @@
 import CustomButton from "@/components/CustomButton";
-import { icons } from "@/constants";
 import AuthContext from "@/context/Auth/AuthContext";
 import { router } from "expo-router";
 import React, { useContext } from "react";
 import {
-  Image,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -14,8 +12,10 @@ import {
 import { ScrollView } from "react-native-gesture-handler";
 import Toast from "react-native-toast-message";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import Icon from "react-native-vector-icons/Ionicons";
-import Ionicons from "react-native-vector-icons/Ionicons";
+import {
+  default as Icon,
+  default as Ionicons,
+} from "react-native-vector-icons/Ionicons";
 
 const Menu = () => {
   const { onLogout, session } = useContext(AuthContext);
@@ -88,13 +88,18 @@ const Menu = () => {
       roles: ["Admin"],
     },
     {
-      name: "Solicitud Asistencia",
+      name: "Solicitud Asistencia Agente",
       icon: "happy",
       route: "/(crm)/(agente)/solicitud-asistencia",
       roles: ["Admin"],
     },
     {
-      name: "Solicitudes de Cambio de Agente",
+      name: "Solicitud Asistencia Cliente",
+      icon: "happy",
+      route: "/(crm)/(cliente)/solicitud-asistencia",
+    },
+    {
+      name: "Solicitud Cambio Agente",
       icon: "swap-horizontal-outline",
       route: "/(admin)/solicitudesCambioAgente",
       roles: ["Admin"],
