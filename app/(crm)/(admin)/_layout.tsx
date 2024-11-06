@@ -87,6 +87,20 @@ const AdminLayout = () => {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name="cupones"
+        options={{
+          title: "Cupones",
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="formularioCupones"
+        options={{
+          title: "Formulario de Cupones",
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 };

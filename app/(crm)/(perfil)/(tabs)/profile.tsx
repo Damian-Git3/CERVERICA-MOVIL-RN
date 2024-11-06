@@ -97,6 +97,10 @@ const Profile = () => {
       <SafeAreaView style={styles.container}>
         {userMayoristaDetails ? (
           <>
+            <View style={styles.profileHeader}>
+              <Text style={styles.profileTitle}>Información del perfil</Text>
+            </View>
+
             <View style={styles.userInfoContainer}>
               <Text style={styles.userInfoLabel}>Nombre completo:</Text>
               <Text style={styles.userInfoText}>
@@ -146,16 +150,22 @@ const Profile = () => {
             </View>
           </>
         ) : userDetails ? (
-          <View style={styles.userInfoContainer}>
-            <Text style={styles.userInfoLabel}>Email:</Text>
-            <Text style={styles.userInfoText}>{userDetails.email}</Text>
+          <>
+            <View style={styles.profileHeader}>
+              <Text style={styles.profileTitle}>Información del perfil</Text>
+            </View>
 
-            <Text style={styles.userInfoLabel}>Nombre completo:</Text>
-            <Text style={styles.userInfoText}>{userDetails.fullName}</Text>
+            <View style={styles.userInfoContainer}>
+              <Text style={styles.userInfoLabel}>Email:</Text>
+              <Text style={styles.userInfoText}>{userDetails.email}</Text>
 
-            <Text style={styles.userInfoLabel}>Teléfono:</Text>
-            <Text style={styles.userInfoText}>{userDetails.phoneNumber}</Text>
-          </View>
+              <Text style={styles.userInfoLabel}>Nombre completo:</Text>
+              <Text style={styles.userInfoText}>{userDetails.fullName}</Text>
+
+              <Text style={styles.userInfoLabel}>Teléfono:</Text>
+              <Text style={styles.userInfoText}>{userDetails.phoneNumber}</Text>
+            </View>
+          </>
         ) : (
           <Text>No hay detalles de usuario disponibles</Text>
         )}

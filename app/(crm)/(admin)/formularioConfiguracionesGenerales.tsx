@@ -87,9 +87,25 @@ const FormularioConfiguracionesGenerales: React.FC = () => {
   };
 
   const handleSubmit = async () => {
+    // Obtener la fecha de modificación formateada
+    const fechaSolicitud = new Date();
+    const year = fechaSolicitud.getFullYear();
+    const month = String(fechaSolicitud.getMonth() + 1).padStart(2, "0"); // Mes comienza en 0
+    const day = String(fechaSolicitud.getDate()).padStart(2, "0");
+    const hours = String(fechaSolicitud.getHours()).padStart(2, "0");
+    const minutes = String(fechaSolicitud.getMinutes()).padStart(2, "0");
+    const seconds = String(fechaSolicitud.getSeconds()).padStart(2, "0");
+    const milliseconds = String(fechaSolicitud.getMilliseconds()).padStart(
+      3,
+      "0"
+    );
+
+    // Formatear como cadena ISO
+    const fechaFormatoAPI = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}Z`;
+
     const dataToSend = {
       ...formValues,
-      fechaModificacion: new Date(), // Asigna la fecha actual al enviar
+      fechaModificacion: fechaFormatoAPI,
       ...(configuracion ? { id } : {}),
     };
 
