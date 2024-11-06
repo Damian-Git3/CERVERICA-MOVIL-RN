@@ -17,7 +17,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { images } from "@/constants";
 import useVentas from "@/hooks/useVentas";
-import useVentaStore from "@/stores/VentasStore";
 import { router } from "expo-router";
 
 interface ListVentasProps {
@@ -29,7 +28,7 @@ interface CardProps {
 }
 
 export const ListVentas: React.FC<ListVentasProps> = () => {
-  const { ventas, getVentas, cargando } = useVentas();
+  const { ventas, getVentas, cargando, getVenta } = useVentas();
   const { session } = useContext(AuthContext);
   const [searchText, setSearchText] = useState("");
   const [filteredVentas, setFilteredVentas] = useState<Venta[]>([]);
@@ -65,14 +64,12 @@ export const ListVentas: React.FC<ListVentasProps> = () => {
     setIsRefreshing(false);
   };
 
-  const handlePressVenta = (venta: Venta) => {
-    const setVentaSeleccionada = useVentaStore.getState().setVenta;
-    setVentaSeleccionada(venta);
-    router.push("/(crm)/(admin)/(ventas)/detalle-venta");
+  const handlePressVenta = async (id: number) => {
+    router.push(`/(crm)/(admin)/(ventas)/detalle-venta?id=${id}`);
   }
 
   const renderItem = ({ item }: { item: Venta }) => (
-    <TouchableOpacity onPress={() => handlePressVenta(item)}>
+    <TouchableOpacity onPress={() => handlePressVenta(item.id)}>
       <Card venta={item} />
     </TouchableOpacity>
   );
@@ -276,9 +273,6 @@ const Card: React.FC<CardProps> = ({ venta }) => {
       </Text>
       <Text style={styles.description}>
         Método de Pago: {obtenerMetodoPago(venta.metodoPago)}
-      </Text>
-      <Text style={styles.description}>
-        Número de Tarjeta: {venta.numeroTarjeta}
       </Text>
       <Text style={styles.description}>
         Estatus:

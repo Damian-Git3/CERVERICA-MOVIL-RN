@@ -22,6 +22,12 @@ const VentasReducer = (state: any, action: any) => {
         ...state,
         ventas: payload,
       };
+    case "GET_VENTA":
+      console.log("llamado al reducer venta");
+      return {
+        ...state,
+        selectedVenta: payload,
+      };
     case "GET_REPORTE_VENTAS":
       console.log("llamado al reducer reporte de ventas");
       return {
@@ -67,6 +73,25 @@ export default function useVentas() {
       });
     } catch (error) {
       console.error("Error al obtener ventas:", error);
+    } finally {
+      setCargando(false);
+    }
+  };
+
+  const getVenta = async (idVenta: number) => {
+    setCargando(true);
+
+    try {
+      console.log("llamado a venta");
+      const result = await axios.get(`${END_POINT}/pedidos/${idVenta}`);
+      console.log("resultado de venta", result.data);
+
+      dispatch({
+        type: "GET_VENTA",
+        payload: result.data,
+      });
+    } catch (error) {
+      console.error("Error al obtener la venta:", error);
     } finally {
       setCargando(false);
     }
@@ -126,9 +151,9 @@ export default function useVentas() {
     }
   };
 
-  const empezarEmpaquetar = async (idVenta: number) => {
+  const empaquetar = async (idVenta: number) => {
     try {
-      const result = await axios.put(
+      const result = await axios.get(
         `${END_POINT}/siguiente-estatus-landing/${idVenta}`
       );
 
@@ -146,12 +171,15 @@ export default function useVentas() {
   return {
     cargando,
     ventas: state.ventas,
+    selectedVenta: state.selectedVenta,
     resumenVentas: state.resumenVentas,
     reporteVentas: state.reporteVentas,
     response: state.response,
     getVentas,
+    getVenta,
     getReporteVentas,
     getResumenVentas,
     retrocederStatus,
+    empaquetar,
   };
 }

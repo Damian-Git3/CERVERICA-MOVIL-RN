@@ -5,16 +5,17 @@ import {
   Modal,
   StyleSheet,
   TouchableOpacity,
-  Image,
   ActivityIndicator,
   FlatList,
   Dimensions,
+  Alert,
 } from "react-native";
 import { CheckBox } from "react-native-elements";
 import CustomButton from "@/components/CustomButton";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { Producto } from "@/models/Producto";
 import { DetalleVenta } from "@/models/venta";
+import useVentas from "@/hooks/useVentas";
+import Toast from "react-native-toast-message";
 
 interface ModalVentaProps {
   modalVisible: boolean;
@@ -22,12 +23,8 @@ interface ModalVentaProps {
   venta: any;
   empaquetandoPedidos: boolean;
   productosDisponibles: DetalleVenta[];
-  productosEmpaquetados: DetalleVenta[];
   cargando: boolean;
-  habilitarMarcarListo: boolean;
-  empezarEmpaquetar: () => void;
-  finalizarVenta: () => void;
-  verificarProductosEmpaquetados: () => void;
+  id: number;
 }
 
 const ModalVenta: React.FC<ModalVentaProps> = ({
@@ -35,25 +32,15 @@ const ModalVenta: React.FC<ModalVentaProps> = ({
   setModalVisible,
   empaquetandoPedidos,
   productosDisponibles,
-  productosEmpaquetados,
   cargando,
-  habilitarMarcarListo,
-  empezarEmpaquetar,
-  finalizarVenta,
-  verificarProductosEmpaquetados,
+  id,
 }) => {
-  const [source, setSource] = useState<DetalleVenta[]>([]);
-  const [target, setTarget] = useState<DetalleVenta[]>([]);
-  const [selectedProducts, setSelectedProducts] = useState<Set<number>>(
-    new Set()
-  );
+  const [selectedProducts, setSelectedProducts] = useState<Set<number>>(new Set());
+  const { empaquetar, getVentas, getVenta } = useVentas();
 
   useEffect(() => {
     console.log("Productos disponibles", productosDisponibles);
-    setSource(productosDisponibles);
-    console.log("Productos empaquetados", productosEmpaquetados);
-    setTarget(productosEmpaquetados);
-  }, [productosDisponibles, productosEmpaquetados]);
+  }, [productosDisponibles]);
 
   const toggleProductSelection = useCallback((item: DetalleVenta) => {
     setSelectedProducts((prevSelected) => {
@@ -78,6 +65,43 @@ const ModalVenta: React.FC<ModalVentaProps> = ({
     [selectedProducts, toggleProductSelection]
   );
 
+  const finalizarVenta = async (idVenta: number) => {
+    console.log("Finalizar venta", idVenta);
+    Alert.alert(
+      "Confirmación",
+      "¿Estás seguro de finalizar esta venta?",
+      [
+        {
+          text: "Cancelar",
+          style: "cancel",
+        },
+        {
+          text: "Confirmar",
+          onPress: async () => {
+            try {
+              await empaquetar(idVenta);
+              Toast.show({
+                type: "success",
+                text1: "Éxito",
+                text2: "Venta finalizada con éxito!",
+              });
+              await getVenta(idVenta);
+              setModalVisible(false);
+            } catch (error) {
+              Toast.show({
+                type: "error",
+                text1: "Error",
+                text2: "Error al finalizar la venta, intenta nuevamente",
+              });
+              console.error(error);
+            }
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
   return (
     <Modal
       animationType="slide"
@@ -94,51 +118,28 @@ const ModalVenta: React.FC<ModalVentaProps> = ({
           </Text>
 
           {empaquetandoPedidos && (
-            <>
-              <FlatList
-                data={source}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id.toString()}
-                contentContainerStyle={styles.list}
-                ListEmptyComponent={() => (
-                  <Text style={styles.emptyText}>
-                    No hay productos disponibles
-                  </Text>
-                )}
-              />
-              <FlatList
-                data={target}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id.toString()}
-                contentContainerStyle={styles.list}
-                ListEmptyComponent={() => (
-                  <Text style={styles.emptyText}>
-                    No hay productos empaquetados
-                  </Text>
-                )}
-              />
-            </>
+            <FlatList
+              data={productosDisponibles}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.id.toString()}
+              contentContainerStyle={styles.list}
+              ListEmptyComponent={() => (
+                <Text style={styles.emptyText}>
+                  No hay productos disponibles
+                </Text>
+              )}
+            />
           )}
 
           <View style={styles.buttonContainer}>
-            {empaquetandoPedidos ? (
-              <CustomButton
-                title="Finalizar venta"
-                onPress={finalizarVenta}
-                disabled={selectedProducts.size !== source.length}
-                IconRight={() => (
-                  <Ionicons name="checkmark" size={24} color="white" />
-                )}
-              />
-            ) : (
-              <CustomButton
-                title="Empezar empaquetar"
-                onPress={empezarEmpaquetar}
-                IconRight={() => (
-                  <Ionicons name="cube" size={24} color="white" />
-                )}
-              />
-            )}
+            <CustomButton
+              title="Finalizar venta"
+              onPress={() => finalizarVenta(id)}
+              disabled={selectedProducts.size !== productosDisponibles.length}
+              IconRight={() => (
+                <Ionicons name="checkmark" size={24} color="white" />
+              )}
+            />
           </View>
 
           {cargando && <ActivityIndicator size="large" color="#0000ff" />}
@@ -170,10 +171,6 @@ const ProductItem = React.memo(
         checked={isSelected}
         onPress={() => toggleProductSelection(item)}
       />
-      <Image
-        source={{ uri: item.stock.receta.imagen }}
-        style={styles.productImage}
-      />
       <View style={styles.productInfo}>
         <Text style={styles.productName}>{item.stock.receta.nombre}</Text>
         <Text style={styles.productDetail}>{item.cantidad} paquetes</Text>
@@ -184,7 +181,6 @@ const ProductItem = React.memo(
 );
 
 const { height } = Dimensions.get("window");
-
 const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
@@ -193,8 +189,8 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalContent: {
-    width: "90%", // Ajusta el ancho del modal
-    height: "75%", // Ajusta la altura máxima del modal
+    width: "90%",
+    height: "75%",
     backgroundColor: "white",
     borderRadius: 10,
     padding: 20,
@@ -212,7 +208,7 @@ const styles = StyleSheet.create({
   },
   list: {
     width: "100%",
-    height: "100%" // Ajusta el tamaño máximo de la lista
+    flexGrow: 1,
   },
   productItem: {
     flexDirection: "row",
@@ -220,10 +216,6 @@ const styles = StyleSheet.create({
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: "#ccc",
-  },
-  productImage: {
-    width: 100,
-    height: 100,
   },
   productInfo: {
     flex: 1,
