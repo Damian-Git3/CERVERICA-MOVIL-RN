@@ -12,10 +12,10 @@ import {
   Image,
   Text,
   View,
-  Button,
   ScrollView,
+  TouchableOpacity,
+  StyleSheet,
 } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 const ListaSolicitudes = () => {
   const { getSolicitudesMayoristas, solicitudesMayoristas, cargando } =
@@ -28,19 +28,20 @@ const ListaSolicitudes = () => {
   const [filtrosLista, setFiltrosLista] = useState({
     noAtendidos: false,
     mayorMenor: false,
+    menorMayor: false,
   });
 
   useEffect(() => {
-    getSolicitudesMayoristas!();
+    if (getSolicitudesMayoristas) getSolicitudesMayoristas();
   }, []);
 
   useEffect(() => {
-    setFilteredSolicitudes(solicitudesMayoristas); // Actualiza la lista cuando cambien las solicitudes
+    setFilteredSolicitudes(solicitudesMayoristas); // Actualiza la lista cuando cambian las solicitudes
   }, [solicitudesMayoristas]);
 
   const onRefresh = async () => {
     setIsRefreshing(true);
-    await getSolicitudesMayoristas!();
+    if (getSolicitudesMayoristas) await getSolicitudesMayoristas();
     setIsRefreshing(false);
   };
 
@@ -56,47 +57,65 @@ const ListaSolicitudes = () => {
         break;
 
       default:
-        console.log("Método no soportado");
+        router.push("/(agente)/(solicitudes-mayoristas)/contactado-solicitud");
         break;
     }
   };
 
-  const handleFilterNoAtendidos = () => {
-    if (!filtrosLista.noAtendidos) {
-      const noAtendidos = solicitudesMayoristas.filter(
-        (solicitud: SolicitudMayorista) => solicitud.estatus === 1
-      );
-
-      setFilteredSolicitudes(noAtendidos);
-    } else {
-      setFilteredSolicitudes(solicitudesMayoristas);
+  const toggleFilter = (filterType: string) => {
+    let updatedList = solicitudesMayoristas;
+    if (filterType === "noAtendidos") {
+      updatedList = filtrosLista.noAtendidos
+        ? solicitudesMayoristas
+        : solicitudesMayoristas.filter(
+            (solicitud: SolicitudMayorista) => solicitud.estatus === 1
+          );
+    } else if (filterType === "mayorMenor") {
+      updatedList = filtrosLista.mayorMenor
+        ? solicitudesMayoristas
+        : [...solicitudesMayoristas].sort((a, b) => b.estatus - a.estatus);
+    } else if (filterType === "menorMayor") {
+      updatedList = filtrosLista.menorMayor
+        ? solicitudesMayoristas
+        : [...solicitudesMayoristas].sort((a, b) => a.estatus - b.estatus);
     }
+    setFilteredSolicitudes(updatedList);
 
-    setFiltrosLista({
-      mayorMenor: false,
-      noAtendidos: !filtrosLista.noAtendidos,
-    });
+    setFiltrosLista((prevState) => ({
+      noAtendidos:
+        filterType === "noAtendidos" ? !prevState.noAtendidos : false,
+      mayorMenor: filterType === "mayorMenor" ? !prevState.mayorMenor : false,
+      menorMayor: filterType === "menorMayor" ? !prevState.menorMayor : false,
+    }));
   };
 
-  const handleOrdenarMayorAMenor = () => {
-    if (!filtrosLista.mayorMenor) {
-      const sorted = solicitudesMayoristas.sort(
-        (a: SolicitudMayorista, b: SolicitudMayorista) => b.estatus - a.estatus
-      );
+  const filtrosScroll = [
+    {
+      titulo: "No atendidos",
+      accion: () => toggleFilter("noAtendidos"),
+      nombreFiltro: "noAtendidos",
+    },
+    {
+      titulo: "Mayor a menor",
+      accion: () => toggleFilter("mayorMenor"),
+      nombreFiltro: "mayorMenor",
+    },
+    {
+      titulo: "Menor a mayor",
+      accion: () => toggleFilter("menorMayor"),
+      nombreFiltro: "menorMayor",
+    },
+  ];
 
-      setFilteredSolicitudes(sorted);
-    } else {
-      setFilteredSolicitudes(solicitudesMayoristas);
-    }
-
-    setFiltrosLista({
-      noAtendidos: false,
-      mayorMenor: !filtrosLista.mayorMenor,
-    });
-  };
+  const getButtonStyle = (isActive: boolean) => ({
+    backgroundColor: isActive ? "#ED9224" : "#E0E0E0",
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 20,
+  });
 
   return (
-    <View className="flex-1 px-3">
+    <View style={styles.container}>
       <FlatList
         data={filteredSolicitudes}
         renderItem={({ item }) => (
@@ -110,18 +129,18 @@ const ListaSolicitudes = () => {
         refreshing={isRefreshing}
         onRefresh={onRefresh}
         ListEmptyComponent={() => (
-          <View className="flex flex-col items-center justify-center">
+          <View style={styles.emptyContainer}>
             {cargando ? (
               <ActivityIndicator size="small" color="#000" />
             ) : (
               <>
                 <Image
                   source={images.noResult}
-                  className="w-40 h-40"
+                  style={styles.noResultImage}
                   alt="No se encontraron solicitudes de mayoristas"
                   resizeMode="contain"
                 />
-                <Text className="text-sm">
+                <Text style={styles.noResultText}>
                   No se encontraron solicitudes de mayoristas
                 </Text>
               </>
@@ -129,52 +148,25 @@ const ListaSolicitudes = () => {
           </View>
         )}
         ListHeaderComponent={() => (
-          <View className="flex flex-col my-5">
-            <Text className="text-2xl font-JakartaExtraBold mb-3">
+          <View style={styles.headerContainer}>
+            <Text style={styles.welcomeText}>
               Bienvenido {session?.nombre} 👋
             </Text>
-
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              <View className="flex flex-row gap-2">
-                <TouchableOpacity
-                  onPress={handleFilterNoAtendidos}
-                  style={{
-                    backgroundColor: filtrosLista.noAtendidos
-                      ? "#ED9224"
-                      : "#E0E0E0",
-                    paddingVertical: 10,
-                    paddingHorizontal: 15,
-                    borderRadius: 20,
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: filtrosLista.noAtendidos ? "#FFFFFF" : "#000000",
-                    }}
+              <View style={styles.filtersContainer}>
+                {filtrosScroll.map((filtro, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={filtro.accion}
+                    style={getButtonStyle(
+                      filtrosLista[
+                        filtro.nombreFiltro as keyof typeof filtrosLista
+                      ]
+                    )}
                   >
-                    No atendidos
-                  </Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  onPress={handleOrdenarMayorAMenor}
-                  style={{
-                    backgroundColor: filtrosLista.mayorMenor
-                      ? "#ED9224"
-                      : "#E0E0E0",
-                    paddingVertical: 10,
-                    paddingHorizontal: 15,
-                    borderRadius: 20,
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: filtrosLista.mayorMenor ? "#FFFFFF" : "#000000",
-                    }}
-                  >
-                    Ordenar Mayor a Menor
-                  </Text>
-                </TouchableOpacity>
+                    <Text>{filtro.titulo}</Text>
+                  </TouchableOpacity>
+                ))}
               </View>
             </ScrollView>
           </View>
@@ -183,5 +175,20 @@ const ListaSolicitudes = () => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: { flex: 1, paddingHorizontal: 12 },
+  emptyContainer: { flex: 1, alignItems: "center", justifyContent: "center" },
+  noResultImage: { width: 160, height: 160 },
+  noResultText: { fontSize: 14, color: "#333" },
+  headerContainer: { marginVertical: 20 },
+  welcomeText: { fontSize: 24, fontWeight: "bold", marginBottom: 10 },
+  filtersContainer: { flexDirection: "row", gap: 8 },
+  filterButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 20,
+  },
+});
 
 export default ListaSolicitudes;

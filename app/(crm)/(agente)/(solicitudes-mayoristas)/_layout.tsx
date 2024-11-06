@@ -15,6 +15,12 @@ const SolicitudesMayoristasLayout = () => {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name="contactado-solicitud"
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 };

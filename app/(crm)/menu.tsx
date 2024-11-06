@@ -36,7 +36,12 @@ const Menu = () => {
   const userInitial = userName?.charAt(0).toUpperCase();
 
   // Lista de módulos, incluyendo restricciones de roles
-  const modules = [
+  const modules: {
+    name: string;
+    icon: string;
+    route: Href;
+    roles: string[];
+  }[] = [
     {
       name: "Vendedores",
       icon: "people",
@@ -119,12 +124,13 @@ const Menu = () => {
       name: "Solicitudes mayoristas",
       icon: "swap-horizontal-outline",
       route: "/(agente)/(solicitudes-mayoristas)/lista-solicitudes",
+      roles: ["Agente"],
     },
   ];
 
   // Filtramos los módulos basados en el rol de la sesión
   const filteredModules = modules.filter((module) =>
-    module.roles.includes(session.rol)
+    module.roles.includes(session!.rol)
   );
 
   return (
@@ -157,7 +163,7 @@ const Menu = () => {
         </TouchableOpacity>
 
         <View style={styles.modulesGrid}>
-          {filteredModules.map((module) => (
+          {filteredModules.map((module, index) => (
             <TouchableOpacity
               key={index}
               style={styles.moduleCard}
