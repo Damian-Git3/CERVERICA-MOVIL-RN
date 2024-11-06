@@ -51,9 +51,14 @@ const Menu = () => {
     },
     { name: "Ventas", icon: "cart", route: "/(admin)/ventas" },
     {
-      name: "Solicitud Asistencia",
+      name: "Solicitud Asistencia Agente",
       icon: "happy",
       route: "/(crm)/(agente)/solicitud-asistencia",
+    },
+    {
+      name: "Solicitud Asistencia Cliente",
+      icon: "happy",
+      route: "/(crm)/(cliente)/solicitud-asistencia",
     },
     {
       name: "Solicitud Cambio Agente",
