@@ -1,11 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import {
-  Text,
-  View,
-  Button,
-  Modal,
-  TouchableOpacity,
-} from "react-native";
+import { Text, View, Button, Modal, TouchableOpacity } from "react-native";
 import Toast from "react-native-toast-message";
 import { useNavigation } from "@react-navigation/native"; // Importación añadida
 import AuthContext from "@/context/Auth/AuthContext";
@@ -240,12 +234,16 @@ const DetalleSolicitudCambioAgente = () => {
       )}
 
       <View style={styles.buttonContainer}>
-        <Button title="Aceptar" onPress={handleAceptar} color="#4CAF50" />
-        <Button
-          title="Rechazar"
-          onPress={handleMotivoRechazo}
-          color="#F44336"
-        />
+        <View style={styles.buttonWrapper}>
+          <Button title="Aceptar" onPress={handleAceptar} color="#4CAF50" />
+        </View>
+        <View style={styles.buttonWrapper}>
+          <Button
+            title="Rechazar"
+            onPress={handleMotivoRechazo}
+            color="#F44336"
+          />
+        </View>
       </View>
 
       <MotivoCambioModal
@@ -278,6 +276,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
+    paddingHorizontal: 10,
     marginTop: 10,
   },
   modalOverlay: {
@@ -346,6 +345,10 @@ const styles = StyleSheet.create({
   errorText: {
     color: "red",
     marginBottom: 10,
+  },
+  buttonWrapper: {
+    flex: 1,
+    marginHorizontal: 5,
   },
 });
 

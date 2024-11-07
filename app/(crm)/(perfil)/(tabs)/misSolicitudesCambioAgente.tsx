@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import styles from "./perfilStyle";
 import AuthContext from "@/context/Auth/AuthContext";
-import { useLocalSearchParams, useNavigation } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import useCambioAgente from "@/hooks/useCambioAgente";
 import Timeline from "react-native-timeline-flatlist";
 
@@ -23,7 +23,28 @@ const MisSolicitudesCambioAgente = () => {
   const [timelineData, setTimelineData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  let formattedData: any = null;
+  let formattedData = null;
+
+  // Define the convertAndFormatDate function before using it
+  const convertAndFormatDate = (dateString) => {
+    const date = new Date(dateString);
+
+    if (isNaN(date.getTime())) {
+      console.error("Fecha inválida:", dateString);
+      return "Fecha inválida";
+    }
+
+    const options = {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    };
+
+    return date.toLocaleString("es-ES", options);
+  };
 
   useEffect(() => {
     formattedData = solicitudesClienteCambioAgente.map((solicitud) => ({
@@ -32,11 +53,11 @@ const MisSolicitudesCambioAgente = () => {
       lineColor: "#009688",
       status: solicitud.estatus,
       fechaSolicitud: solicitud.fechaSolicitud
-        /* ? convertAndFormatDate(solicitud.fechaSolicitud)
-        : "Fecha no disponible" */,
+        ? convertAndFormatDate(solicitud.fechaSolicitud)
+        : "Fecha no disponible",
       fechaRespuesta: solicitud.fechaRespuesta
-        /* ? convertAndFormatDate(solicitud.fechaRespuesta)
-        : "Fecha no disponible" */,
+        ? convertAndFormatDate(solicitud.fechaRespuesta)
+        : "Fecha no disponible",
       agenteVenta: solicitud.agenteVentaActualNombre,
       nuevoAgente: solicitud.agenteVentaNuevoNombre,
       motivoRechazo: solicitud.motivoRechazo,
@@ -87,26 +108,6 @@ const MisSolicitudesCambioAgente = () => {
     });
     return null;
   }
-
-  const convertAndFormatDate = (dateString) => {
-    const date = new Date(dateString);
-
-    if (isNaN(date.getTime())) {
-      console.error("Fecha inválida:", dateString);
-      return "Fecha inválida";
-    }
-
-    const options = {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    };
-
-    return date.toLocaleString("es-ES", options);
-  };
 
   const renderTimelineItem = (item) => {
     return (
@@ -164,7 +165,7 @@ const MisSolicitudesCambioAgente = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.profileHeader}>
         <Text style={styles.profileTitle}>
-          Mi Solicitudes de Cambio de Agente de Ventas
+          Mis Solicitudes de Cambio de Agente de Ventas
         </Text>
       </View>
 

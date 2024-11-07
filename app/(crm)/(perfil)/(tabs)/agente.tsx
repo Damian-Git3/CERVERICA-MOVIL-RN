@@ -197,16 +197,16 @@ const Agente = () => {
         </View>
 
         <View style={styles.buttonContainer}>
-          {solicitudesClienteCambioAgente.length > 0 &&
+          {(solicitudesClienteCambioAgente.length === 0 ||
             solicitudesClienteCambioAgente[
               solicitudesClienteCambioAgente.length - 1
-            ].estatus !== "Pendiente" && (
-              <Button
-                title="Solicitar cambio de agente"
-                color="#2196F3"
-                onPress={handleSolicitarCambio}
-              />
-            )}
+            ].estatus !== "Pendiente") && (
+            <Button
+              title="Solicitar cambio de agente"
+              color="#2196F3"
+              onPress={handleSolicitarCambio}
+            />
+          )}
         </View>
 
         <View style={[styles.buttonContainer, { marginTop: 10 }]}>

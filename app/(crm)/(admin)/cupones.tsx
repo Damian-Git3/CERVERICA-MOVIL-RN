@@ -67,8 +67,12 @@ const Cupones = () => {
             {categoriaComprador[item.categoriaComprador] || "Desconocido"}
           </Text>
           <Text style={styles.couponText}>
-            Expira el: {new Date(item.fechaExpiracion).toLocaleDateString()}
+            Expira el:{" "}
+            {isNaN(new Date(item.fechaExpiracion))
+              ? "Fecha inválida"
+              : new Date(item.fechaExpiracion).toLocaleDateString()}
           </Text>
+
           <Text style={styles.couponText}>
             Estatus: {item.activo ? "Activo" : "Inactivo"}
           </Text>
