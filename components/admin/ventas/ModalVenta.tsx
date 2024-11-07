@@ -3,11 +3,9 @@ import {
   View,
   Text,
   Modal,
-  StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
   FlatList,
-  Dimensions,
   Alert,
 } from "react-native";
 import { CheckBox } from "react-native-elements";
@@ -35,7 +33,9 @@ const ModalVenta: React.FC<ModalVentaProps> = ({
   cargando,
   id,
 }) => {
-  const [selectedProducts, setSelectedProducts] = useState<Set<number>>(new Set());
+  const [selectedProducts, setSelectedProducts] = useState<Set<number>>(
+    new Set()
+  );
   const { empaquetar, getVentas, getVenta } = useVentas();
 
   useEffect(() => {
@@ -109,9 +109,9 @@ const ModalVenta: React.FC<ModalVentaProps> = ({
       visible={modalVisible}
       onRequestClose={() => setModalVisible(false)}
     >
-      <View style={styles.modalOverlay}>
-        <View style={styles.modalContent}>
-          <Text style={styles.modalTitle}>
+      <View className="flex-1 justify-center items-center bg-black bg-opacity-50">
+        <View className="w-11/12 h-3/4 bg-white rounded-lg p-5 items-center shadow-lg">
+          <Text className="text-xl font-bold mb-5">
             {empaquetandoPedidos
               ? "Empaquetando venta"
               : "Empezar empaquetar venta"}
@@ -122,16 +122,16 @@ const ModalVenta: React.FC<ModalVentaProps> = ({
               data={productosDisponibles}
               renderItem={renderItem}
               keyExtractor={(item) => item.id.toString()}
-              contentContainerStyle={styles.list}
+              contentContainerStyle={{ flexGrow: 1 }}
               ListEmptyComponent={() => (
-                <Text style={styles.emptyText}>
+                <Text className="text-center text-gray-600 mt-5">
                   No hay productos disponibles
                 </Text>
               )}
             />
           )}
 
-          <View style={styles.buttonContainer}>
+          <View className="mt-5 w-full">
             <CustomButton
               title="Finalizar venta"
               onPress={() => finalizarVenta(id)}
@@ -146,9 +146,9 @@ const ModalVenta: React.FC<ModalVentaProps> = ({
 
           <TouchableOpacity
             onPress={() => setModalVisible(false)}
-            style={styles.closeButton}
+            className="mt-5 py-2 px-4 bg-blue-500 rounded-lg"
           >
-            <Text style={styles.closeButtonText}>Cerrar</Text>
+            <Text className="text-white text-lg">Cerrar</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -166,88 +166,20 @@ const ProductItem = React.memo(
     isSelected: boolean;
     toggleProductSelection: (item: DetalleVenta) => void;
   }) => (
-    <View style={styles.productItem}>
+    <View className="flex-row items-center p-2 border-b border-gray-300">
       <CheckBox
         checked={isSelected}
         onPress={() => toggleProductSelection(item)}
       />
-      <View style={styles.productInfo}>
-        <Text style={styles.productName}>{item.stock.receta.nombre}</Text>
-        <Text style={styles.productDetail}>{item.cantidad} paquetes</Text>
-        <Text style={styles.productDetail}>Paquete de {item.pack}</Text>
+      <View className="flex-1">
+        <Text className="text-lg font-bold">{item.stock.receta.nombre}</Text>
+        <Text className="text-base text-gray-600">
+          {item.cantidad} paquetes
+        </Text>
+        <Text className="text-base text-gray-600">Paquete de {item.pack}</Text>
       </View>
     </View>
   )
 );
-
-const { height } = Dimensions.get("window");
-const styles = StyleSheet.create({
-  modalOverlay: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-  modalContent: {
-    width: "90%",
-    height: "75%",
-    backgroundColor: "white",
-    borderRadius: 10,
-    padding: 20,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
-  list: {
-    width: "100%",
-    flexGrow: 1,
-  },
-  productItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
-  },
-  productInfo: {
-    flex: 1,
-  },
-  productName: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  productDetail: {
-    fontSize: 14,
-    color: "#666",
-  },
-  buttonContainer: {
-    marginTop: 20,
-    width: "100%",
-  },
-  closeButton: {
-    marginTop: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    backgroundColor: "#2196F3",
-    borderRadius: 5,
-  },
-  closeButtonText: {
-    color: "white",
-    fontSize: 16,
-  },
-  emptyText: {
-    textAlign: "center",
-    color: "#666",
-    marginTop: 20,
-  },
-});
 
 export default ModalVenta;

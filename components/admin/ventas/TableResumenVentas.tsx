@@ -2,7 +2,7 @@ import VentaContext from "@/context/Venta/VentaContext";
 import useVentas from "@/hooks/useVentas";
 import { ResumenVentas } from "@/models/venta";
 import React, { useContext, useEffect } from "react";
-import { View, Text, FlatList, Button, StyleSheet } from "react-native";
+import { View, Text, FlatList, Button } from "react-native";
 
 interface TableResumenVentasProps {
   navigateToReporte: (param: string) => void;
@@ -26,11 +26,11 @@ const TableResumenVentas: React.FC<TableResumenVentasProps> = ({
   }, []);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Semana</Text>
-        <Text style={styles.headerText}>Mes</Text>
-        <Text style={styles.headerText}>Año</Text>
+    <View className="flex-1 p-4 bg-white">
+      <View className="flex-row justify-between py-2 border-b border-gray-300">
+        <Text className="flex-1 text-center text-lg font-bold">Semana</Text>
+        <Text className="flex-1 text-center text-lg font-bold">Mes</Text>
+        <Text className="flex-1 text-center text-lg font-bold">Año</Text>
       </View>
       <FlatList
         data={resumenVentas ? [resumenVentas] : []}
@@ -38,14 +38,14 @@ const TableResumenVentas: React.FC<TableResumenVentasProps> = ({
           `resumen-${item.semana}-${item.mes}-${item.anio}`
         }
         renderItem={({ item }) => (
-          <View style={styles.listItem}>
-            <Text style={styles.semana}>${item.semana}</Text>
-            <Text style={styles.mes}>${item.mes}</Text>
-            <Text style={styles.anio}>${item.anio}</Text>
+          <View className="flex-row justify-between items-center py-2 border-b border-gray-300">
+            <Text className="flex-1 text-center text-lg">${item.semana}</Text>
+            <Text className="flex-1 text-center text-lg">${item.mes}</Text>
+            <Text className="flex-1 text-center text-lg">${item.anio}</Text>
           </View>
         )}
       />
-      <View style={styles.button}>
+      <View className="mt-4">
         <Button
           title="Ver detalle"
           onPress={() => navigateToReporte("semana")}
@@ -55,80 +55,14 @@ const TableResumenVentas: React.FC<TableResumenVentasProps> = ({
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: "#fff",
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingVertical: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
-  },
-  headerText: {
-    flex: 1,
-    fontSize: 16,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  listItem: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingVertical: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
-  },
-  semana: {
-    flex: 1,
-    fontSize: 16,
-    textAlign: "center",
-  },
-  mes: {
-    flex: 1,
-    fontSize: 16,
-    textAlign: "center",
-  },
-  anio: {
-    flex: 1,
-    fontSize: 16,
-    textAlign: "center",
-  },
-  button: {
-    marginTop: 16,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  card: {
-    backgroundColor: "#fff",
-    padding: 20,
-    marginVertical: 10,
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 3,
-  },
-  description: {
-    fontSize: 14,
-    color: "#666",
-  },
-});
-
-export default TableResumenVentas;
-
 export const Card: React.FC<CardProps> = ({ resumenVentas }) => {
   return (
-    <View style={styles.card}>
-      <Text style={styles.title}>Semana: {resumenVentas.semana}</Text>
-      <Text style={styles.description}>Mes: {resumenVentas.mes}</Text>
-      <Text style={styles.description}>Año: {resumenVentas.anio}</Text>
+    <View className="bg-white p-5 my-2 rounded-lg shadow-md">
+      <Text className="text-lg font-bold">Semana: {resumenVentas.semana}</Text>
+      <Text className="text-base text-gray-600">Mes: {resumenVentas.mes}</Text>
+      <Text className="text-base text-gray-600">Año: {resumenVentas.anio}</Text>
     </View>
   );
 };
+
+export default TableResumenVentas;
