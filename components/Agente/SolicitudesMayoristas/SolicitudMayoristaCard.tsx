@@ -15,7 +15,9 @@ export default function SolicitudMayoristaCard({
 }) {
   // Define los pasos según el valor de solicitudMayorista
   const pasos =
-    solicitudMayorista.tipo === 1
+    solicitudMayorista.estatus === 5
+      ? ["Cancelado"]
+      : solicitudMayorista.tipo === 1
       ? ["Prospecto", "Contactado", "Cerrado"]
       : ["Nuevo pedido", "Contactado", "Cerrado"];
 
@@ -35,7 +37,7 @@ export default function SolicitudMayoristaCard({
       activeStep = 2;
       break;
     case 5: // Cancelado
-      activeStep = 2; // Si consideras que se cancela en el último paso
+      activeStep = 0; // Si consideras que se cancela en el último paso
       break;
     default:
       activeStep = 0; // Valor por defecto
@@ -65,19 +67,34 @@ export default function SolicitudMayoristaCard({
       </Text>
 
       {/* Información de fecha */}
-      <Text className="text-xs text-neutral-400 mt-2">
+      <Text className="text-sm text-neutral-500">
         Fecha de inicio:{" "}
         {new Date(solicitudMayorista.fechaInicio).toLocaleDateString()}
       </Text>
+
+      {solicitudMayorista.estatus == 5 && (
+        <>
+          <Text className="text-lg text-neutral-800 mt-2">
+            Mensaje rechazo:
+          </Text>
+
+          <Text className="text-base text-neutral-800">
+            {solicitudMayorista.mensajeRechazo}
+          </Text>
+        </>
+      )}
 
       <ProgressSteps
         activeStepIconBorderColor="#ed9224"
         progressBarColor="#ed9224"
         completedProgressBarColor="#ed9224"
-        completedStepIconColor="#ed9224"
+        completedStepIconColor={
+          solicitudMayorista.estatus == 5 ? "red" : "#ed9224"
+        }
         labelColor="#ed9224"
         activeLabelColor="#ed9224"
-        activeStep={activeStep} // Usar el paso activo calculado
+        activeStep={activeStep}
+        isComplete={solicitudMayorista.estatus == 5}
       >
         {pasos.map((stepLabel, index) => (
           <ProgressStep key={index} label={stepLabel} removeBtnRow={true} />

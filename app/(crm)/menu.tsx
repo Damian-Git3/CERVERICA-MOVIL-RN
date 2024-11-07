@@ -1,6 +1,6 @@
 import CustomButton from "@/components/CustomButton";
 import AuthContext from "@/context/Auth/AuthContext";
-import { router } from "expo-router";
+import { Href, router } from "expo-router";
 import React, { useContext } from "react";
 import {
   SafeAreaView,
@@ -29,38 +29,108 @@ const Menu = () => {
       text2: "Lamentamos que te tengas que ir:(",
     });
 
-    if (respuestaLogout.data.isSuccess) {
-      router.replace("/(auth)/login");
-    }
+    router.replace("/(auth)/login");
   };
 
   const userName = session?.nombre;
   const userInitial = userName?.charAt(0).toUpperCase();
 
-  const modules = [
-    { name: "Vendedores", icon: "people", route: "/(admin)/ventas" },
-    { name: "Clientes Mayoristas", icon: "people", route: "/(admin)/ventas" },
-    { name: "Precios", icon: "dollar", route: "/(admin)/HistorialPrecios" },
-    { name: "Cupones", icon: "tags", route: "/(admin)/ventas" },
-    { name: "Descuentos", icon: "percent", route: "/(admin)/ventas" },
-    { name: "Dashboard", icon: "stats-chart", route: "/(admin)/ventas" },
+  // Lista de módulos, incluyendo restricciones de roles
+  const modules: {
+    name: string;
+    icon: string;
+    route: Href;
+    roles: string[];
+  }[] = [
+    {
+      name: "Vendedores",
+      icon: "people",
+      route: "/(admin)/ventas",
+      roles: ["Admin"],
+    },
+    {
+      name: "Clientes Mayoristas",
+      icon: "people",
+      route: "/(admin)/ventas",
+      roles: ["Admin"],
+    },
+    {
+      name: "Precios",
+      icon: "dollar",
+      route: "/(admin)/ventas",
+      roles: ["Admin", "Mayorista"],
+    },
+    {
+      name: "Cupones",
+      icon: "tags",
+      route: "",
+      roles: ["Mayorista"],
+    },
+    {
+      name: "Descuentos",
+      icon: "percent",
+      route: "/(admin)/ventas",
+      roles: ["Mayorista"],
+    },
+    {
+      name: "Dashboard",
+      icon: "stats-chart",
+      route: "/(admin)/ventas",
+      roles: ["Admin"],
+    },
     {
       name: "Notificaciones",
       icon: "notifications",
       route: "/(crm)/(notificacion)",
+      roles: ["Admin", "Mayorista"],
     },
-    { name: "Ventas", icon: "cart", route: "/(admin)/ventas" },
     {
-      name: "Solicitud Asistencia",
+      name: "Ventas",
+      icon: "cart",
+      route: "/(admin)/ventas",
+      roles: ["Admin"],
+    },
+    {
+      name: "Solicitud Asistencia Agente",
       icon: "happy",
       route: "/(crm)/(agente)/solicitud-asistencia",
+      roles: ["Admin", "Agente"],
+    },
+    {
+      name: "Solicitud Asistencia Cliente",
+      icon: "happy",
+      route: "/(crm)/(cliente)/solicitud-asistencia",
+      roles: ["Cliente", "Mayorista"],
     },
     {
       name: "Solicitud Cambio Agente",
       icon: "swap-horizontal-outline",
       route: "/(admin)/solicitudesCambioAgente",
+      roles: ["Admin"],
+    },
+    {
+      name: "Gestión de Configuraciones",
+      icon: "settings-outline",
+      route: "/(admin)/menuConfiguraciones",
+      roles: ["Admin"],
+    },
+    {
+      name: "Solicitudes mayoristas",
+      icon: "swap-horizontal-outline",
+      route: "/(agente)/(solicitudes-mayoristas)/lista-solicitudes",
+      roles: ["Agente"],
+    },
+      name: "Cupones",
+      icon: "tags",
+      route: "/(admin)/cupones",
+      roles: ["Admin"],
     },
   ];
+
+  // Filtramos los módulos basados en el rol de la sesión
+  const filteredModules = modules.filter((module) =>
+    module.roles.includes(session!.rol)
+  );
 
   return (
     <SafeAreaView className="flex-1">
@@ -92,13 +162,12 @@ const Menu = () => {
         </TouchableOpacity>
 
         <View style={styles.modulesGrid}>
-          {modules.map((module, index) => (
+          {filteredModules.map((module, index) => (
             <TouchableOpacity
-              key={module.name}
+              key={index}
               style={styles.moduleCard}
               onPress={() => router.push(module.route as any)} // Agrega la navegación aquí
             >
-              {/* Decide qué icono usar según el módulo */}
               {module.icon === "percent" ||
               module.icon === "tags" ||
               module.icon === "dollar" ? (
@@ -122,13 +191,13 @@ const Menu = () => {
   );
 };
 
-const menuAdmin = () => {
+/* const menuAdmin = () => {
   return (
     <TouchableOpacity onPress={() => router.replace("/(crm)/(admin)/inicio" as any)}>
       <FontAwesome name="dollar" size={16} color="black" />
     </TouchableOpacity>
   );
-};
+}; */
 
 const styles = StyleSheet.create({
   container: {

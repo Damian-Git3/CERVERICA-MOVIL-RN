@@ -84,16 +84,23 @@ const Profile = () => {
   ];
 
   // Filtrar módulos según el rol
+  // Filtrar módulos según el rol
   const filteredModules =
     session?.rol === "Mayorista"
       ? modules.filter((module) => module.name === "Mi Agente")
-      : modules.filter((module) => module.name !== "Mi Agente");
+      : session?.rol !== "Admin"
+      ? modules.filter((module) => module.name !== "Mi Agente")
+      : [];
 
   return (
     <ScrollView>
       <SafeAreaView style={styles.container}>
         {userMayoristaDetails ? (
           <>
+            <View style={styles.profileHeader}>
+              <Text style={styles.profileTitle}>Información del perfil</Text>
+            </View>
+
             <View style={styles.userInfoContainer}>
               <Text style={styles.userInfoLabel}>Nombre completo:</Text>
               <Text style={styles.userInfoText}>
@@ -143,16 +150,22 @@ const Profile = () => {
             </View>
           </>
         ) : userDetails ? (
-          <View style={styles.userInfoContainer}>
-            <Text style={styles.userInfoLabel}>Email:</Text>
-            <Text style={styles.userInfoText}>{userDetails.email}</Text>
+          <>
+            <View style={styles.profileHeader}>
+              <Text style={styles.profileTitle}>Información del perfil</Text>
+            </View>
 
-            <Text style={styles.userInfoLabel}>Nombre completo:</Text>
-            <Text style={styles.userInfoText}>{userDetails.fullName}</Text>
+            <View style={styles.userInfoContainer}>
+              <Text style={styles.userInfoLabel}>Email:</Text>
+              <Text style={styles.userInfoText}>{userDetails.email}</Text>
 
-            <Text style={styles.userInfoLabel}>Teléfono:</Text>
-            <Text style={styles.userInfoText}>{userDetails.phoneNumber}</Text>
-          </View>
+              <Text style={styles.userInfoLabel}>Nombre completo:</Text>
+              <Text style={styles.userInfoText}>{userDetails.fullName}</Text>
+
+              <Text style={styles.userInfoLabel}>Teléfono:</Text>
+              <Text style={styles.userInfoText}>{userDetails.phoneNumber}</Text>
+            </View>
+          </>
         ) : (
           <Text>No hay detalles de usuario disponibles</Text>
         )}

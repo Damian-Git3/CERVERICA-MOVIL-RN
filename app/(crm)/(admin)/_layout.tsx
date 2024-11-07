@@ -11,7 +11,7 @@ const AdminLayout = () => {
         }}
       /> */}
       <Stack.Screen
-        name="ventas"
+        name="(ventas)"
         options={{
           title: "Ventas",
           headerShown: false,
@@ -42,6 +42,69 @@ const AdminLayout = () => {
         name="HistorialPrecios"
         options={{
           title: "Historial de Precios",
+          headerShown: false,
+         }}
+      />
+      <Stack.Screen
+        name="menuConfiguraciones"
+        options={{
+          title: "Menu de Configuraciones",
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="configuracionesGenerales"
+        options={{
+          title: "Configuraciones Generales",
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="configuracionVentasMayoreo"
+        options={{
+          title: "Configuraciones de Ventas de Mayoreo",
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="reglaPuntos"
+        options={{
+          title: "Reglas de Puntos",
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="formularioReglasPuntos"
+        options={{
+          title: "Formulario de Reglas de Puntos",
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="formularioConfiguracionesGenerales"
+        options={{
+          title: "Formulario de Configuraciones Generales",
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="formularioConfiguracionVentasMayoreo"
+        options={{
+          title: "Formulario de Configuración de Ventas de Mayoreo",
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="cupones"
+        options={{
+          title: "Cupones",
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="formularioCupones"
+        options={{
+          title: "Formulario de Cupones",
           headerShown: false,
         }}
       />

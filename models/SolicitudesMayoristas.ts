@@ -55,9 +55,16 @@ export type SolicitudMayorista = {
   idAgente: string;
   estatus: EstatusSolicitudMayorista;
   tipo: number;
+
+  mensajeRechazo: string;
 };
 
 export type AvanzarSiguienteEstatusSolicitudMayoristaDTO = {
   idSolicitud: number;
   nuevoEstatus: number;
+};
+
+export type CancelarSolicitudMayoristaDTO = {
+  idSolicitud: number;
+  mensajeRechazo: string;
 };

@@ -15,7 +15,7 @@ export interface ActualizarSolicitudCambioAgenteDTO {
   idAdministrador?: string;
   idAgenteActual: string;
   motivoRechazo?: string | null;
-  IdAgenteNuevo?: string | null;
+  idAgenteNuevo?: string | null;
   fechaRespuesta: string;
 }
 

@@ -2,8 +2,7 @@ import React, { useEffect } from "react";
 import { StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { SafeAreaView } from "react-native-safe-area-context";
-import VentaState from "@/context/Venta/VentaState";
-import { ListaReporteVentas } from "@/components/ListaReporteVentas";
+import { ListaReporteVentas } from "@/components/admin/ventas/ListaReporteVentas";
 import { useIsFocused } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/Ionicons"; // Importa los iconos
 
@@ -13,11 +12,9 @@ const ReporteVentasScreen = () => {
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    // Logic to reload data when the tab is focused
   }, [isFocused]);
 
   return (
-    <VentaState>
       <SafeAreaView style={styles.container}>
         <Tab.Navigator>
           <Tab.Screen
@@ -52,7 +49,6 @@ const ReporteVentasScreen = () => {
           </Tab.Screen>
         </Tab.Navigator>
       </SafeAreaView>
-    </VentaState>
   );
 };
 

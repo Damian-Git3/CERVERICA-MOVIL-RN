@@ -20,7 +20,21 @@ const ClienteLayout = () => {
       <Stack.Screen
         name="detalle-solicitud-asistencia"
         options={{
-          title: "Deatalles de Solicitudes Asistencias",
+          title: "Detalle de Solicitud de Asistencia",
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="detalle-solicitud-asistencia-historico"
+        options={{
+          title: "Detalle de Asistencia",
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="valorar-solicitud"
+        options={{
+          title: "Valorar Solicitud",
           headerShown: false,
         }}
       />

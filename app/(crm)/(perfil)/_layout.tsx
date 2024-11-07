@@ -10,6 +10,13 @@ const Layout = () => {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name="(tabs)/profile"
+        options={{
+          title: "Perfil",
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 };
