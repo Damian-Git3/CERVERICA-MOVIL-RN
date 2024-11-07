@@ -3,7 +3,6 @@ import {
   Text,
   View,
   Button,
-  Picker,
   Modal,
   TouchableOpacity,
 } from "react-native";
@@ -14,6 +13,7 @@ import { StyleSheet, TextInput } from "react-native";
 import useCambioAgente from "@/hooks/useCambioAgente";
 import { useLocalSearchParams } from "expo-router";
 import { ActualizarSolicitudCambioAgenteDTO } from "@/dtos/cambioAgente";
+import { Picker } from "@react-native-picker/picker";
 
 const MotivoCambioModal = ({ modalVisible, setModalVisible, onSubmit }) => {
   const [motivo, setMotivo] = useState("");
