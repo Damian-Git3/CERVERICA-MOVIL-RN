@@ -209,6 +209,12 @@ const Agente = () => {
                 onPress={handleSolicitarCambio}
               />
             )}
+
+          <Button
+            title="Solicitar cambio de agente"
+            color="#2196F3"
+            onPress={handleSolicitarCambio}
+          />
         </View>
 
         <View style={[styles.buttonContainer, { marginTop: 10 }]}>
