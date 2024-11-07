@@ -16,14 +16,14 @@ export default function RootLayout() {
   return (
     <AuthState>
       <AuthLoaded>
-          <GestureHandlerRootView>
-            <Stack>
-              <Stack.Screen name="index" options={{ headerShown: false }} />
-              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-              <Stack.Screen name="(crm)" options={{ headerShown: false }} />
-            </Stack>
-            <Toast config={toastConfig} topOffset={60} />
-          </GestureHandlerRootView>
+        <GestureHandlerRootView>
+          <Stack>
+            <Stack.Screen name="index" options={{ headerShown: false }} />
+            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+            <Stack.Screen name="(crm)" options={{ headerShown: false }} />
+          </Stack>
+          <Toast config={toastConfig} topOffset={60} />
+        </GestureHandlerRootView>
       </AuthLoaded>
     </AuthState>
   );

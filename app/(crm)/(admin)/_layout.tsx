@@ -3,13 +3,13 @@ import { Stack } from "expo-router";
 const AdminLayout = () => {
   return (
     <Stack>
-      <Stack.Screen
+      {/* <Stack.Screen
         name="inicio"
         options={{
           title: "Inicio Admin",
           headerShown: false,
         }}
-      />
+      /> */}
       <Stack.Screen
         name="(ventas)"
         options={{
@@ -37,6 +37,13 @@ const AdminLayout = () => {
           title: "Detalles de solicitud de cambio de agente",
           headerShown: false,
         }}
+      />
+      <Stack.Screen
+        name="HistorialPrecios"
+        options={{
+          title: "Historial de Precios",
+          headerShown: false,
+         }}
       />
       <Stack.Screen
         name="menuConfiguraciones"
