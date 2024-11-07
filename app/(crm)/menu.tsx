@@ -160,7 +160,7 @@ const Menu = () => {
             <TouchableOpacity
               key={index}
               style={styles.moduleCard}
-              onPress={() => router.push(module.route)} // Agrega la navegación aquí
+              onPress={() => router.push(module.route as any)} // Agrega la navegación aquí
             >
               {module.icon === "percent" ||
               module.icon === "tags" ||
@@ -187,7 +187,7 @@ const Menu = () => {
 
 /* const menuAdmin = () => {
   return (
-    <TouchableOpacity onPress={() => router.replace("/(crm)/(admin)/inicio")}>
+    <TouchableOpacity onPress={() => router.replace("/(crm)/(admin)/inicio" as any)}>
       <FontAwesome name="dollar" size={16} color="black" />
     </TouchableOpacity>
   );
