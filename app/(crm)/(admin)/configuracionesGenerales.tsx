@@ -8,7 +8,7 @@ import {
   Image,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { useFocusEffect } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import useConfiguracionesGenerales from "@/hooks/useConfiguracionesGenerales";
 import { images } from "@/constants";
 
@@ -29,11 +29,14 @@ const ConfiguracionesGenerales = () => {
 
   const handleButtonClick = () => {
     if (configuracionesGenerales) {
-      navigation.navigate("formularioConfiguracionesGenerales", {
-        configuracionesGenerales,
+      router.push({
+        pathname: "/(admin)/formularioConfiguracionesGenerales",
+        params: {
+          configuracionesGenerales: JSON.stringify(configuracionesGenerales),
+        },
       });
     } else {
-      navigation.navigate("formularioConfiguracionesGenerales");
+      router.push("/(admin)/formularioConfiguracionesGenerales");
     }
   };
 

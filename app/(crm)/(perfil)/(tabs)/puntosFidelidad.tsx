@@ -1,13 +1,9 @@
 import { useContext, useEffect } from "react";
 import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation } from "expo-router";
 import usePuntosFidelidad from "@/hooks/usePuntosFidelidad";
 
 const Puntosfidelidad = () => {
-  const navigation = useNavigation();
-  navigation.setOptions({ headerShown: false });
-
   const {
     getPuntosFidelidad,
     getTransacciones,

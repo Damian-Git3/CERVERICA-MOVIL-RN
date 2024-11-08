@@ -14,14 +14,13 @@ import Toast from "react-native-toast-message";
 import { ScrollView } from "react-native-gesture-handler";
 import { Picker } from "@react-native-picker/picker"; // Para seleccionar tipo y categoría
 import useCupones from "@/hooks/useCupones";
+import { router, useLocalSearchParams } from "expo-router";
 
 const FormularioCupones: React.FC = () => {
   const route = useRoute();
-  const cupon = route.params?.cupon || null; // Obtener el cupón si se está editando
-  const navigation = useNavigation();
+  const params = useLocalSearchParams();
+  const cupon = params?.cupon ? JSON.parse(params.cupon) : null;
 
-  console.log("cupon");
-  console.log(cupon);
   const { registrarCupon, actualizarCupon } = useCupones();
 
   const [formValues, setFormValues] = useState({
@@ -29,7 +28,7 @@ const FormularioCupones: React.FC = () => {
     codigo: cupon?.codigo || "",
     fechaCreacion: cupon?.fechaCreacion || new Date().toISOString(),
     fechaExpiracion: cupon?.fechaExpiracion || "",
-    tipo: cupon?.tipo || 1,
+    tipo: cupon?.tipo || 0, // Cambié a 0 para el tipo "Porcentaje"
     paquete: cupon?.paquete || 0,
     cantidad: cupon?.cantidad || 0,
     valor: cupon?.valor || 0,
@@ -50,19 +49,9 @@ const FormularioCupones: React.FC = () => {
 
   const handleSubmit = async () => {
     try {
-      // Generar la fecha de creación formateada solo si es un nuevo cupón
       const fecha = new Date();
-      const year = fecha.getFullYear();
-      const month = String(fecha.getMonth() + 1).padStart(2, "0");
-      const day = String(fecha.getDate()).padStart(2, "0");
-      const hours = String(fecha.getHours()).padStart(2, "0");
-      const minutes = String(fecha.getMinutes()).padStart(2, "0");
-      const seconds = String(fecha.getSeconds()).padStart(2, "0");
-      const milliseconds = String(fecha.getMilliseconds()).padStart(3, "0");
+      const fechaFormatoAPI = fecha.toISOString();
 
-      const fechaFormatoAPI = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}Z`;
-
-      // Si el cupón es nuevo, incluir la fecha de creación
       const formValuesConFecha = cupon
         ? {
             ...formValues, // Si ya existe un cupón, solo utilizamos los datos actuales del formulario sin modificar la fecha
@@ -74,18 +63,17 @@ const FormularioCupones: React.FC = () => {
 
       if (cupon) {
         // Si el cupón ya existe, actualizar sin tocar la fechaCreacion
+        console.log("ACTUALIZAR");
         console.log(formValuesConFecha);
-        /*
-      await actualizarCupon(formValuesConFecha);
-      Toast.show({
-        text1: "Cupón Actualizado",
-        text2: "El cupón ha sido actualizado exitosamente.",
-        type: "success",
-      });
-      */
+        await actualizarCupon(formValuesConFecha.id, formValuesConFecha);
+
+        Toast.show({
+          text1: "Cupón Actualizado",
+          text2: "El cupón ha sido actualizado exitosamente.",
+          type: "success",
+        });
       } else {
         // Si el cupón es nuevo, registrar con la fechaCreacion
-        console.log(formValuesConFecha);
         await registrarCupon(formValuesConFecha);
         Toast.show({
           text1: "Cupón Registrado",
@@ -93,7 +81,7 @@ const FormularioCupones: React.FC = () => {
           type: "success",
         });
       }
-      navigation.goBack();
+      router.back();
     } catch (error) {
       console.error("Error al registrar o actualizar el cupón:", error);
       Toast.show({
@@ -102,6 +90,13 @@ const FormularioCupones: React.FC = () => {
         type: "error",
       });
     }
+  };
+
+  // Formato legible para la fecha
+  const formatDate = (date: string) => {
+    if (!date) return "Seleccionar fecha";
+    const d = new Date(date);
+    return d.toLocaleDateString(); // Formato legible: "dd/mm/yyyy"
   };
 
   return (
@@ -123,8 +118,9 @@ const FormularioCupones: React.FC = () => {
           onPress={() => setShowDatePicker(true)}
           style={styles.input}
         >
-          <Text>{formValues.fechaExpiracion || "Seleccionar fecha"}</Text>
+          <Text>{formatDate(formValues.fechaExpiracion)}</Text>
         </TouchableOpacity>
+
         {showDatePicker && (
           <DateTimePicker
             value={new Date(formValues.fechaExpiracion || Date.now())}
@@ -132,7 +128,8 @@ const FormularioCupones: React.FC = () => {
             display="default"
             onChange={(event, selectedDate) => {
               if (selectedDate) {
-                handleChange("fechaExpiracion", selectedDate);
+                handleChange("fechaExpiracion", selectedDate.toISOString());
+                setShowDatePicker(false); // Cierra el DateTimePicker después de seleccionar la fecha
               }
             }}
           />
@@ -144,8 +141,8 @@ const FormularioCupones: React.FC = () => {
           onValueChange={(value) => handleChange("tipo", value)}
           style={styles.input}
         >
-          <Picker.Item label="Porcentaje" value="Porcentaje" />
-          <Picker.Item label="Fijo" value="Fijo" />
+          <Picker.Item label="Porcentaje" value={1} />
+          <Picker.Item label="Fijo" value={2} />
         </Picker>
 
         <Text style={styles.label}>Paquete:</Text>
@@ -202,11 +199,11 @@ const FormularioCupones: React.FC = () => {
           onValueChange={(value) => handleChange("categoriaComprador", value)}
           style={styles.input}
         >
-          <Picker.Item label="Todos" value="Todos" />
-          <Picker.Item label="Frecuente" value="Frecuente" />
-          <Picker.Item label="Minorista" value="Minorista" />
-          <Picker.Item label="Mayorista" value="Mayorista" />
-          <Picker.Item label="Inactivo" value="Inactivo" />
+          <Picker.Item label="Todos" value={1} />
+          <Picker.Item label="Frecuente" value={2} />
+          <Picker.Item label="Minorista" value={3} />
+          <Picker.Item label="Mayorista" value={4} />
+          <Picker.Item label="Inactivo" value={5} />
         </Picker>
 
         <Text style={styles.label}>Activo:</Text>
@@ -247,19 +244,21 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
-    marginTop: 5,
-    justifyContent: "center",
+    marginBottom: 10,
+    fontSize: 16,
   },
   button: {
-    marginTop: 30,
-    backgroundColor: "#007bff",
+    backgroundColor: "#4CAF50",
     paddingVertical: 10,
+    paddingHorizontal: 20,
     borderRadius: 5,
-    alignItems: "center",
+    marginTop: 20,
   },
   buttonText: {
     color: "#fff",
     fontSize: 18,
+    fontWeight: "bold",
+    textAlign: "center",
   },
 });
 
