@@ -65,17 +65,17 @@ const SolicitudAsistencia = () => {
       <View style={styles.cardBody}>
         <Text style={styles.cardTitle}>{item.nombreCategoria}</Text>
         <Text style={styles.cardText}>
-          <strong>Descripción:</strong> {item.descripcion}
+          <Text>Descripción:</Text> {item.descripcion}
         </Text>
         <Text style={styles.cardText}>
-          <strong>Fecha de Solicitud:</strong>{" "}
+          <Text>Fecha de Solicitud:</Text>{" "}
           {new Date(item.fechaSolicitud).toLocaleString()}
         </Text>
         <Text style={styles.cardText}>
-          <strong>Cliente:</strong> {item.nombreCliente} ({item.emailCliente})
+          <Text>Cliente:</Text> {item.nombreCliente} ({item.emailCliente})
         </Text>
         <Text style={styles.cardText}>
-          <strong>Estatus:</strong>{" "}
+          <Text>Estatus:</Text>{" "}
           {item.estatus === 1
             ? "Enviado"
             : item.estatus === 3

@@ -44,17 +44,17 @@ const DetalleSolicitudAsistenciaHistorico = () => {
       {/* Información de la Solicitud */}
       <View style={styles.section}>
         <Text style={styles.cardText}>
-          <strong>Descripción:</strong>{" "}
+          <Text>Descripción:</Text>{" "}
           {solicitudAsistencia?.solicitud.descripcion}
         </Text>
         <Text style={styles.cardText}>
-          <strong>Fecha de Solicitud:</strong>{" "}
+          <Text>Fecha de Solicitud:</Text>{" "}
           {new Date(
             solicitudAsistencia?.solicitud.fechaSolicitud
           ).toLocaleString()}
         </Text>
         <Text style={styles.cardText}>
-          <strong>Estatus:</strong> Cerrada
+          <Text>Estatus:</Text> Cerrada
         </Text>
       </View>
 
@@ -64,11 +64,11 @@ const DetalleSolicitudAsistenciaHistorico = () => {
       {/* Detalles de la Categoría */}
       <View style={styles.section}>
         <Text style={styles.cardText}>
-          <strong>Categoría:</strong>{" "}
+          <Text>Categoría:</Text>{" "}
           {solicitudAsistencia?.solicitud.categoriaAsistencia?.nombre}
         </Text>
         <Text style={styles.cardText}>
-          <strong>Estatus de Categoría:</strong>{" "}
+          <Text>Estatus de Categoría:</Text>{" "}
           {solicitudAsistencia?.solicitud.categoriaAsistencia?.estatus
             ? "Activa"
             : "Inactiva"}
@@ -78,18 +78,18 @@ const DetalleSolicitudAsistenciaHistorico = () => {
       {/* Información del Agente de Venta */}
       <View style={styles.section}>
         <Text style={styles.cardText}>
-          <strong>Agente de Venta:</strong>{" "}
+          <Text>Agente de Venta:</Text>{" "}
           {solicitudAsistencia?.cliente?.fullName}
         </Text>
         <Text style={styles.cardText}>
-          <strong>Email:</strong> {solicitudAsistencia?.cliente?.email}
+          <Text>Email:</Text> {solicitudAsistencia?.cliente?.email}
         </Text>
         <Text style={styles.cardText}>
-          <strong>Activo:</strong>{" "}
+          <Text>Activo:</Text>{" "}
           {solicitudAsistencia?.cliente?.activo ? "Sí" : "No"}
         </Text>
         <Text style={styles.cardText}>
-          <strong>Fecha de Registro:</strong>{" "}
+          <Text>Fecha de Registro:</Text>{" "}
           {new Date(
             solicitudAsistencia?.cliente?.fechaRegistro
           ).toLocaleString()}
@@ -105,14 +105,14 @@ const DetalleSolicitudAsistenciaHistorico = () => {
           renderItem={({ item }) => (
             <View style={styles.card}>
               <Text style={styles.cardText}>
-                <strong>Descripción:</strong> {item.descripcion}
+                <Text>Descripción:</Text> {item.descripcion}
               </Text>
               <Text style={styles.cardText}>
-                <strong>Fecha de Seguimiento:</strong>{" "}
+                <Text>Fecha de Seguimiento:</Text>{" "}
                 {new Date(item.fechaSeguimiento).toLocaleString()}
               </Text>
               <Text style={styles.cardText}>
-                <strong>Mensaje:</strong> {item.mensaje}
+                <Text>Mensaje:</Text> {item.mensaje}
               </Text>
             </View>
           )}
