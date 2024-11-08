@@ -18,6 +18,13 @@ const Layout = () => {
         }}
       />
       <Stack.Screen
+        name="(tabs)/puntosFidelidad"
+        options={{
+          title: "Puntos de Fidelidad",
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
         name="(tabs)/agente"
         options={{
           title: "Agente",

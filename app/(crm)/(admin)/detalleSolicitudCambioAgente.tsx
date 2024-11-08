@@ -5,7 +5,7 @@ import { useNavigation } from "@react-navigation/native"; // Importación añadi
 import AuthContext from "@/context/Auth/AuthContext";
 import { StyleSheet, TextInput } from "react-native";
 import useCambioAgente from "@/hooks/useCambioAgente";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { ActualizarSolicitudCambioAgenteDTO } from "@/dtos/cambioAgente";
 import { Picker } from "@react-native-picker/picker";
 
@@ -66,7 +66,6 @@ const DetalleSolicitudCambioAgente = () => {
   const { session } = useContext(AuthContext);
   const params = useLocalSearchParams();
   const solicitud = params?.solicitud ? JSON.parse(params.solicitud) : null;
-  const navigation = useNavigation(); // Hook para acceder a la navegación
 
   const { actualizarSolicitudCambioAgente, agentesVentas, getAgentes } =
     useCambioAgente();
@@ -133,7 +132,7 @@ const DetalleSolicitudCambioAgente = () => {
           text1: "Solicitud aceptada",
           text2: "La solicitud ha sido aceptada con éxito.",
         });
-        navigation.goBack(); // Volver a la pantalla anterior
+        router.back();
       }
     } catch (error) {
       Toast.show({
@@ -189,7 +188,7 @@ const DetalleSolicitudCambioAgente = () => {
           text1: "Solicitud rechazada",
           text2: "La solicitud ha sido rechazada.",
         });
-        navigation.goBack(); // Volver a la pantalla anterior
+        router.back();
       }
     } catch (error) {
       Toast.show({

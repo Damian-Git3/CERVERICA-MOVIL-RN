@@ -10,12 +10,11 @@ import {
   Image,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { useFocusEffect } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import useCupones from "@/hooks/useCupones";
 import { images } from "@/constants";
 
 const Cupones = () => {
-  const navigation = useNavigation();
   const { cargando, cupones, getCupones } = useCupones();
 
   useFocusEffect(
@@ -30,7 +29,7 @@ const Cupones = () => {
 
   // Función para navegar a la pantalla de formulario
   const handleAddCoupon = () => {
-    navigation.navigate("formularioCupones");
+    router.push("/formularioCupones");
   };
 
   const renderCouponCard = ({ item }: { item: any }) => {
@@ -46,8 +45,15 @@ const Cupones = () => {
     };
 
     // Función para manejar el clic en la tarjeta
+    //const handleCardPress = () => {
+    //  navigation.navigate("formularioCupones", { cupon: item });
+    //};
+
     const handleCardPress = () => {
-      navigation.navigate("formularioCupones", { cupon: item });
+      router.push({
+        pathname: "/(admin)/formularioCupones",
+        params: { cupon: JSON.stringify(item) },
+      });
     };
 
     return (

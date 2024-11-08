@@ -7,13 +7,11 @@ import {
   StyleSheet,
   Image,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import usePuntosFidelidad from "@/hooks/usePuntosFidelidad";
-import { useFocusEffect } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { images } from "@/constants";
 
 const ReglaPuntos = () => {
-  const navigation = useNavigation();
   const { cargando, reglasPuntos, getReglasPuntos } = usePuntosFidelidad();
 
   useFocusEffect(
@@ -29,9 +27,14 @@ const ReglaPuntos = () => {
   const handleButtonClick = () => {
     // Verifica si hay reglas de puntos y navega a la ruta con o sin parámetros
     if (reglasPuntos) {
-      navigation.navigate("formularioReglasPuntos", { reglasPuntos });
+      //navigation.navigate("formularioReglasPuntos", { reglasPuntos });
+      router.push({
+        pathname: "/(admin)/formularioReglasPuntos",
+        params: { reglasPuntos: JSON.stringify(reglasPuntos) },
+      });
     } else {
-      navigation.navigate("formularioReglasPuntos");
+      //navigation.navigate("formularioReglasPuntos");
+      router.push("/(admin)/formularioReglasPuntos");
     }
   };
 

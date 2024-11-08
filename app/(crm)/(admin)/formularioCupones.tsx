@@ -14,11 +14,12 @@ import Toast from "react-native-toast-message";
 import { ScrollView } from "react-native-gesture-handler";
 import { Picker } from "@react-native-picker/picker"; // Para seleccionar tipo y categoría
 import useCupones from "@/hooks/useCupones";
+import { router, useLocalSearchParams } from "expo-router";
 
 const FormularioCupones: React.FC = () => {
   const route = useRoute();
-  const cupon = route.params?.cupon || null; // Obtener el cupón si se está editando
-  const navigation = useNavigation();
+  const params = useLocalSearchParams();
+  const cupon = params?.cupon ? JSON.parse(params.cupon) : null;
 
   const { registrarCupon, actualizarCupon } = useCupones();
 
@@ -80,7 +81,7 @@ const FormularioCupones: React.FC = () => {
           type: "success",
         });
       }
-      navigation.goBack();
+      router.back();
     } catch (error) {
       console.error("Error al registrar o actualizar el cupón:", error);
       Toast.show({
@@ -198,11 +199,11 @@ const FormularioCupones: React.FC = () => {
           onValueChange={(value) => handleChange("categoriaComprador", value)}
           style={styles.input}
         >
-          <Picker.Item label="Todos" value={0} />
-          <Picker.Item label="Frecuente" value={1} />
-          <Picker.Item label="Minorista" value={2} />
-          <Picker.Item label="Mayorista" value={3} />
-          <Picker.Item label="Inactivo" value={4} />
+          <Picker.Item label="Todos" value={1} />
+          <Picker.Item label="Frecuente" value={2} />
+          <Picker.Item label="Minorista" value={3} />
+          <Picker.Item label="Mayorista" value={4} />
+          <Picker.Item label="Inactivo" value={5} />
         </Picker>
 
         <Text style={styles.label}>Activo:</Text>
