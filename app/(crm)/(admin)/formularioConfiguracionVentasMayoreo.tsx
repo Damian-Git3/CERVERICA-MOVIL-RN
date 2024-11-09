@@ -11,11 +11,14 @@ import useConfiguracionVentasMayoreo from "@/hooks/useConfiguracionVentasMayoreo
 import { IConfiguracionVentasMayoreo } from "@/dtos/configuracionVentasMayoreo";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import Toast from "react-native-toast-message";
+import { router, useLocalSearchParams } from "expo-router";
 
 const FormularioConfiguracionVentasMayoreo: React.FC = () => {
   const route = useRoute();
-  const configuracion = route.params?.configuracionVentasMayoreo || null;
-  const navigation = useNavigation();
+  const params = useLocalSearchParams();
+  const configuracion = params?.configuracionVentasMayoreo
+    ? JSON.parse(params.configuracionVentasMayoreo)
+    : null;
 
   const {
     registrarConfiguracionVentasMayoreo,
@@ -43,7 +46,7 @@ const FormularioConfiguracionVentasMayoreo: React.FC = () => {
       });
       setId(configuracion.id);
     }
-  }, [configuracion]);
+  }, []);
 
   const handleChange = (name: string, value: any) => {
     setFormValues((prevValues) => ({
@@ -96,7 +99,7 @@ const FormularioConfiguracionVentasMayoreo: React.FC = () => {
           type: "success",
         });
       }
-      navigation.goBack();
+      router.back();
     } catch (error) {
       console.error("Error al registrar o actualizar:", error);
       Toast.show({

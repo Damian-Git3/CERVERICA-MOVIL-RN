@@ -8,12 +8,11 @@ import {
   Image,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { useFocusEffect } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import useConfiguracionVentasMayoreo from "@/hooks/useConfiguracionVentasMayoreo";
 import { images } from "@/constants";
 
 const ConfiguracionVentasMayoreo = () => {
-  const navigation = useNavigation();
   const {
     cargando,
     configuracionVentasMayoreo,
@@ -32,11 +31,16 @@ const ConfiguracionVentasMayoreo = () => {
 
   const handleButtonClick = () => {
     if (configuracionVentasMayoreo) {
-      navigation.navigate("formularioConfiguracionVentasMayoreo", {
-        configuracionVentasMayoreo,
+      router.push({
+        pathname: "/(admin)/formularioConfiguracionVentasMayoreo",
+        params: {
+          configuracionVentasMayoreo: JSON.stringify(
+            configuracionVentasMayoreo
+          ),
+        },
       });
     } else {
-      navigation.navigate("formularioConfiguracionVentasMayoreo");
+      router.push("/(admin)/formularioConfiguracionVentasMayoreo");
     }
   };
 

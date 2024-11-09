@@ -12,12 +12,17 @@ import { IConfiguracionesGenerales } from "@/dtos/configuracionGenerales";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import Toast from "react-native-toast-message";
 import { ScrollView } from "react-native-gesture-handler";
+import { router, useLocalSearchParams } from "expo-router";
 
 const FormularioConfiguracionesGenerales: React.FC = () => {
   const route = useRoute();
-  const configuracion = route.params?.configuracionesGenerales || null;
-  const navigation = useNavigation();
+  const params = useLocalSearchParams();
+  const configuracion = params?.configuracionesGenerales
+    ? JSON.parse(params.configuracionesGenerales)
+    : null;
 
+  console.log("configuracion");
+  console.log(configuracion);
   const {
     registrarConfiguracionesGenerales,
     actualizarConfiguracionesGenerales,
@@ -70,7 +75,7 @@ const FormularioConfiguracionesGenerales: React.FC = () => {
       });
       setId(configuracion.id);
     }
-  }, [configuracion]);
+  }, []);
 
   const handleChange = (name: string, value: any) => {
     setFormValues((prevValues) => ({
@@ -111,6 +116,7 @@ const FormularioConfiguracionesGenerales: React.FC = () => {
 
     try {
       if (configuracion) {
+        console.log(configuracion);
         await actualizarConfiguracionesGenerales(dataToSend);
         Toast.show({
           text1: "Actualización Exitosa",
@@ -125,7 +131,7 @@ const FormularioConfiguracionesGenerales: React.FC = () => {
           type: "success",
         });
       }
-      navigation.goBack();
+      router.back();
     } catch (error) {
       console.error("Error al registrar o actualizar:", error);
       Toast.show({

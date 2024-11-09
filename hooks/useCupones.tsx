@@ -50,10 +50,10 @@ export default function useCupones() {
     }
   };
 
-  const actualizarCupon = async (cupon: ICupon) => {
+  const actualizarCupon = async (id: number, cupon: ICupon) => {
     setCargando(true);
     try {
-      const response = await axios.put(`/Cupon/actualizar-cupon`, cupon);
+      const response = await axios.put(`/Cupon/actualizar-cupon/${id}`, cupon); // Incluir el ID en la URL
       dispatch({
         type: "ACTUALIZAR_CUPON",
         payload: response.data,

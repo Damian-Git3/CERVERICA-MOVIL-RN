@@ -10,11 +10,14 @@ import usePuntosFidelidad from "@/hooks/usePuntosFidelidad";
 import { ReglasPuntosDto } from "@/dtos/puntosFidelidad";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import Toast from "react-native-toast-message";
+import { router, useLocalSearchParams } from "expo-router";
 
 const FormularioReglasPuntos: React.FC = () => {
   const route = useRoute();
-  const reglasPuntos = route.params?.reglasPuntos || null;
-  const navigation = useNavigation();
+  const params = useLocalSearchParams();
+  const reglasPuntos = params?.reglasPuntos
+    ? JSON.parse(params.reglasPuntos)
+    : null;
 
   const { registrarReglasPuntos, actualizarReglasPuntos } =
     usePuntosFidelidad();
@@ -38,7 +41,7 @@ const FormularioReglasPuntos: React.FC = () => {
       });
       setId(reglasPuntos.id);
     }
-  }, [reglasPuntos]);
+  }, []);
 
   const handleChange = (name: string, value: string) => {
     setFormValues((prevValues) => ({
@@ -87,7 +90,7 @@ const FormularioReglasPuntos: React.FC = () => {
           type: "success",
         });
       }
-      navigation.goBack();
+      router.back();
     } catch (error) {
       console.error("Error al registrar o actualizar:", error);
       Toast.show({

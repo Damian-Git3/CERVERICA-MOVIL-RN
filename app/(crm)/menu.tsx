@@ -57,14 +57,8 @@ const Menu = () => {
     {
       name: "Precios",
       icon: "dollar",
-      route: "/(admin)/ventas",
+      route: "/(admin)/HistorialPrecios",
       roles: ["Admin", "Mayorista"],
-    },
-    {
-      name: "Cupones",
-      icon: "tags",
-      route: "",
-      roles: ["Mayorista"],
     },
     {
       name: "Descuentos",
@@ -120,6 +114,7 @@ const Menu = () => {
       route: "/(agente)/(solicitudes-mayoristas)/lista-solicitudes",
       roles: ["Agente"],
     },
+    {
       name: "Cupones",
       icon: "tags",
       route: "/(admin)/cupones",
@@ -127,9 +122,8 @@ const Menu = () => {
     },
   ];
 
-  // Filtramos los módulos basados en el rol de la sesión
   const filteredModules = modules.filter((module) =>
-    module.roles.includes(session!.rol)
+    module.roles.includes(session ? session.rol : "")
   );
 
   return (
