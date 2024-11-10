@@ -1,22 +1,14 @@
 import { useState, useContext, useEffect } from "react";
-import {
-  Text,
-  View,
-  Button,
-  ActivityIndicator, // Indicador de carga
-  ScrollView,
-} from "react-native";
+import { Text, View, ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import styles from "./perfilStyle";
 import AuthContext from "@/context/Auth/AuthContext";
-import { useLocalSearchParams, useNavigation } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import useCambioAgente from "@/hooks/useCambioAgente";
 import Timeline from "react-native-timeline-flatlist";
 
 const MisSolicitudesCambioAgente = () => {
-  const navigation = useNavigation();
-  navigation.setOptions({ headerShown: false });
   const { onLogout, session } = useContext(AuthContext);
 
   const { getSolicitudesCliente, solicitudesClienteCambioAgente } =
@@ -29,36 +21,56 @@ const MisSolicitudesCambioAgente = () => {
 
   const [modalVisible, setModalVisible] = useState(false);
   const [timelineData, setTimelineData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true); // Estado para el indicador de carga
+  const [isLoading, setIsLoading] = useState(true);
+
+  let formattedData = null;
+
+  // Define the convertAndFormatDate function before using it
+  const convertAndFormatDate = (dateString) => {
+    const date = new Date(dateString);
+
+    if (isNaN(date.getTime())) {
+      console.error("Fecha inválida:", dateString);
+      return "Fecha inválida";
+    }
+
+    const options = {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    };
+
+    return date.toLocaleString("es-ES", options);
+  };
+
+  useEffect(() => {
+    formattedData = solicitudesClienteCambioAgente.map((solicitud) => ({
+      title: "Solicitud de cambio de agente",
+      description: solicitud.motivo,
+      lineColor: "#009688",
+      status: solicitud.estatus,
+      fechaSolicitud: solicitud.fechaSolicitud
+        ? convertAndFormatDate(solicitud.fechaSolicitud)
+        : "Fecha no disponible",
+      fechaRespuesta: solicitud.fechaRespuesta
+        ? convertAndFormatDate(solicitud.fechaRespuesta)
+        : "Fecha no disponible",
+      agenteVenta: solicitud.agenteVentaActualNombre,
+      nuevoAgente: solicitud.agenteVentaNuevoNombre,
+      motivoRechazo: solicitud.motivoRechazo,
+    }));
+
+    setTimelineData(formattedData);
+  }, [solicitudesClienteCambioAgente]);
 
   useEffect(() => {
     const fetchSolicitudes = async () => {
       if (userMayoristaDetails) {
         try {
           await getSolicitudesCliente(userMayoristaDetails.idMayorista);
-
-          console.log("ASMFASMFP");
-          if (solicitudesClienteCambioAgente) {
-            const formattedData = solicitudesClienteCambioAgente.map(
-              (solicitud) => ({
-                title: "Solicitud de cambio de agente",
-                description: solicitud.motivo,
-                lineColor: "#009688",
-                status: solicitud.estatus,
-                fechaSolicitud: new Date(
-                  solicitud.fechaSolicitud
-                ).toLocaleString(),
-                fechaRespuesta: new Date(
-                  solicitud.fechaRespuesta
-                ).toLocaleString(),
-                agenteVenta: solicitud.agenteVentaActualNombre,
-                nuevoAgente: solicitud.agenteVentaNuevoNombre,
-                motivoRechazo: solicitud.motivoRechazo,
-              })
-            );
-
-            setTimelineData(formattedData);
-          }
         } catch (error) {
           Toast.show({
             type: "error",
@@ -66,17 +78,15 @@ const MisSolicitudesCambioAgente = () => {
             text2: "No se pudieron cargar las solicitudes.",
           });
         } finally {
-          setIsLoading(false); // Termina la carga
+          setIsLoading(false);
         }
       }
     };
 
     fetchSolicitudes();
-  }, [userMayoristaDetails, getSolicitudesCliente]);
-  //}, [userMayoristaDetails, getSolicitudesCliente]);
+  }, []);
 
   if (isLoading) {
-    // Muestra un indicador de carga mientras se obtienen los datos
     return (
       <View
         style={[
@@ -98,40 +108,6 @@ const MisSolicitudesCambioAgente = () => {
     });
     return null;
   }
-
-  const convertAndFormatDate = (dateString) => {
-    // Dividir la fecha y la hora
-    const [datePart, timePart] = dateString.split(", ");
-
-    // Dividir la fecha en componentes
-    const [day, month, year] = datePart.split("/").map(Number);
-    const [hour, minute, second] = timePart.split(":").map(Number);
-
-    // Crear un nuevo objeto Date
-    const date = new Date(year, month - 1, day, hour, minute, second); // month - 1 porque los meses son indexados desde 0
-
-    // Verificar si la fecha es válida
-    if (isNaN(date.getTime())) {
-      console.error("Fecha inválida:", dateString);
-      return "Fecha inválida";
-    }
-
-    const options = {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true, // Cambiar a true para A.M./P.M.
-    };
-
-    const formattedDate = date.toLocaleString("es-ES", options);
-    const [dateFormatted, timeFormatted] = formattedDate.split(", ");
-
-    // Reemplazar el formato de hora para incluir A.M. o P.M.
-    const [time, period] = timeFormatted.split(" ");
-    return `${dateFormatted} a las ${time} ${period}`;
-  };
 
   const renderTimelineItem = (item) => {
     return (
@@ -158,25 +134,21 @@ const MisSolicitudesCambioAgente = () => {
           <Text>Agente a cambiar: {item.agenteVenta}</Text>
           <Text>Motivo del cambio: {item.description}</Text>
           <Text style={{ fontStyle: "italic" }}>
-            Fecha de solicitud: {convertAndFormatDate(item.fechaSolicitud)}
+            Fecha de solicitud: {item.fechaSolicitud}
           </Text>
 
           {item.status === "Aceptado" && (
             <>
               <Text style={{ color: "#4CAF50" }}>Estado: Aceptada</Text>
               <Text>Nuevo Agente: {item.nuevoAgente}</Text>
-              <Text>
-                Fecha de respuesta: {convertAndFormatDate(item.fechaRespuesta)}
-              </Text>
+              <Text>Fecha de respuesta: {item.fechaRespuesta}</Text>
             </>
           )}
 
           {item.status === "Rechazada" && (
             <>
               <Text style={{ color: "#F44336" }}>Estado: Rechazada</Text>
-              <Text>
-                Fecha de respuesta: {convertAndFormatDate(item.fechaRespuesta)}
-              </Text>
+              <Text>Fecha de respuesta: {item.fechaRespuesta}</Text>
               <Text>Motivo del rechazo: {item?.motivoRechazo}</Text>
             </>
           )}
@@ -190,18 +162,15 @@ const MisSolicitudesCambioAgente = () => {
   };
 
   return (
-    <ScrollView>
-      <SafeAreaView style={styles.container}>
-        <View style={styles.profileHeader}>
-          <Text style={styles.profileTitle}>
-            Mi Solicitudes de Cambio de Agente de Ventas
-          </Text>
-        </View>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.profileHeader}>
+        <Text style={styles.profileTitle}>
+          Mis Solicitudes de Cambio de Agente de Ventas
+        </Text>
+      </View>
 
-        {/* Renderizar el Timeline con los datos formateados */}
-        <Timeline data={timelineData} renderDetail={renderTimelineItem} />
-      </SafeAreaView>
-    </ScrollView>
+      <Timeline data={timelineData} renderDetail={renderTimelineItem} />
+    </SafeAreaView>
   );
 };
 

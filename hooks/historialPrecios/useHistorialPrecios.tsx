@@ -101,9 +101,10 @@ const useHistorialPrecios = () => {
 
   const setNuevoPrecio = async (data: HistorialPrecioInsert) => {
     try {
+      console.log("ENVIANDO PRECIOS", data);
       setCargando(true);
       const response = await axios.post(`/HistorialPrecios`, data);
-      console.log(response);
+      console.log("RESPUETA PRECIOS", response);
       return response;
     } catch (error) {
       console.error("Error al insertar nuevo precio", error);

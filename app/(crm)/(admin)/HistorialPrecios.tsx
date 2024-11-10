@@ -296,11 +296,11 @@ const NuevoHistorialModal = ({
 
   const handleSubmit = () => {
     const nuevoHistorial: HistorialPrecioInsert = {
-      IdReceta: idReceta,
-      Paquete1: parseFloat(paquete1),
-      Paquete6: parseFloat(paquete6),
-      Paquete12: parseFloat(paquete12),
-      Paquete24: parseFloat(paquete24),
+      idReceta: idReceta,
+      paquete1: parseFloat(paquete1),
+      paquete6: parseFloat(paquete6),
+      paquete12: parseFloat(paquete12),
+      paquete24: parseFloat(paquete24),
     };
 
     console.log("Nuevo historial de precios:", nuevoHistorial);

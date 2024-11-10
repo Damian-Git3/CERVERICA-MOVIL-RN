@@ -11,25 +11,17 @@ const SolicitudesCambioAgente = () => {
   const { session } = useContext(AuthContext);
   const { getSolicitudes, solicitudesCambioAgente, cargando } =
     useCambioAgente();
-
-  // Para manejar el mensaje de no coincidencias
   const [noSolicitudes, setNoSolicitudes] = useState(false);
 
+  // Usar useFocusEffect para ejecutar la función cuando el componente se enfoque
   useFocusEffect(
     useCallback(() => {
-      const fetchData = async () => {
+      const fetchSolicitudes = async () => {
         await getSolicitudes();
-
-        // Verifica si hay solicitudes
-        console.log(solicitudesCambioAgente);
-        if (solicitudesCambioAgente.length === 0) {
-          setNoSolicitudes(true); // Cambia el estado si no hay solicitudes
-        } else {
-          setNoSolicitudes(false); // Resetea el estado si hay solicitudes
-        }
       };
-      fetchData();
-    }, [solicitudesCambioAgente]) // Dependencia de solicitudesCambioAgente
+
+      fetchSolicitudes();
+    }, [])
   );
 
   const handleVerSolicitudes = (solicitud) => {
@@ -72,7 +64,7 @@ const SolicitudesCambioAgente = () => {
               <Text>Motivo: {solicitud.motivo}</Text>
               <Text>Estatus: {solicitud.estatus}</Text>
 
-              <Button
+              <Button                
                 title="Ver Solicitud"
                 onPress={() => handleVerSolicitudes(solicitud)}
                 color="#2196F3"
@@ -91,12 +83,10 @@ const styles = StyleSheet.create({
     padding: 20,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#F8F8F8",
   },
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: "#F8F8F8",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -116,6 +106,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 2,
+    width: "100%",
   },
 });
 

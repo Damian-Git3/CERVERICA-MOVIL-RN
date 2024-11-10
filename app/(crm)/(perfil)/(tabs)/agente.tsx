@@ -13,7 +13,7 @@ import Toast from "react-native-toast-message";
 import styles from "./perfilStyle";
 import { ScrollView } from "react-native-gesture-handler";
 import AuthContext from "@/context/Auth/AuthContext";
-import { router, useLocalSearchParams, useNavigation } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import useCambioAgente from "@/hooks/useCambioAgente";
 import { SolicitudCambioAgenteDTO } from "../../../../dtos/cambioAgente";
 
@@ -71,8 +71,6 @@ const MotivoCambioModal = ({ modalVisible, setModalVisible, onSubmit }) => {
 };
 
 const Agente = () => {
-  const navigation = useNavigation();
-  navigation.setOptions({ headerShown: false });
   const { onLogout, session } = useContext(AuthContext);
 
   const {
@@ -199,16 +197,16 @@ const Agente = () => {
         </View>
 
         <View style={styles.buttonContainer}>
-          {solicitudesClienteCambioAgente.length > 0 &&
+          {(solicitudesClienteCambioAgente.length === 0 ||
             solicitudesClienteCambioAgente[
               solicitudesClienteCambioAgente.length - 1
-            ].estatus !== "Pendiente" && (
-              <Button
-                title="Solicitar cambio de agente"
-                color="#2196F3"
-                onPress={handleSolicitarCambio}
-              />
-            )}
+            ].estatus !== "Pendiente") && (
+            <Button
+              title="Solicitar cambio de agente"
+              color="#2196F3"
+              onPress={handleSolicitarCambio}
+            />
+          )}
         </View>
 
         <View style={[styles.buttonContainer, { marginTop: 10 }]}>

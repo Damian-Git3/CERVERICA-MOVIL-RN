@@ -95,17 +95,17 @@ const SolicitudAsistencia = () => {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Datos de la Asistencia</Text>
         <Text style={styles.cardText}>
-          <strong>Descripción:</strong>{" "}
+          <Text>Descripción:</Text>{" "}
           {solicitudAsistencia?.solicitud.descripcion}
         </Text>
         <Text style={styles.cardText}>
-          <strong>Fecha de Solicitud:</strong>{" "}
+          <Text>Fecha de Solicitud:</Text>{" "}
           {new Date(
             solicitudAsistencia?.solicitud.fechaSolicitud
           ).toLocaleString()}
         </Text>
         <Text style={styles.cardText}>
-          <strong>Estatus:</strong>{" "}
+          <Text>Estatus:</Text>{" "}
           {solicitudAsistencia?.solicitud.estatus === 3 ? "Cerrada" : "Activa"}
         </Text>
       </View>
@@ -114,11 +114,11 @@ const SolicitudAsistencia = () => {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Datos del Agente</Text>
         <Text style={styles.cardText}>
-          <strong>Nombre del Agente:</strong>{" "}
+          <Text>Nombre del Agente:</Text>{" "}
           {solicitudAsistencia?.solicitud.agenteVenta?.fullName}
         </Text>
         <Text style={styles.cardText}>
-          <strong>Email del Agente:</strong>{" "}
+          <Text>Email del Agente:</Text>{" "}
           {solicitudAsistencia?.solicitud.agenteVenta?.email}
         </Text>
         <View style={styles.separator} />
@@ -134,11 +134,11 @@ const SolicitudAsistencia = () => {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Datos de la Categoría</Text>
         <Text style={styles.cardText}>
-          <strong>Nombre de la Categoría:</strong>{" "}
+          <Text>Nombre de la Categoría:</Text>{" "}
           {solicitudAsistencia?.solicitud.categoriaAsistencia?.nombre}
         </Text>
         <Text style={styles.cardText}>
-          <strong>Estatus:</strong>{" "}
+          <Text>Estatus:</Text>{" "}
           {solicitudAsistencia?.solicitud.categoriaAsistencia?.estatus
             ? "Activa"
             : "Inactiva"}
@@ -154,14 +154,14 @@ const SolicitudAsistencia = () => {
           renderItem={({ item }) => (
             <View style={styles.card}>
               <Text style={styles.cardText}>
-                <strong>Descripción:</strong> {item.descripcion}
+                <Text>Descripción:</Text> {item.descripcion}
               </Text>
               <Text style={styles.cardText}>
-                <strong>Fecha de Seguimiento:</strong>{" "}
+                <Text>Fecha de Seguimiento:</Text>{" "}
                 {new Date(item.fechaSeguimiento).toLocaleString()}
               </Text>
               <Text style={styles.cardText}>
-                <strong>Mensaje:</strong> {item.mensaje}
+                <Text>Mensaje:</Text> {item.mensaje}
               </Text>
             </View>
           )}
