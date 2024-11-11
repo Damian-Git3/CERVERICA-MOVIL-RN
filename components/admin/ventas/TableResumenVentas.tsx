@@ -26,7 +26,7 @@ const TableResumenVentas: React.FC<TableResumenVentasProps> = ({
   }, []);
 
   return (
-    <View className="flex-1 p-4 bg-white">
+    <View className="flex-auto bg-white">
       <View className="flex-row justify-between py-2 border-b border-gray-300">
         <Text className="flex-1 text-center text-lg font-bold">Semana</Text>
         <Text className="flex-1 text-center text-lg font-bold">Mes</Text>

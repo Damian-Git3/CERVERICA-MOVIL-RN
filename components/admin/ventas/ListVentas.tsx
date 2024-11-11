@@ -25,7 +25,7 @@ interface CardProps {
   venta: Venta;
 }
 
-export const ListVentas: React.FC<ListVentasProps> = () => {
+export const ListVentas = () => {
   const { ventas, getVentas, cargando, getVenta } = useVentas();
   const { session } = useContext(AuthContext);
   const [searchText, setSearchText] = useState("");
@@ -107,7 +107,7 @@ export const ListVentas: React.FC<ListVentasProps> = () => {
                 <Image
                   source={images.noResult}
                   className="w-24 h-24"
-                  alt="No se encontraron ventas"
+                  alt="No se encontraron pedidos"
                   resizeMode="contain"
                 />
                 <Text className="text-lg text-gray-600">
@@ -115,13 +115,6 @@ export const ListVentas: React.FC<ListVentasProps> = () => {
                 </Text>
               </>
             )}
-          </View>
-        )}
-        ListHeaderComponent={() => (
-          <View className="mb-5">
-            <Text className="text-2xl font-bold">
-              Bienvenido {session?.nombre} 👋
-            </Text>
           </View>
         )}
       />

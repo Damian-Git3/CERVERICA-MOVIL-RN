@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   FlatList,
   Alert,
+  Image,
 } from "react-native";
 import { CheckBox } from "react-native-elements";
 import CustomButton from "@/components/CustomButton";
@@ -104,13 +105,13 @@ const ModalVenta: React.FC<ModalVentaProps> = ({
 
   return (
     <Modal
-      animationType="slide"
+      animationType="fade"
       transparent
       visible={modalVisible}
       onRequestClose={() => setModalVisible(false)}
     >
       <View className="flex-1 justify-center items-center bg-black bg-opacity-50">
-        <View className="w-11/12 h-3/4 bg-white rounded-lg p-5 items-center shadow-lg">
+        <View className="w-11/12 h-3/4 bg-gray-100 rounded-lg p-5 items-center shadow-lg">
           <Text className="text-xl font-bold mb-5">
             {empaquetandoPedidos
               ? "Empaquetando venta"
@@ -122,7 +123,7 @@ const ModalVenta: React.FC<ModalVentaProps> = ({
               data={productosDisponibles}
               renderItem={renderItem}
               keyExtractor={(item) => item.id.toString()}
-              contentContainerStyle={{ flexGrow: 1 }}
+              contentContainerStyle="flex-grow"
               ListEmptyComponent={() => (
                 <Text className="text-center text-gray-600 mt-5">
                   No hay productos disponibles
@@ -166,17 +167,29 @@ const ProductItem = React.memo(
     isSelected: boolean;
     toggleProductSelection: (item: DetalleVenta) => void;
   }) => (
-    <View className="flex-row items-center p-2 border-b border-gray-300">
+    <View className="flex-row items-center bg-white p-5 my-2 rounded-lg shadow-md">
       <CheckBox
         checked={isSelected}
         onPress={() => toggleProductSelection(item)}
+        containerStyle={{ margin: 0, padding: 0 }}
       />
-      <View className="flex-1">
-        <Text className="text-lg font-bold">{item.stock.receta.nombre}</Text>
-        <Text className="text-base text-gray-600">
-          {item.cantidad} paquetes
-        </Text>
-        <Text className="text-base text-gray-600">Paquete de {item.pack}</Text>
+      <View className="flex-row items-center">
+        {item.stock.receta.imagen && (
+          <Image
+            source={{ uri: item.stock.receta.imagen }}
+            className="w-12 h-12"
+            resizeMode="contain"
+          />
+        )}
+        <View>
+          <Text className="text-sm font-bold">{item.stock.receta.nombre}</Text>
+          <Text className="text-xs text-gray-600">
+            {item.cantidad} paquetes
+          </Text>
+          <Text className="text-xs text-gray-600">
+            Paquete de {item.pack}
+          </Text>
+        </View>
       </View>
     </View>
   )

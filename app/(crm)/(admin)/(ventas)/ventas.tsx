@@ -40,25 +40,16 @@ const Ventas = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-gray-100 p-4">
-      <View className="flex-2 mb-4">
+      <View className="flex-1">
         <Text className="text-lg font-bold mb-2">Lista de ventas</Text>
-        <View className="border-b border-gray-300 mb-5" />
-        <ListVentas data={ventas} />
+        <View className="border-b border-gray-300" />
+        <ListVentas />
       </View>
 
-      <View className="flex-1">
+      <View className="flex-2 mb-2">
         <Text className="text-lg font-bold mb-2">Resumen de tus ventas</Text>
         <View className="border-b border-gray-300 mb-5" />
         <TableResumenVentas navigateToReporte={navigateToReporte} />
-      </View>
-
-      <View className="flex-row justify-between mt-5">
-        <TouchableOpacity
-          onPress={onRefresh}
-          className="justify-center items-center py-2 px-4 rounded-full bg-orange-500"
-        >
-          <Text className="text-white text-lg">Recargar</Text>
-        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
