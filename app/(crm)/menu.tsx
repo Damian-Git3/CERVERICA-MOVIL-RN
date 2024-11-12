@@ -58,7 +58,7 @@ const Menu = () => {
       name: "Precios",
       icon: "dollar",
       route: "/(admin)/HistorialPrecios",
-      roles: ["Admin", "Mayorista"],
+      roles: ["Admin"],
     },
     {
       name: "Descuentos",
