@@ -35,7 +35,7 @@ const HistorialPrecios = ({ children }: HistorialPreciosProps) => {
 
   useEffect(() => {
     getListaRecetas();
-  }, []);
+  }, [modalVisible]);
 
   useEffect(() => {
     setFilteredRecetas(listaRecetas);
@@ -191,6 +191,14 @@ const ModalReceta = ({
               </Text>
             </View>
           </View>
+          <View className="flex flex-row justify-between ">
+            <View className="w-1/2 p-2">
+              <Text style={styles.modalText}>
+                Precio Unitario Base para Mayoreo: ${" "}
+                {receta.precioUnitarioBaseMayoreo}
+              </Text>
+            </View>
+          </View>
 
           {/* LISTA DE HISTORIAL DE PRECIOS OBTENIDOS */}
 
@@ -227,6 +235,9 @@ const ModalReceta = ({
                       </Text>
                       <Text className="w-1/5 text-xs text-center">
                         $ {item.precioPaquete24}
+                      </Text>
+                      <Text className="w-1/5 text-xs text-center">
+                        $ {item.precioUnitarioBaseMayoreo}
                       </Text>
                     </View>
                   );
