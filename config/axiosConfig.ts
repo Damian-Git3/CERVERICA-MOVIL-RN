@@ -31,5 +31,7 @@ axios.interceptors.response.use(
         text2: "La solicitud excedió el tiempo de espera",
       });
     }
+
+    return Promise.reject(error);
   }
 );

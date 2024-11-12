@@ -136,6 +136,7 @@ const useHistorialPrecios = () => {
 
   const setNuevoPrecio = async (data: HistorialPrecioInsert) => {
     try {
+      console.log("ENVIANDO PRECIOS", data);
       setCargando(true);
       const response = await axios.post(`/HistorialPrecios`, data);
       console.log(response);
