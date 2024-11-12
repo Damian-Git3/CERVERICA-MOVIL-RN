@@ -9,9 +9,6 @@ type RecetaCardProps = {
 };
 
 export default function RecetaCard({ receta }: RecetaCardProps) {
-  const [selectedPrice, setSelectedPrice] = useState(
-    receta.precioUnitarioBaseMayoreo
-  );
   const [isModalVisible, setModalVisible] = useState(false);
   const [cantidad, setCantidad] = useState(1);
   const addToCart = useCartStore((state) => state.addItem);
@@ -24,7 +21,7 @@ export default function RecetaCard({ receta }: RecetaCardProps) {
     addToCart({
       id: receta.id,
       nombre: receta.nombre,
-      precio: selectedPrice,
+      precio: receta.precioUnitarioBaseMayoreo,
       cantidad,
     });
     setModalVisible(false);
@@ -35,26 +32,16 @@ export default function RecetaCard({ receta }: RecetaCardProps) {
     <View style={styles.card}>
       <View style={{ flexDirection: "row", gap: 20 }}>
         <Image source={{ uri: receta.imagen }} style={styles.image} />
+
         <View style={styles.info}>
           <Text style={styles.name}>{receta.nombre}</Text>
           <Text style={styles.description}>{receta.descripcion}</Text>
           <Text style={styles.priceLabel}>
-            Precio actual: ${selectedPrice!.toFixed(2)}
+            Precio: ${receta.precioUnitarioBaseMayoreo!.toFixed(2)}
           </Text>
-
-          <Slider
-            style={styles.slider}
-            minimumValue={receta.precioUnitarioMinimoMayoreo}
-            maximumValue={receta.precioUnitarioBaseMayoreo}
-            value={selectedPrice}
-            onValueChange={(value) => setSelectedPrice(value)}
-            step={0.01}
-            minimumTrackTintColor="#ED9224"
-            maximumTrackTintColor="#000000"
-            thumbTintColor="#ED9224"
-          />
         </View>
       </View>
+
       <View className="mt-3">
         <CustomButton title="Agregar a pedido" onPress={handleAgregarPedido} />
       </View>
@@ -63,7 +50,9 @@ export default function RecetaCard({ receta }: RecetaCardProps) {
       <Modal visible={isModalVisible} transparent animationType="slide">
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle} className="text-[#ED9224]">{receta.nombre}</Text>
+            <Text style={styles.modalTitle} className="text-[#ED9224]">
+              {receta.nombre}
+            </Text>
             <Text style={styles.modalTitle}>Seleccionar cantidad</Text>
             <TextInput
               style={styles.input}
@@ -100,6 +89,7 @@ const styles = StyleSheet.create({
   },
   info: {
     flex: 1,
+    justifyContent: "center",
   },
   name: {
     fontSize: 16,
@@ -131,7 +121,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 10,
     alignItems: "center",
-    gap: 15
+    gap: 15,
   },
   modalTitle: {
     fontSize: 18,
