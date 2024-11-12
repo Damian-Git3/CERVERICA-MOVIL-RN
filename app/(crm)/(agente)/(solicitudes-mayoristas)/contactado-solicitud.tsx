@@ -21,9 +21,8 @@ export default function ProspectoSolicitud() {
   const { solicitudMayorista } = useSolicitudesMayoristasStore();
   const { recetas, cargando, getRecetas } = useRecetas();
   const [isMounted, setIsMounted] = useState(false);
-  const { items, clearCart } = useCartStore();
+  const { items } = useCartStore();
 
-  // Estado para manejar la visibilidad del modal
   const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
@@ -54,9 +53,6 @@ export default function ProspectoSolicitud() {
       <FlatList
         data={recetas}
         renderItem={({ item }) => <RecetaCard receta={item} />}
-        ListHeaderComponent={() => (
-          <Button title="Limpiar Carrito" onPress={clearCart} color="#ED9224" />
-        )}
       />
 
       {/* Botón del carrito */}

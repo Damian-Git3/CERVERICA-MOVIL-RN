@@ -59,7 +59,7 @@ const CustomButton = ({
   return (
     <TouchableOpacity
       onPress={disabled ? undefined : onPress} // Evita onPress si está deshabilitado
-      className={`w-full rounded-full p-3 flex flex-row justify-center items-center shadow-md shadow-neutral-400/70 
+      className={`w-full rounded-full p-2 flex flex-row justify-center items-center shadow-md shadow-neutral-400/70 
       ${getBgVariantStyle(bgVariant, disabled)} 
       ${className} ${disabled ? "opacity-50" : ""}`} // Agrega opacidad si está deshabilitado
       disabled={disabled}
@@ -67,7 +67,7 @@ const CustomButton = ({
     >
       {IconLeft && <IconLeft />}
       <Text
-        className={`text-lg font-bold ${getTextVariantStyle(
+        className={`text-base font-bold ${getTextVariantStyle(
           textVariant,
           disabled
         )}`}
