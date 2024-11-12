@@ -4,7 +4,7 @@ const Layout = () => {
   return (
     <Stack>
       <Stack.Screen
-        name="(tabs)"
+        name="notificaciones"
         options={{
           title: "Notificaciones",
           headerShown: false,
