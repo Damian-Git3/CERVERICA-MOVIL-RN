@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FlatList,
   Image,
@@ -18,20 +18,25 @@ import {
   PreciosRecetaView,
   RecetaView,
 } from "@/dtos/HistorialPrecios";
+import CustomButton from "@/components/CustomButton";
+import CustomInput from "../../../components/CustomInput";
+import { SubmitHandler, useForm } from "react-hook-form";
 
-interface HistorialPreciosProps {
-  children?: ReactNode;
-}
-
-const HistorialPrecios = ({ children }: HistorialPreciosProps) => {
+const HistorialPrecios = () => {
   const [text, setText] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedReceta, setSelectedReceta] =
     useState<PreciosRecetaView | null>(null);
   const [filteredRecetas, setFilteredRecetas] = useState<RecetaView[]>([]);
-  const { listaRecetas, getListaRecetas } = useHistorialPrecios();
-  const { receta, getPrecioReceta } = useHistorialPrecios();
-  const { historialPrecios, getHistorialPrecios } = useHistorialPrecios();
+  const {
+    listaRecetas,
+    getListaRecetas,
+    receta,
+    getPrecioReceta,
+    historialPrecios,
+    getHistorialPrecios,
+    setNuevoPrecio,
+  } = useHistorialPrecios();
 
   useEffect(() => {
     getListaRecetas();
@@ -117,6 +122,8 @@ const HistorialPrecios = ({ children }: HistorialPreciosProps) => {
           setModalVisible={setModalVisible}
           receta={selectedReceta}
           historialPrecios={historialPrecios}
+          getHistorialPrecios={getHistorialPrecios}
+          setNuevoPrecio={setNuevoPrecio}
         />
       )}
     </View>
@@ -128,13 +135,22 @@ const ModalReceta = ({
   setModalVisible,
   receta,
   historialPrecios = [],
+  getHistorialPrecios,
+  setNuevoPrecio,
 }: {
   modalVisible: boolean;
   setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
   receta: PreciosRecetaView;
   historialPrecios: HistorialPreciosView[];
+  getHistorialPrecios: (id: number) => void;
+  setNuevoPrecio: (precio: HistorialPrecioInsert) => Promise<void>;
 }) => {
   const [newModalVisible, setNewModalVisible] = useState(false);
+
+  const handleNewModalClose = () => {
+    setNewModalVisible(false);
+    getHistorialPrecios(receta.id);
+  };
 
   return (
     <Modal
@@ -216,7 +232,6 @@ const ModalReceta = ({
                   const fecha = new Date(item.fecha);
                   return (
                     <View
-                      key={fecha}
                       className={`flex flex-row p-2 ${
                         index % 2 === 0 ? "bg-white" : "bg-gray-100"
                       }`}
@@ -259,32 +274,35 @@ const ModalReceta = ({
                     <Text className="w-1/5 font-bold text-xs text-center">
                       P24
                     </Text>
+                    <Text className="w-1/5 font-bold text-xs text-center">
+                      PUBM
+                    </Text>
                   </View>
                 )}
               />
             )}
           </View>
-
-          <Pressable
+          <CustomButton
             onPress={() => setNewModalVisible(true)}
-            className="mt-4 p-2 bg-blue-500 rounded"
-          >
-            <Text className="text-white text-center">Nuevo Historial</Text>
-          </Pressable>
+            title="Cambio de Precio"
+            bgVariant="success"
+            className="my-1"
+          />
 
-          <Pressable
+          <CustomButton
             onPress={() => setModalVisible(false)}
-            style={styles.closeButton}
-          >
-            <Text style={styles.closeButtonText}>Cerrar</Text>
-          </Pressable>
+            title="Cerrar"
+            className="my-1"
+          />
         </View>
       </View>
 
       <NuevoHistorialModal
         modalVisible={newModalVisible}
-        setModalVisible={setNewModalVisible}
+        setModalVisible={handleNewModalClose}
         idReceta={receta.id}
+        setNuevoPrecio={setNuevoPrecio}
+        getHistorialPrecios={getHistorialPrecios}
       />
     </Modal>
   );
@@ -294,31 +312,42 @@ const NuevoHistorialModal = ({
   modalVisible,
   setModalVisible,
   idReceta,
+  setNuevoPrecio,
+  getHistorialPrecios,
 }: {
   modalVisible: boolean;
   setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
   idReceta: number;
+  setNuevoPrecio: (precio: HistorialPrecioInsert) => Promise<void>;
+  getHistorialPrecios: (id: number) => void;
 }) => {
-  const [paquete1, setPaquete1] = useState("");
-  const [paquete6, setPaquete6] = useState("");
-  const [paquete12, setPaquete12] = useState("");
-  const [paquete24, setPaquete24] = useState("");
-  const { setNuevoPrecio } = useHistorialPrecios();
+  const {
+    control,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm<HistorialPrecioInsert>();
 
-  const handleSubmit = () => {
-    const nuevoHistorial: HistorialPrecioInsert = {
-      idReceta: idReceta,
-      paquete1: parseFloat(paquete1),
-      paquete6: parseFloat(paquete6),
-      paquete12: parseFloat(paquete12),
-      paquete24: parseFloat(paquete24),
-    };
-
-    console.log("Nuevo historial de precios:", nuevoHistorial);
+  const onSubmit: SubmitHandler<HistorialPrecioInsert> = async (data) => {
+    console.log("Nuevo historial de precios:", data);
     // Aquí puedes agregar la lógica para enviar el nuevo historial al servidor
-    setNuevoPrecio(nuevoHistorial);
+    await setNuevoPrecio({ ...data, idReceta });
+    await getHistorialPrecios(idReceta);
     setModalVisible(false);
   };
+
+  const precioPaquete1 = watch("precioPaquete1");
+  const watchFields = watch();
+  useEffect(() => {
+    console.log(watchFields);
+
+    if (precioPaquete1) {
+      setValue("precioPaquete6", precioPaquete1 * 6);
+      setValue("precioPaquete12", precioPaquete1 * 12);
+      setValue("precioPaquete24", precioPaquete1 * 24);
+    }
+  }, [precioPaquete1]);
 
   return (
     <Modal
@@ -334,46 +363,47 @@ const NuevoHistorialModal = ({
           <Text className="text-lg font-bold mb-4">
             Nuevo Historial de Precios
           </Text>
-          <TextInput
-            className="border p-2 mb-2"
+          <CustomInput
+            name="precioPaquete1"
+            control={control}
             placeholder="Paquete 1"
-            keyboardType="numeric"
-            value={paquete1}
-            onChangeText={setPaquete1}
+            required={true}
           />
-          <TextInput
-            className="border p-2 mb-2"
+          <CustomInput
+            name="precioPaquete6"
+            control={control}
             placeholder="Paquete 6"
-            keyboardType="numeric"
-            value={paquete6}
-            onChangeText={setPaquete6}
+            required={true}
           />
-          <TextInput
-            className="border p-2 mb-2"
+          <CustomInput
+            name="precioPaquete12"
+            control={control}
             placeholder="Paquete 12"
-            keyboardType="numeric"
-            value={paquete12}
-            onChangeText={setPaquete12}
+            required={true}
           />
-          <TextInput
-            className="border p-2 mb-2"
+          <CustomInput
+            name="precioPaquete24"
+            control={control}
             placeholder="Paquete 24"
-            keyboardType="numeric"
-            value={paquete24}
-            onChangeText={setPaquete24}
+            required={true}
           />
-          <Pressable
-            onPress={handleSubmit}
-            className="mt-4 p-2 bg-blue-500 rounded"
-          >
-            <Text className="text-white text-center">Guardar</Text>
-          </Pressable>
-          <Pressable
+          <CustomInput
+            name="precioBaseMayoreo"
+            control={control}
+            placeholder="Precio Unitario Base para Mayoreo"
+            required={true}
+          />
+          <CustomButton
+            onPress={handleSubmit(onSubmit)}
+            title="Guardar"
+            bgVariant="success"
+            className="my-1"
+          />
+          <CustomButton
             onPress={() => setModalVisible(false)}
-            className="mt-4 p-2 bg-gray-500 rounded"
-          >
-            <Text className="text-white text-center">Cancelar</Text>
-          </Pressable>
+            title="Cancelar"
+            className="my-1"
+          />
         </View>
       </View>
     </Modal>
@@ -476,8 +506,8 @@ const styles = StyleSheet.create({
     borderColor: "black",
   },
   modalContent: {
-    width: "80%",
-    height: "60%",
+    width: "90%",
+    height: "auto",
     backgroundColor: "white",
     borderRadius: 10,
     padding: 20,
@@ -492,7 +522,7 @@ const styles = StyleSheet.create({
   },
   modalPrecios: {
     width: "80%",
-    height: "70%",
+    height: "auto",
     backgroundColor: "white",
     borderRadius: 10,
     padding: 20,

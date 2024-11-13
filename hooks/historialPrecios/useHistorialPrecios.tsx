@@ -134,7 +134,7 @@ const useHistorialPrecios = () => {
     }
   };
 
-  const setNuevoPrecio = async (data: HistorialPrecioInsert) => {
+  const setNuevoPrecio = async (data: HistorialPrecioInsert): Promise<any> => {
     try {
       console.log("ENVIANDO PRECIOS", data);
       setCargando(true);
