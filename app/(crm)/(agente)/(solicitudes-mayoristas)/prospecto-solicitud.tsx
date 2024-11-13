@@ -12,7 +12,7 @@ export default function ProspectoSolicitud() {
   const { solicitudMayorista } = useSolicitudesMayoristasStore();
   const {
     avanzarSiguienteEstatus,
-    getSolicitudesMayoristas,
+    getSolicitudesAgente,
     cancelarSolicitudMayorista,
   } = useSolicitudesMayoristas();
   const [isMounted, setIsMounted] = useState(false);
@@ -128,7 +128,7 @@ export default function ProspectoSolicitud() {
                 Alert.alert("Éxito", "Prospecto marcado como contactado.");
 
                 // Actualizar la lista de solicitudes
-                await getSolicitudesMayoristas();
+                await getSolicitudesAgente();
 
                 // Volver a la pantalla anterior
                 router.replace(
@@ -170,7 +170,7 @@ export default function ProspectoSolicitud() {
 
                 Alert.alert("Éxito", "Solicitud marcada como cancelada");
 
-                await getSolicitudesMayoristas();
+                await getSolicitudesAgente();
 
                 router.replace(
                   "/(agente)/(solicitudes-mayoristas)/lista-solicitudes"

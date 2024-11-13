@@ -16,69 +16,79 @@ import { useCartStore } from "@/stores/CartStore";
 import useSolicitudesMayoristasStore from "@/stores/SolicitudesMayoristasStore";
 import { router } from "expo-router";
 import Cart from "@/components/Agente/SolicitudesMayoristas/Cart";
+import useCarrito from "@/hooks/useCarrito";
 
-export default function ProspectoSolicitud() {
-  const { solicitudMayorista } = useSolicitudesMayoristasStore();
-  const { recetas, cargando, getRecetas } = useRecetas();
-  const [isMounted, setIsMounted] = useState(false);
-  const { items } = useCartStore();
+export default function NuevaSolicitud() {
+  const {
+    productosCarrito,
+    cargando: cargandoCarrito,
+    obtenerProductosCarrito,
+  } = useCarrito();
+  const { recetas, cargando: cargandoRecetas, getRecetas } = useRecetas();
 
   const [modalVisible, setModalVisible] = useState(false);
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (isMounted && solicitudMayorista == null) {
-      router.replace("/(agente)/(solicitudes-mayoristas)/lista-solicitudes");
-    }
-  }, [isMounted, solicitudMayorista]);
+  const onCarritoChange = () => {
+    obtenerProductosCarrito();
+  };
 
   useEffect(() => {
     getRecetas();
+    obtenerProductosCarrito();
   }, []);
 
   return (
     <View style={styles.container}>
-      {cargando && (
-        <Progress.Bar
-          indeterminate={true}
-          width={null}
-          color="#ED9224"
-          className="mt-5"
-        />
-      )}
-
       <FlatList
         data={recetas}
-        renderItem={({ item }) => <RecetaCard receta={item} />}
+        renderItem={({ item }) => (
+          <RecetaCard
+            receta={item}
+            onCarritoChange={onCarritoChange}
+            productosCarrito={productosCarrito}
+          />
+        )}
+        ListHeaderComponent={() => (
+          <>
+            <Text style={styles.welcomeText}>Nueva solicitud</Text>
+
+            {(cargandoCarrito || cargandoRecetas) && (
+              <Progress.Bar
+                indeterminate={true}
+                width={null}
+                color="#ED9224"
+                className="mt-5"
+              />
+            )}
+          </>
+        )}
       />
 
-      {/* Botón del carrito */}
       <TouchableOpacity
         style={styles.cartButton}
         onPress={() => setModalVisible(true)}
       >
         <Ionicons name="cart-outline" size={30} color="white" />
-        {items.length > 0 && (
+        {productosCarrito && productosCarrito.length > 0 && (
           <View style={styles.badge}>
-            <Text style={styles.badgeText}>{items.length}</Text>
+            <Text style={styles.badgeText}>{productosCarrito.length}</Text>
           </View>
         )}
       </TouchableOpacity>
 
-      {/* Modal del carrito */}
-      <Cart
-        modalVisible={modalVisible}
-        setModalVisible={setModalVisible}
-        idSolicitudMayorista={solicitudMayorista!.id}
-      />
+      {productosCarrito && (
+        <Cart
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+          productosCarrito={productosCarrito}
+        />
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  welcomeText: { fontSize: 24, fontWeight: "bold", marginBottom: 10 },
   container: {
     flex: 1,
     padding: 10,
