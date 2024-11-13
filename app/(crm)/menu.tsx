@@ -67,6 +67,12 @@ const Menu = () => {
       roles: ["Mayorista"],
     },
     {
+      name: "Pagos",
+      icon: "dollar",
+      route: "/(mayorista)/pagos",
+      roles: ["Mayorista"],
+    },
+    {
       name: "Dashboard",
       icon: "stats-chart",
       route: "/(admin)/(dashboard)",
@@ -76,7 +82,7 @@ const Menu = () => {
       name: "Notificaciones",
       icon: "notifications",
       route: "/(crm)/(notificacion)",
-      roles: ["Admin", "Mayorista"],
+      roles: ["Admin", "Mayorista", "Agente", "Cliente"],
     },
     {
       name: "Ventas",
@@ -125,6 +131,12 @@ const Menu = () => {
       icon: "tags",
       route: "/(mayorista)/(solicitudes-mayoristas)/lista-solicitudes",
       roles: ["Mayorista"],
+    },
+    {
+      name: "Mayoristas Asignados",
+      icon: "people",
+      route: "/(agente)/mayoristas-asignados",
+      roles: ["Agente"],
     },
   ];
 
