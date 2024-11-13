@@ -2,7 +2,14 @@ import React, { useState, useEffect } from "react";
 import CustomButton from "@/components/CustomButton";
 import useVentas from "@/hooks/useVentas";
 import { useRouter, useLocalSearchParams } from "expo-router";
-import { Text, View, Linking, Alert, StyleSheet, ActivityIndicator, FlatList } from "react-native";
+import {
+  Text,
+  View,
+  Linking,
+  Alert,
+  ActivityIndicator,
+  FlatList,
+} from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import ModalVenta from "@/components/admin/ventas/ModalVenta";
 import { Badge, Image } from "react-native-elements";
@@ -20,7 +27,8 @@ interface CardProps {
 }
 
 export default function DetalleVentaScreen() {
-  const { selectedVenta, getVenta, retrocederStatus, empaquetar, cargando } = useVentas();
+  const { selectedVenta, getVenta, retrocederStatus, empaquetar, cargando } =
+    useVentas();
   const [modalVisible, setModalVisible] = useState(false);
   const router = useRouter();
   const { id } = useLocalSearchParams();
@@ -121,13 +129,15 @@ export default function DetalleVentaScreen() {
   );
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Venta</Text>
-      <View style={styles.hr} />
+    <View className="flex-1 p-5 bg-gray-100 rounded-lg shadow-md">
+      <Text className="text-2xl font-bold mb-4 text-center text-gray-800">
+        Venta
+      </Text>
+      <View className="border-b border-gray-300 mb-5" />
       {selectedVenta && (
         <>
-          <Text style={styles.text}>ID: {selectedVenta.id}</Text>
-          <Text style={styles.text}>
+          <Text className="text-lg text-gray-700">ID: {selectedVenta.id}</Text>
+          <Text className="text-lg text-gray-700">
             Fecha de la venta:{" "}
             {new Date(selectedVenta.fechaVenta).toLocaleString("es-ES", {
               day: "2-digit",
@@ -137,16 +147,16 @@ export default function DetalleVentaScreen() {
               minute: "2-digit",
             })}
           </Text>
-          <Text style={styles.text}>
+          <Text className="text-lg text-gray-700">
             Total de cervezas: {selectedVenta.totalCervezas}
           </Text>
-          <Text style={styles.text}>
+          <Text className="text-lg text-gray-700">
             Metodo de envio: {obtenerMetodoEnvio(selectedVenta.metodoEnvio)}
           </Text>
-          <Text style={styles.text}>
+          <Text className="text-lg text-gray-700">
             Metodo de pago: {obtenerMetodoPago(selectedVenta.metodoPago)}
           </Text>
-          <Text style={styles.text}>
+          <Text className="text-lg text-gray-700">
             Estatus:
             <Badge
               value={obtenerNombreEstatusVenta(selectedVenta.estatusVenta)}
@@ -159,9 +169,11 @@ export default function DetalleVentaScreen() {
               textStyle={{ color: "white" }}
             />
           </Text>
-          <Text style={styles.text}>Monto: ${selectedVenta.montoVenta}</Text>
+          <Text className="text-lg text-gray-700">
+            Monto: ${selectedVenta.montoVenta}
+          </Text>
           {selectedVenta.estatusVenta !== 1 && (
-            <View style={styles.buttonContainer}>
+            <View className="mt-8 flex-col gap-5 items-center">
               <CustomButton
                 title="Retroceder paso"
                 onPress={() => retrocederPaso(selectedVenta.id)}
@@ -172,7 +184,7 @@ export default function DetalleVentaScreen() {
             </View>
           )}
           {selectedVenta.estatusVenta === 1 && (
-            <View style={styles.buttonContainer}>
+            <View className="mt-8 flex-col gap-5 items-center">
               <CustomButton
                 title="Empezar empaquetar cervezas"
                 onPress={() => avanzarEmpaquetar(selectedVenta.id)}
@@ -183,7 +195,7 @@ export default function DetalleVentaScreen() {
             </View>
           )}
           {selectedVenta.estatusVenta === 2 && (
-            <View style={styles.buttonContainer}>
+            <View className="mt-8 flex-col gap-5 items-center">
               <CustomButton
                 title="Empaquetar cervezas"
                 style={{ backgroundColor: severityColors["warning"] }}
@@ -195,27 +207,29 @@ export default function DetalleVentaScreen() {
             </View>
           )}
 
-          <Text style={styles.header}>Detalle de Venta</Text>
-          <View style={styles.hr} />
-          <Text style={styles.text}>Productos:</Text>
+          <Text className="text-2xl font-bold mb-4 text-center text-gray-800">
+            Detalle de Venta
+          </Text>
+          <View className="border-b border-gray-300 mb-5" />
+          <Text className="text-lg text-gray-700">Productos:</Text>
           <FlatList
             data={selectedVenta.productosPedido}
             renderItem={renderItem}
             keyExtractor={(item) => item.id.toString()}
-            contentContainerStyle={styles.list}
+            contentContainerStyle={{ flexGrow: 1, padding: 16 }}
             ListEmptyComponent={() => (
-              <View style={styles.emptyContainer}>
+              <View className="flex-1 justify-center items-center">
                 {cargando ? (
                   <ActivityIndicator size="small" color="#000" />
                 ) : (
                   <>
                     <Image
                       source={images.noResult}
-                      style={styles.noResultImage}
+                      className="w-24 h-24"
                       alt="No se encontraron ventas"
                       resizeMode="contain"
                     />
-                    <Text style={styles.noResultText}>
+                    <Text className="text-lg text-gray-600">
                       No se encontraron ventas
                     </Text>
                   </>
@@ -223,8 +237,8 @@ export default function DetalleVentaScreen() {
               </View>
             )}
             ListHeaderComponent={() => (
-              <View style={styles.headerContainer}>
-                <Text style={styles.headerText}>
+              <View className="mb-5">
+                <Text className="text-2xl font-bold">
                   Venta total de : {selectedVenta.totalCervezas} cervezas
                 </Text>
               </View>
@@ -304,106 +318,31 @@ const severityColors = {
   default: "gray",
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: "#f9f9f9",
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
-    elevation: 2,
-  },
-  hr: {
-    borderBottomColor: "#ccc",
-    borderBottomWidth: 1,
-    marginBottom: 20,
-  },
-  noResultImage: {
-    width: 100,
-    height: 100,
-  },
-  noResultText: {
-    fontSize: 16,
-    color: "#666",
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 15,
-    color: "#333",
-    textAlign: "center",
-  },
-  text: {
-    fontSize: 16,
-    marginVertical: 5,
-    color: "#555",
-    textAlign: "left",
-  },
-  buttonContainer: {
-    marginTop: 30,
-    flexDirection: "column",
-    gap: 20,
-    alignItems: "center",
-  },
-  emptyContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  headerContainer: {
-    marginBottom: 20,
-  },
-  headerText: {
-    fontSize: 24,
-    fontWeight: "bold",
-  },
-  list: {
-    flexGrow: 1,
-    padding: 16,
-  },
-  card: {
-    backgroundColor: "#fff",
-    padding: 20,
-    marginVertical: 10,
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 3,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  description: {
-    fontSize: 14,
-    color: "#666",
-  },
-});
-
 const Card: React.FC<CardProps> = ({ detalleVenta }) => {
-
   return (
-    <View style={styles.card}>
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
+    <View className="bg-white p-5 my-2 rounded-lg shadow-md">
+      <View className="flex-row items-center">
         <Image
           source={{ uri: detalleVenta.stock.receta.imagen }}
-          style={{ width: 100, height: 100, marginRight: 10 }}
+          className="w-24 h-24 mr-2"
           resizeMode="contain"
         />
-        <View style={{ flex: 1 }}>
-          <Text style={styles.title}>{detalleVenta.stock.receta.nombre}</Text>
-          <Text style={styles.description}>Cantidad: {detalleVenta.cantidad}</Text>
-          <Text style={styles.description}>Pack: {detalleVenta.pack} cervezas</Text>
-          <Text style={styles.description}>Costo Unitario: {detalleVenta.costoUnitario}</Text>
-          <Text style={styles.description}>Total: {detalleVenta.montoVenta}</Text>
+        <View className="flex-1">
+          <Text className="text-lg font-bold">
+            {detalleVenta.stock.receta.nombre}
+          </Text>
+          <Text className="text-base text-gray-600">
+            Cantidad: {detalleVenta.cantidad}
+          </Text>
+          <Text className="text-base text-gray-600">
+            Pack: {detalleVenta.pack} cervezas
+          </Text>
+          <Text className="text-base text-gray-600">
+            Costo Unitario: {detalleVenta.costoUnitario}
+          </Text>
+          <Text className="text-base text-gray-600">
+            Total: {detalleVenta.montoVenta}
+          </Text>
         </View>
       </View>
     </View>
