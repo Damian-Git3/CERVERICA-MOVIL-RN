@@ -30,8 +30,9 @@ export interface HistorialPreciosView {
 
 export interface HistorialPrecioInsert {
   idReceta: number;
-  paquete1: number;
-  paquete6: number;
-  paquete12: number;
-  paquete24: number;
+  precioPaquete1: number;
+  precioPaquete6: number;
+  precioPaquete12: number;
+  precioPaquete24: number;
+  precioBaseMayoreo: number;
 }
