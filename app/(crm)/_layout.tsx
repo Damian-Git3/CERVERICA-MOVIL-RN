@@ -14,12 +14,12 @@ const Layout = () => {
     <Stack
       screenOptions={{
         headerLeft: () => (
-          <Link href="/(crm)/menu" className="mr-5">
+          <Link href="/(crm)/menu" className="ml-5">
             <Icon name="menu" size={30} />
           </Link>
         ),
         headerRight: () => (
-          <Link href="/(crm)/(perfil)/(tabs)/profile" className="ml-5">
+          <Link href="/(crm)/(perfil)/(tabs)/profile" className="mr-5">
             <UserAvatar
               size={35}
               name={session?.nombre}
@@ -45,6 +45,7 @@ const Layout = () => {
         contentStyle: {
           backgroundColor: "white",
         },
+        gestureDirection: "vertical",
       }}
     >
       <Stack.Screen name="(agente)" />
@@ -52,11 +53,7 @@ const Layout = () => {
       <Stack.Screen
         name="menu"
         options={{
-          headerTitle: "Menú",
-          headerLeft: undefined,
-          headerRight: undefined,
-          headerBackTitle: "Regresar",
-          headerTintColor: "black",
+          animationTypeForReplace: "pop",
           headerShown: false,
         }}
       />

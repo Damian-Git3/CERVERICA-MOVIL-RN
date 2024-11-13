@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -13,63 +13,25 @@ import useVentas from "@/hooks/useVentas";
 import { CrearVentaDto } from "@/dtos/CrearVentaDTO";
 import useSolicitudesMayoristas from "@/hooks/useSolicitudesMayoristas";
 import { router } from "expo-router";
+import useCarrito from "@/hooks/useCarrito";
+import { ProductoCarrito } from "@/models/ProductoCarrito";
+import CustomButton from "@/components/CustomButton";
 
 type CartProps = {
   modalVisible: boolean;
   setModalVisible: (visible: boolean) => void;
-  idSolicitudMayorista: number;
+  productosCarrito: ProductoCarrito[] | null;
 };
 
 export default function Cart({
   modalVisible,
   setModalVisible,
-  idSolicitudMayorista,
+  productosCarrito,
 }: CartProps) {
-  const { items, clearCart } = useCartStore();
-  const { avanzarSiguienteEstatus, getSolicitudesMayoristas } =
-    useSolicitudesMayoristas();
+  const { crearSolicitudMayorista } = useSolicitudesMayoristas();
 
-  const { crearVenta } = useVentas();
-
-  const handleGenerarVenta = async () => {
-    const nuevaVenta: CrearVentaDto = {
-      detalles: items.map((item) => ({
-        idReceta: item.id,
-        cantidad: item.cantidad,
-        pack: 1,
-        montoVenta: 0,
-        medidaEnvase: 355,
-        tipoEnvase: "Botella",
-      })),
-      metodoEnvio: 1,
-      metodoPago: 3,
-      AnioExpiracion: undefined,
-      Ciudad: undefined,
-      CVV: undefined,
-      calle: undefined,
-      codigoPostal: undefined,
-      Estado: undefined,
-      MesExpiracion: undefined,
-      nombrePersonaRecibe: undefined,
-      NombrePersonaTarjeta: undefined,
-      NumeroTarjeta: undefined,
-      numeroCasa: undefined,
-    };
-
-    //const result = await crearVenta(nuevaVenta);
-
-    clearCart();
-
-    await avanzarSiguienteEstatus({
-      idSolicitud: idSolicitudMayorista,
-      nuevoEstatus: 4,
-    });
-
-    Alert.alert("Éxito", "Venta generada correctamente.");
-
-    //await getSolicitudesMayoristas();
-
-    //router.replace("/(agente)/(solicitudes-mayoristas)/lista-solicitudes");
+  const handleRealizarSolicitud = async () => {
+    await crearSolicitudMayorista();
   };
 
   return (
@@ -82,20 +44,24 @@ export default function Cart({
       <View style={styles.modalOverlay}>
         <View style={styles.modalContent}>
           <Text style={styles.modalTitle}>Carrito de Compras</Text>
-          {items.length > 0 ? (
+          {productosCarrito!.length > 0 ? (
             <FlatList
-              data={items}
+              data={productosCarrito}
               renderItem={({ item }) => (
                 <View style={styles.cartItem}>
-                  <Text style={styles.productName}>{item.nombre}</Text>
+                  <Text style={styles.productName}>{item.receta.nombre}</Text>
                   <Text style={styles.productPrice}>
-                    ${(item.precio ?? 0).toFixed(2)}
+                    ${(item.receta.precioUnitarioBaseMayoreo ?? 0).toFixed(2)}
                   </Text>
                   <Text style={styles.productQuantity}>
                     Cantidad: {item.cantidad}
                   </Text>
                   <Text style={styles.productTotal}>
-                    Total: ${((item.precio ?? 0) * item.cantidad).toFixed(2)}
+                    Total: $
+                    {(
+                      (item.receta.precioUnitarioBaseMayoreo ?? 0) *
+                      item.cantidad
+                    ).toFixed(2)}
                   </Text>
                 </View>
               )}
@@ -104,19 +70,22 @@ export default function Cart({
           ) : (
             <Text style={styles.emptyCart}>El carrito está vacío</Text>
           )}
-          <View style={styles.modalButtons}>
-            <Button
-              title="Generar venta"
-              onPress={handleGenerarVenta}
-              color="#ED9224"
+          <View style={styles.modalButtons} className="flex flex-col gap-2">
+            <CustomButton
+              title="Realizar solicitud"
+              onPress={handleRealizarSolicitud}
             />
-            <Button
+            <CustomButton
               title="Cerrar"
+              bgVariant="secondary"
               onPress={() => setModalVisible(false)}
-              color="#ED9224"
             />
-            {items.length > 0 && (
-              <Button title="Limpiar Carrito" onPress={clearCart} color="red" />
+            {productosCarrito!.length > 0 && (
+              <CustomButton
+                title="Limpiar Carrito"
+                bgVariant="danger"
+                /* onPress={clearCart} */
+              />
             )}
           </View>
         </View>

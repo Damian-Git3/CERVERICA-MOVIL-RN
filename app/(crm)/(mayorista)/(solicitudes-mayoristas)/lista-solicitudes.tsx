@@ -1,4 +1,5 @@
 import SolicitudMayoristaCard from "@/components/Agente/SolicitudesMayoristas/SolicitudMayoristaCard";
+import CustomButton from "@/components/CustomButton";
 import { images } from "@/constants";
 import AuthContext from "@/context/Auth/AuthContext";
 import useSolicitudesMayoristas from "@/hooks/useSolicitudesMayoristas";
@@ -18,13 +19,14 @@ import {
 } from "react-native";
 
 const ListaSolicitudes = () => {
-  const { getSolicitudesAgente, solicitudesMayoristas, cargando } =
+  const { getSolicitudesMayorista, solicitudesMayoristas, cargando } =
     useSolicitudesMayoristas();
   const { session } = useContext(AuthContext);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [filteredSolicitudes, setFilteredSolicitudes] = useState(
     solicitudesMayoristas
   );
+
   const [filtrosLista, setFiltrosLista] = useState({
     noAtendidos: false,
     mayorMenor: false,
@@ -32,16 +34,18 @@ const ListaSolicitudes = () => {
   });
 
   useEffect(() => {
-    getSolicitudesAgente();
+    getSolicitudesMayorista();
   }, []);
 
   useEffect(() => {
-    setFilteredSolicitudes(solicitudesMayoristas); // Actualiza la lista cuando cambian las solicitudes
+    setFilteredSolicitudes(solicitudesMayoristas);
   }, [solicitudesMayoristas]);
 
   const onRefresh = async () => {
     setIsRefreshing(true);
-    await getSolicitudesAgente();
+
+    getSolicitudesMayorista();
+
     setIsRefreshing(false);
   };
 
@@ -52,8 +56,12 @@ const ListaSolicitudes = () => {
     setSolicitudMayorista(solicitudMayorista);
 
     switch (solicitudMayorista.estatus) {
-      case 2:
-        router.push("/(agente)/(solicitudes-mayoristas)/confirmando-solicitud");
+      case 1:
+        router.push("/(agente)/(solicitudes-mayoristas)/prospecto-solicitud");
+        break;
+
+      default:
+        router.push("/(agente)/(solicitudes-mayoristas)/contactado-solicitud");
         break;
     }
   };
@@ -136,18 +144,28 @@ const ListaSolicitudes = () => {
                   alt="No se encontraron solicitudes de mayoristas"
                   resizeMode="contain"
                 />
+
                 <Text style={styles.noResultText}>
-                  No se encontraron solicitudes de mayoristas
+                  No se encontraron tus solicitudes {":("}
                 </Text>
+
+                <CustomButton
+                  title="Registrar nueva solicitud"
+                  className="mt-5"
+                  onPress={() =>
+                    router.push(
+                      "/(mayorista)/(solicitudes-mayoristas)/nueva-solicitud"
+                    )
+                  }
+                />
               </>
             )}
           </View>
         )}
         ListHeaderComponent={() => (
           <View style={styles.headerContainer}>
-            <Text style={styles.welcomeText}>
-              Bienvenido {session?.nombre} 👋
-            </Text>
+            <Text style={styles.welcomeText}>Mis solicitudes</Text>
+
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <View style={styles.filtersContainer}>
                 {filtrosScroll.map((filtro, index) => (

@@ -13,31 +13,29 @@ export default function SolicitudMayoristaCard({
 }: {
   solicitudMayorista: SolicitudMayorista;
 }) {
-  // Define los pasos según el valor de solicitudMayorista
   const pasos =
     solicitudMayorista.estatus === 5
+      ? ["Rechazado"]
+      : solicitudMayorista.estatus === 4
       ? ["Cancelado"]
-      : solicitudMayorista.tipo === 1
-      ? ["Prospecto", "Contactado", "Cerrado"]
-      : ["Nuevo pedido", "Contactado", "Cerrado"];
+      : ["Nuevo pedido", "Confirmando", "Concretado"];
 
-  // Determina el paso activo basado en el estatus
   let activeStep;
   switch (solicitudMayorista.estatus) {
-    case 1: // Prospecto
+    case 1: // Nuevo Pedido
       activeStep = 0;
       break;
-    case 2: // Nuevo Pedido
-      activeStep = 0; // Si el tipo es 2, puedes cambiar esto según la lógica que necesites
-      break;
-    case 3: // Contactado
+    case 2: // Confirmando
       activeStep = 1;
       break;
-    case 4: // Cerrado
+    case 3: // Concretado
       activeStep = 2;
       break;
-    case 5: // Cancelado
-      activeStep = 0; // Si consideras que se cancela en el último paso
+    case 4: // Cancelado
+      activeStep = 0;
+      break;
+    case 5: // Rechazado
+      activeStep = 0;
       break;
     default:
       activeStep = 0; // Valor por defecto
@@ -72,10 +70,11 @@ export default function SolicitudMayoristaCard({
         {new Date(solicitudMayorista.fechaInicio).toLocaleDateString()}
       </Text>
 
-      {solicitudMayorista.estatus == 5 && (
+      {(solicitudMayorista.estatus == 4 || solicitudMayorista.estatus == 5) && (
         <>
           <Text className="text-lg text-neutral-800 mt-2">
-            Mensaje rechazo:
+            Mensaje{" "}
+            {solicitudMayorista.estatus == 4 ? "cancelación" : "rechazado"}:
           </Text>
 
           <Text className="text-base text-neutral-800">
@@ -94,7 +93,11 @@ export default function SolicitudMayoristaCard({
         labelColor="#ed9224"
         activeLabelColor="#ed9224"
         activeStep={activeStep}
-        isComplete={solicitudMayorista.estatus == 5}
+        isComplete={
+          solicitudMayorista.estatus == 5 ||
+          solicitudMayorista.estatus == 4 ||
+          solicitudMayorista.estatus == 3
+        }
       >
         {pasos.map((stepLabel, index) => (
           <ProgressStep key={index} label={stepLabel} removeBtnRow={true} />
