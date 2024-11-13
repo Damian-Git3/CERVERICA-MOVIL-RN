@@ -67,6 +67,12 @@ const Menu = () => {
       roles: ["Mayorista"],
     },
     {
+      name: "Pagos",
+      icon: "dollar",
+      route: "/(mayorista)/pagos",
+      roles: ["Mayorista"],
+    },
+    {
       name: "Dashboard",
       icon: "stats-chart",
       route: "/(admin)/ventas",
@@ -125,6 +131,12 @@ const Menu = () => {
       icon: "tags",
       route: "/(mayorista)/(solicitudes-mayoristas)/lista-solicitudes",
       roles: ["Mayorista"],
+    },
+    {
+      name: "Mayoristas Asignados",
+      icon: "people",
+      route: "/(agente)/mayoristas-asignados",
+      roles: ["Agente"],
     },
   ];
 

@@ -10,7 +10,7 @@ const AgenteLayout = () => {
           headerShown: false,
         }}
       />
-      
+
       <Stack.Screen
         name="solicitud-asistencia"
         options={{
@@ -36,6 +36,20 @@ const AgenteLayout = () => {
         name="seguimiento-solicitud-asistencia"
         options={{
           title: "Seguimiento",
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="mayoristas-asignados"
+        options={{
+          title: "Clientes mayoristas asignados",
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="pagos"
+        options={{
+          title: "Detalle de Pagos",
           headerShown: false,
         }}
       />
