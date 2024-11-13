@@ -185,8 +185,8 @@ const ModalReceta = ({
           </View>
           <View className="flex flex-row justify-between mt-4">
             <View className="w-1/2 p-2 ">
-              <Text style={styles.modalText}>
-                Paquete 1: $ {receta.precioPaquet1}
+              <Text style={styles.modalText} >
+                Paquete 1: $ {receta.precioPaquete1}
               </Text>
             </View>
             <View className="w-1/2 p-2">

@@ -11,7 +11,7 @@ export interface PreciosRecetaView {
   nombre: string;
   imagen: string;
   precioLitro: number;
-  precioPaquet1: number;
+  precioPaquete1: number;
   precioPaquete6: number;
   precioPaquete12: number;
   precioPaquete24: number;
