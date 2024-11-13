@@ -16,6 +16,7 @@ import { router } from "expo-router";
 import useCarrito from "@/hooks/useCarrito";
 import { ProductoCarrito } from "@/models/ProductoCarrito";
 import CustomButton from "@/components/CustomButton";
+import Toast from "react-native-toast-message";
 
 type CartProps = {
   modalVisible: boolean;
@@ -31,7 +32,17 @@ export default function Cart({
   const { crearSolicitudMayorista } = useSolicitudesMayoristas();
 
   const handleRealizarSolicitud = async () => {
-    await crearSolicitudMayorista();
+    const response = await crearSolicitudMayorista();
+
+    if (response?.status == 200) {
+      Toast.show({
+        type: "success",
+        text1: "Solicitud realizada!",
+        text2: "Tú agente la atendera en breve",
+      });
+
+      router.replace("/(mayorista)/(solicitudes-mayoristas)/lista-solicitudes");
+    }
   };
 
   return (

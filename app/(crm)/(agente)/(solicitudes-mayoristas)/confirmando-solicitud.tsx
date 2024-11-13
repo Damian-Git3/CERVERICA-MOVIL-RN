@@ -7,6 +7,9 @@ import { FlatList, StyleSheet } from "react-native";
 import { Image, Text, TextInput, View } from "react-native";
 import RechazarSolicitud from "./rechazar-solicitud";
 import { ProductoCarrito } from "@/models/ProductoCarrito";
+import { PedidoMayoristaInsertDTO } from "@/dtos/PedidosMayoristas/PedidoMayoristaInsertDTO";
+import usePedidosMayoristas from "@/hooks/usePedidosMayoristas";
+import Toast from "react-native-toast-message";
 
 const ProductoCarritoCard = ({
   productoCarrito,
@@ -45,6 +48,7 @@ export default function ConfirmandoSolicitud() {
   const { solicitudMayorista } = useSolicitudesMayoristasStore();
   const { obtenerCarritoSolicitud, carritoSolicitud } =
     useSolicitudesMayoristas();
+  const { crearPedidoMayorista, cargando } = usePedidosMayoristas();
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -61,9 +65,32 @@ export default function ConfirmandoSolicitud() {
     obtenerCarritoSolicitud(solicitudMayorista!.id);
   }, []);
 
-  useEffect(() => {
-    console.log(carritoSolicitud);
-  }, [carritoSolicitud]);
+  const handleConfirmarSolicitud = async () => {
+    const nuevoPedidoMayorista: PedidoMayoristaInsertDTO = {
+      idMayorista: solicitudMayorista!.idMayorista,
+      idSolicitudMayorista: solicitudMayorista!.id,
+      plazoMeses: 1,
+      observaciones: "",
+      listaCervezas: carritoSolicitud.map(
+        (productoCarrito: ProductoCarrito) => ({
+          idReceta: productoCarrito.receta.id,
+          cantidad: productoCarrito.cantidad,
+        })
+      ),
+    };
+
+    const result = await crearPedidoMayorista(nuevoPedidoMayorista);
+
+    if (result?.status == 200) {
+      Toast.show({
+        type: "success",
+        text1: "Pedido confirmado!",
+        text2: "Manos a la obra en la producción!"
+      });
+
+      router.replace("/(agente)/(solicitudes-mayoristas)/lista-solicitudes");
+    }
+  };
 
   return (
     <View className="p-5">
@@ -74,7 +101,10 @@ export default function ConfirmandoSolicitud() {
         )}
       />
 
-      <CustomButton title="Confirmar solicitud" />
+      <CustomButton
+        title="Confirmar solicitud"
+        onPress={handleConfirmarSolicitud}
+      />
 
       <RechazarSolicitud solicitudMayorista={solicitudMayorista} />
     </View>

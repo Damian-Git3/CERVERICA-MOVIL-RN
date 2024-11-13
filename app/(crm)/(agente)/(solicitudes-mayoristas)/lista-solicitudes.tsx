@@ -26,7 +26,7 @@ const ListaSolicitudes = () => {
     solicitudesMayoristas
   );
   const [filtrosLista, setFiltrosLista] = useState({
-    noAtendidos: false,
+    confirmando: false,
     mayorMenor: false,
     menorMayor: false,
   });
@@ -36,7 +36,7 @@ const ListaSolicitudes = () => {
   }, []);
 
   useEffect(() => {
-    setFilteredSolicitudes(solicitudesMayoristas); // Actualiza la lista cuando cambian las solicitudes
+    setFilteredSolicitudes(solicitudesMayoristas);
   }, [solicitudesMayoristas]);
 
   const onRefresh = async () => {
@@ -60,11 +60,11 @@ const ListaSolicitudes = () => {
 
   const toggleFilter = (filterType: string) => {
     let updatedList = solicitudesMayoristas;
-    if (filterType === "noAtendidos") {
-      updatedList = filtrosLista.noAtendidos
+    if (filterType === "confirmando") {
+      updatedList = filtrosLista.confirmando
         ? solicitudesMayoristas
         : solicitudesMayoristas.filter(
-            (solicitud: SolicitudMayorista) => solicitud.estatus === 1
+            (solicitud: SolicitudMayorista) => solicitud.estatus === 2
           );
     } else if (filterType === "mayorMenor") {
       updatedList = filtrosLista.mayorMenor
@@ -78,8 +78,8 @@ const ListaSolicitudes = () => {
     setFilteredSolicitudes(updatedList);
 
     setFiltrosLista((prevState) => ({
-      noAtendidos:
-        filterType === "noAtendidos" ? !prevState.noAtendidos : false,
+      confirmando:
+        filterType === "confirmando" ? !prevState.confirmando : false,
       mayorMenor: filterType === "mayorMenor" ? !prevState.mayorMenor : false,
       menorMayor: filterType === "menorMayor" ? !prevState.menorMayor : false,
     }));
@@ -87,9 +87,9 @@ const ListaSolicitudes = () => {
 
   const filtrosScroll = [
     {
-      titulo: "No atendidos",
-      accion: () => toggleFilter("noAtendidos"),
-      nombreFiltro: "noAtendidos",
+      titulo: "Confirmando",
+      accion: () => toggleFilter("confirmando"),
+      nombreFiltro: "confirmando",
     },
     {
       titulo: "Mayor a menor",

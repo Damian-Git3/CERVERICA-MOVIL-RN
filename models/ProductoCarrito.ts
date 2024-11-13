@@ -5,6 +5,7 @@ export type ProductoCarrito = {
   cantidadPaquete: number;
   cantidad: number;
   receta: {
+    id: number;
     nombre: string;
     descripcion: string;
     precioPaquete1: number;
