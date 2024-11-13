@@ -82,7 +82,7 @@ const Menu = () => {
       name: "Notificaciones",
       icon: "notifications",
       route: "/(crm)/(notificacion)",
-      roles: ["Admin", "Mayorista"],
+      roles: ["Admin", "Mayorista", "Agente", "Cliente"],
     },
     {
       name: "Ventas",
