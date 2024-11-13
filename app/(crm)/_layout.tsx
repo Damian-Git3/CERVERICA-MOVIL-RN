@@ -48,8 +48,6 @@ const Layout = () => {
         gestureDirection: "vertical",
       }}
     >
-      <Stack.Screen name="(agente)" />
-
       <Stack.Screen
         name="menu"
         options={{
@@ -58,17 +56,6 @@ const Layout = () => {
         }}
       />
       <Stack.Screen name="inicio" />
-      <Stack.Screen
-        name="(perfil)"
-        options={{
-          headerTitle: "Perfil de usuario",
-          headerLeft: undefined,
-          headerRight: undefined,
-          headerBackTitle: "Regresar",
-          headerTintColor: "black",
-          headerShown: false,
-        }}
-      />
     </Stack>
   );
 };

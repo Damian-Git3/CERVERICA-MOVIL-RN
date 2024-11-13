@@ -15,6 +15,7 @@ export interface PreciosRecetaView {
   precioPaquete6: number;
   precioPaquete12: number;
   precioPaquete24: number;
+  precioUnitarioBaseMayoreo: number;
   estatus: boolean;
 }
 
@@ -24,12 +25,14 @@ export interface HistorialPreciosView {
   precioPaquete6: number;
   precioPaquete12: number;
   precioPaquete24: number;
+  precioUnitarioBaseMayoreo: number;
 }
 
 export interface HistorialPrecioInsert {
   idReceta: number;
-  paquete1: number;
-  paquete6: number;
-  paquete12: number;
-  paquete24: number;
+  precioPaquete1: number;
+  precioPaquete6: number;
+  precioPaquete12: number;
+  precioPaquete24: number;
+  precioBaseMayoreo: number;
 }

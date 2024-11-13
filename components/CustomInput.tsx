@@ -1,3 +1,4 @@
+import React from "react";
 import { Control, useController, FieldValues } from "react-hook-form";
 import { StyleSheet, TextInput, TextInputProps, Text } from "react-native";
 
