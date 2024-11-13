@@ -1,7 +1,14 @@
 import { images } from "@/constants";
 import AuthContext from "@/context/Auth/AuthContext";
 import React, { useContext } from "react";
-import { SafeAreaView, Text, View, Image, StyleSheet } from "react-native";
+import {
+  SafeAreaView,
+  Text,
+  View,
+  Image,
+  StyleSheet,
+  Button,
+} from "react-native";
 
 const Inicio = () => {
   const { session } = useContext(AuthContext);

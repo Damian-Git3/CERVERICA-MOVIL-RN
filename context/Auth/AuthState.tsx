@@ -68,7 +68,6 @@ export default function AuthState({ children }: { children: any }) {
       return result;
     } catch (e: any) {
       if (axios.isAxiosError(e)) {
-        toastConfig;
         if (e.response) {
           return e.response;
         } else if (e.request) {

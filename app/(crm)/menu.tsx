@@ -58,7 +58,7 @@ const Menu = () => {
       name: "Precios",
       icon: "dollar",
       route: "/(admin)/HistorialPrecios",
-      roles: ["Admin", "Mayorista"],
+      roles: ["Admin"],
     },
     {
       name: "Descuentos",
@@ -69,7 +69,7 @@ const Menu = () => {
     {
       name: "Dashboard",
       icon: "stats-chart",
-      route: "/(admin)/ventas",
+      route: "/(admin)/(dashboard)",
       roles: ["Admin"],
     },
     {
@@ -120,6 +120,12 @@ const Menu = () => {
       route: "/(admin)/cupones",
       roles: ["Admin"],
     },
+    {
+      name: "Mis solicitudes",
+      icon: "tags",
+      route: "/(mayorista)/(solicitudes-mayoristas)/lista-solicitudes",
+      roles: ["Mayorista"],
+    },
   ];
 
   const filteredModules = modules.filter((module) =>
@@ -131,7 +137,10 @@ const Menu = () => {
       <ScrollView style={styles.container}>
         {/* Header con título y botones de búsqueda y configuración */}
         <View style={styles.header}>
-          <View>
+          <View className="flex flex-row gap-3 items-center justify-center">
+            <TouchableOpacity onPress={() => router.back()}>
+              <Ionicons name="menu" size={30} />
+            </TouchableOpacity>
             <Text style={styles.headerTitle}>Menú</Text>
           </View>
 
@@ -145,7 +154,7 @@ const Menu = () => {
           </View>
         </View>
         <TouchableOpacity
-          onPress={() => router.push("/(perfil)/(tabs)/profile")}
+          onPress={() => router.replace("/(perfil)/(tabs)/profile")}
         >
           <View style={styles.userInfo}>
             <View style={styles.circle}>
@@ -160,7 +169,7 @@ const Menu = () => {
             <TouchableOpacity
               key={index}
               style={styles.moduleCard}
-              onPress={() => router.push(module.route as any)} // Agrega la navegación aquí
+              onPress={() => router.replace(module.route as any)} // Agrega la navegación aquí
             >
               {module.icon === "percent" ||
               module.icon === "tags" ||

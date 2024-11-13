@@ -1,12 +1,11 @@
 import { Stack } from "expo-router";
 
-const Layout = () => {
+const DashboardLayout = () => {
   return (
     <Stack>
       <Stack.Screen
-        name="notificaciones"
+        name="dashboard"
         options={{
-          title: "Notificaciones",
           headerShown: false,
         }}
       />
@@ -14,4 +13,4 @@ const Layout = () => {
   );
 };
 
-export default Layout;
+export default DashboardLayout;

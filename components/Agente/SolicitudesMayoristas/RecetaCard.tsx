@@ -1,34 +1,112 @@
 import CustomButton from "@/components/CustomButton";
-import { useState } from "react";
-import { Image, Modal, StyleSheet, Text, TextInput, View } from "react-native";
-import Slider from "@react-native-community/slider";
+import { useEffect, useState } from "react";
+import {
+  Image,
+  Modal,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  TouchableOpacity,
+  Button,
+} from "react-native";
 import { useCartStore } from "@/stores/CartStore";
+import useCarrito from "@/hooks/useCarrito";
+import { ProductoCarrito } from "@/models/ProductoCarrito";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import * as Progress from "react-native-progress";
 
 type RecetaCardProps = {
   receta: Receta;
+  productosCarrito: ProductoCarrito[] | null;
+  onCarritoChange?: () => void;
 };
 
-export default function RecetaCard({ receta }: RecetaCardProps) {
-  const [selectedPrice, setSelectedPrice] = useState(
-    receta.precioUnitarioBaseMayoreo
-  );
-  const [isModalVisible, setModalVisible] = useState(false);
+export default function RecetaCard({
+  receta,
+  productosCarrito,
+  onCarritoChange,
+}: RecetaCardProps) {
+  const {
+    cargando,
+    agregarProductoCarrito,
+    actualizarProductoCarrito,
+    eliminarProductoCarrito,
+  } = useCarrito();
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisibleConfirmacion, setModalVisibleConfirmacion] =
+    useState(false);
   const [cantidad, setCantidad] = useState(1);
-  const addToCart = useCartStore((state) => state.addItem);
+  const [productoCarrito, setProductoCarrito] = useState<ProductoCarrito>();
 
-  const handleAgregarPedido = () => {
+  const handleAbrirModal = () => {
     setModalVisible(true);
   };
 
-  const handleAddToCart = () => {
-    addToCart({
-      id: receta.id,
-      nombre: receta.nombre,
-      precio: selectedPrice,
+  useEffect(() => {
+    if (productosCarrito && productosCarrito.length > 0) {
+      const estaEnCarrito = productosCarrito.find(
+        (producto) => producto.idReceta === receta.id
+      );
+
+      setProductoCarrito(estaEnCarrito);
+      setCantidad(estaEnCarrito?.cantidad || 1);
+    } else {
+      setProductoCarrito(undefined);
+    }
+  }, [productosCarrito]);
+
+  const handleAgregarACarrito = async () => {
+    await agregarProductoCarrito({
+      idReceta: receta.id,
+      cantidadLote: 1,
       cantidad,
     });
+
     setModalVisible(false);
     setCantidad(1);
+
+    if (onCarritoChange) {
+      onCarritoChange();
+    }
+  };
+
+  const handleActualizarCarrito = async () => {
+    await actualizarProductoCarrito({
+      idReceta: receta.id,
+      cantidadLote: 1,
+      cantidad,
+    });
+
+    setModalVisible(false);
+    setCantidad(1);
+
+    if (onCarritoChange) {
+      onCarritoChange();
+    }
+  };
+
+  const handleEliminarProductoCarrito = async () => {
+    if (productoCarrito) {
+      await eliminarProductoCarrito({
+        idReceta: productoCarrito.idReceta,
+        cantidadLote: 1,
+      });
+    }
+
+    setModalVisibleConfirmacion(false);
+
+    if (onCarritoChange) {
+      onCarritoChange();
+    }
+  };
+
+  const aumentarCantidad = () => {
+    setCantidad(cantidad + 1);
+  };
+
+  const disminuirCantidad = () => {
+    setCantidad(cantidad - 1);
   };
 
   return (
@@ -39,43 +117,126 @@ export default function RecetaCard({ receta }: RecetaCardProps) {
           <Text style={styles.name}>{receta.nombre}</Text>
           <Text style={styles.description}>{receta.descripcion}</Text>
           <Text style={styles.priceLabel}>
-            Precio actual: ${selectedPrice!.toFixed(2)}
+            Precio:{" "}
+            <Text className="text-[#ed9224]">
+              ${receta.precioUnitarioBaseMayoreo!.toFixed(2)}
+            </Text>
           </Text>
-
-          <Slider
-            style={styles.slider}
-            minimumValue={receta.precioUnitarioMinimoMayoreo}
-            maximumValue={receta.precioUnitarioBaseMayoreo}
-            value={selectedPrice}
-            onValueChange={(value) => setSelectedPrice(value)}
-            step={0.01}
-            minimumTrackTintColor="#ED9224"
-            maximumTrackTintColor="#000000"
-            thumbTintColor="#ED9224"
-          />
         </View>
-      </View>
-      <View className="mt-3">
-        <CustomButton title="Agregar a pedido" onPress={handleAgregarPedido} />
+
+        {productoCarrito && (
+          <TouchableOpacity
+            onPress={() => setModalVisibleConfirmacion(true)}
+            style={styles.deleteButton}
+          >
+            <Ionicons name="trash" size={20} color="red" />
+          </TouchableOpacity>
+        )}
       </View>
 
-      {/* Modal para seleccionar cantidad */}
-      <Modal visible={isModalVisible} transparent animationType="slide">
+      <View className="mt-3">
+        {productoCarrito ? (
+          <>
+            <View className="flex-row items-center justify-center space-x-2">
+              <CustomButton
+                title="-"
+                className="w-10"
+                onPress={() => disminuirCantidad()}
+              />
+              <TextInput
+                className="text-center border border-gray-300 rounded w-16 h-full"
+                keyboardType="number-pad"
+                value={cantidad.toString()}
+                onChangeText={(text) => setCantidad(parseInt(text) || 1)}
+              />
+              <CustomButton
+                title="+"
+                className="w-10"
+                onPress={() => aumentarCantidad()}
+              />
+            </View>
+
+            <CustomButton
+              title="Actualizar"
+              onPress={handleActualizarCarrito}
+              className="mt-5"
+            />
+          </>
+        ) : (
+          <CustomButton title="Agregar a carrito" onPress={handleAbrirModal} />
+        )}
+      </View>
+
+      <Modal visible={modalVisible} transparent animationType="fade">
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle} className="text-[#ED9224]">{receta.nombre}</Text>
-            <Text style={styles.modalTitle}>Seleccionar cantidad</Text>
+            <Text style={styles.modalTitle} className="text-[#ED9224]">
+              {receta.nombre}
+            </Text>
+            <Text style={styles.modalTitle}>Ingresa la cantidad</Text>
+
             <TextInput
               style={styles.input}
               keyboardType="number-pad"
               value={cantidad.toString()}
               onChangeText={(text) => setCantidad(parseInt(text) || 1)}
             />
-            <CustomButton title="Agregar" onPress={handleAddToCart} />
+
+            <CustomButton title="Agregar" onPress={handleAgregarACarrito} />
+
             <CustomButton
               title="Cancelar"
               onPress={() => setModalVisible(false)}
             />
+
+            {cargando && (
+              <View className="w-full">
+                <Progress.Bar
+                  indeterminate={true}
+                  width={null}
+                  color="#ED9224"
+                  className="mt-5"
+                />
+              </View>
+            )}
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+        visible={modalVisibleConfirmacion}
+        transparent
+        animationType="fade"
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Confirmar eliminación</Text>
+            <Text className="text-center">
+              ¿Estás seguro de que deseas eliminar este producto de tu carrito?
+            </Text>
+
+            {cargando && (
+              <View className="w-full">
+                <Progress.Bar
+                  indeterminate={true}
+                  width={null}
+                  color="#ED9224"
+                  className="mt-5"
+                />
+              </View>
+            )}
+
+            <View style={styles.modalActions}>
+              <Button
+                title="Cancelar"
+                onPress={() => setModalVisibleConfirmacion(false)}
+              />
+              <Button
+                title="Confirmar"
+                onPress={handleEliminarProductoCarrito}
+                color="#28a745"
+              />
+            </View>
           </View>
         </View>
       </Modal>
@@ -84,6 +245,18 @@ export default function RecetaCard({ receta }: RecetaCardProps) {
 }
 
 const styles = StyleSheet.create({
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
+  },
+  modalActions: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    marginTop: 10,
+  },
   card: {
     flexDirection: "column",
     padding: 10,
@@ -100,6 +273,7 @@ const styles = StyleSheet.create({
   },
   info: {
     flex: 1,
+    justifyContent: "center",
   },
   name: {
     fontSize: 16,
@@ -113,7 +287,7 @@ const styles = StyleSheet.create({
   priceLabel: {
     fontSize: 14,
     fontWeight: "600",
-    marginTop: 10,
+    marginTop: 20,
   },
   slider: {
     width: "100%",
@@ -131,7 +305,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 10,
     alignItems: "center",
-    gap: 15
+    gap: 15,
   },
   modalTitle: {
     fontSize: 18,
@@ -146,5 +320,10 @@ const styles = StyleSheet.create({
     padding: 8,
     marginBottom: 10,
     textAlign: "center",
+  },
+  deleteButton: {
+    position: "absolute",
+    top: 0,
+    right: 0,
   },
 });

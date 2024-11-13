@@ -1,12 +1,12 @@
 import { Stack } from "expo-router";
 
-const Layout = () => {
+const MayoristaLayout = () => {
   return (
     <Stack>
       <Stack.Screen
-        name="notificaciones"
+        name="(solicitudes-mayoristas)"
         options={{
-          title: "Notificaciones",
+          title: "Solicitudes mayoristas",
           headerShown: false,
         }}
       />
@@ -14,4 +14,4 @@ const Layout = () => {
   );
 };
 
-export default Layout;
+export default MayoristaLayout;

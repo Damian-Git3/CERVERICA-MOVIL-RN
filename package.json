@@ -29,6 +29,7 @@
     "@react-native-picker/picker": "^2.9.0",
     "@react-navigation/material-top-tabs": "^6.6.14",
     "@react-navigation/native": "^6.0.2",
+    "@shopify/react-native-skia": "^1.5.3",
     "axios": "^1.7.7",
     "babel-plugin-module-resolver": "^5.0.2",
     "cerverica-app": "file:",
@@ -49,6 +50,7 @@
     "react-dom": "18.2.0",
     "react-hook-form": "^7.53.1",
     "react-native": "0.74.5",
+    "react-native-chart-kit": "^6.12.0",
     "react-native-dotenv": "^3.4.11",
     "react-native-elements": "^3.4.3",
     "react-native-gesture-handler": "~2.16.1",
@@ -59,7 +61,7 @@
     "react-native-reanimated": "~3.10.1",
     "react-native-safe-area-context": "4.10.5",
     "react-native-screens": "3.31.1",
-    "react-native-svg": "15.2.0",
+    "react-native-svg": "^15.2.0",
     "react-native-swiper": "^1.6.0",
     "react-native-tab-view": "^3.5.2",
     "react-native-timeline-flatlist": "^0.8.0",
@@ -68,6 +70,7 @@
     "react-native-user-avatar": "^1.0.8",
     "react-native-vector-icons": "^10.2.0",
     "react-native-web": "~0.19.10",
+    "victory-native": "^41.9.0",
     "zustand": "^5.0.0"
   },
   "devDependencies": {

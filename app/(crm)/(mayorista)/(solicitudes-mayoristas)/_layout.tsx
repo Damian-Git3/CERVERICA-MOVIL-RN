@@ -10,7 +10,7 @@ const SolicitudesMayoristasLayout = () => {
         }}
       />
       <Stack.Screen
-        name="confirmando-solicitud"
+        name="nueva-solicitud"
         options={{
           headerShown: false,
         }}
