@@ -69,7 +69,7 @@ const Menu = () => {
     {
       name: "Dashboard",
       icon: "stats-chart",
-      route: "/(admin)/ventas",
+      route: "/(admin)/(dashboard)",
       roles: ["Admin"],
     },
     {

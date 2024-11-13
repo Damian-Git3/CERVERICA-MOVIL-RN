@@ -18,13 +18,6 @@ const AdminLayout = () => {
         }}
       />
       <Stack.Screen
-        name="reporteVentas"
-        options={{
-          title: "Reporte de Ventas",
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
         name="solicitudesCambioAgente"
         options={{
           title: "Solicitudes de cambio de agente",
@@ -43,7 +36,7 @@ const AdminLayout = () => {
         options={{
           title: "Historial de Precios",
           headerShown: false,
-         }}
+        }}
       />
       <Stack.Screen
         name="menuConfiguraciones"
@@ -105,6 +98,13 @@ const AdminLayout = () => {
         name="formularioCupones"
         options={{
           title: "Formulario de Cupones",
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="(dashboard)"
+        options={{
+          title: "Dashboard",
           headerShown: false,
         }}
       />
