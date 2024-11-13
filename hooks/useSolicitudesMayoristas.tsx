@@ -135,10 +135,7 @@ export default function useSolicitudesMayoristas() {
     try {
       const result = await axios.post(`${END_POINT}`);
 
-      dispatch({
-        type: "CREAR_SOLICITUD_MAYORISTA",
-        payload: result.data,
-      });
+      return result;
     } catch (error) {
       console.error("Error al crear solicitud mayorista:", error);
     } finally {

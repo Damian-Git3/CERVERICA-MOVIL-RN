@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   FlatList,
-  StyleSheet,
   Text,
   TextInput,
   ActivityIndicator,
@@ -11,7 +10,6 @@ import {
 } from "react-native";
 import { Badge } from "react-native-elements";
 import { Venta } from "@/models/venta";
-import VentaContext from "@/context/Venta/VentaContext";
 import AuthContext from "@/context/Auth/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
@@ -27,7 +25,7 @@ interface CardProps {
   venta: Venta;
 }
 
-export const ListVentas: React.FC<ListVentasProps> = () => {
+export const ListVentas = () => {
   const { ventas, getVentas, cargando, getVenta } = useVentas();
   const { session } = useContext(AuthContext);
   const [searchText, setSearchText] = useState("");
@@ -47,14 +45,21 @@ export const ListVentas: React.FC<ListVentasProps> = () => {
   const handleSearch = (text: string) => {
     setSearchText(text);
     if (text) {
-      const filtered: Venta[] = ventas.filter((venta: Venta) =>
-        venta.id.toString().includes(text) ||
-        venta.fechaVenta.toLowerCase().includes(text.toLowerCase()) ||
-        venta.totalCervezas.toString().includes(text) ||
-        obtenerMetodoEnvio(venta.metodoEnvio).toLowerCase().includes(text.toLowerCase()) ||
-        obtenerMetodoPago(venta.metodoPago).toLowerCase().includes(text.toLowerCase()) ||
-        obtenerNombreEstatusVenta(venta.estatusVenta).toLowerCase().includes(text.toLowerCase()) ||
-        venta.montoVenta.toString().includes(text)
+      const filtered: Venta[] = ventas.filter(
+        (venta: Venta) =>
+          venta.id.toString().includes(text) ||
+          venta.fechaVenta.toLowerCase().includes(text.toLowerCase()) ||
+          venta.totalCervezas.toString().includes(text) ||
+          obtenerMetodoEnvio(venta.metodoEnvio)
+            .toLowerCase()
+            .includes(text.toLowerCase()) ||
+          obtenerMetodoPago(venta.metodoPago)
+            .toLowerCase()
+            .includes(text.toLowerCase()) ||
+          obtenerNombreEstatusVenta(venta.estatusVenta)
+            .toLowerCase()
+            .includes(text.toLowerCase()) ||
+          venta.montoVenta.toString().includes(text)
       );
       setFilteredVentas(filtered);
     } else {
@@ -70,7 +75,7 @@ export const ListVentas: React.FC<ListVentasProps> = () => {
 
   const handlePressVenta = async (id: number) => {
     router.push(`/(crm)/(admin)/(ventas)/detalle-venta?id=${id}`);
-  }
+  };
 
   const renderItem = ({ item }: { item: Venta }) => (
     <TouchableOpacity onPress={() => handlePressVenta(item.id)}>
@@ -79,9 +84,9 @@ export const ListVentas: React.FC<ListVentasProps> = () => {
   );
 
   return (
-    <View style={styles.container}>
+    <View className="flex-1 p-4">
       <TextInput
-        style={styles.searchInput}
+        className="h-10 border border-gray-300 rounded-lg px-3 mb-4"
         placeholder="Buscar"
         value={searchText}
         onChangeText={handleSearch}
@@ -90,112 +95,32 @@ export const ListVentas: React.FC<ListVentasProps> = () => {
         data={filteredVentas}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
-        contentContainerStyle={styles.list}
+        contentContainerStyle={{ flexGrow: 1, padding: 16 }}
         refreshing={isRefreshing}
         onRefresh={onRefresh}
         ListEmptyComponent={() => (
-          <View style={styles.emptyContainer}>
+          <View className="flex-1 justify-center items-center">
             {cargando ? (
               <ActivityIndicator size="small" color="#000" />
             ) : (
               <>
                 <Image
                   source={images.noResult}
-                  style={styles.noResultImage}
-                  alt="No se encontraron ventas"
+                  className="w-24 h-24"
+                  alt="No se encontraron pedidos"
                   resizeMode="contain"
                 />
-                <Text style={styles.noResultText}>
+                <Text className="text-lg text-gray-600">
                   No se encontraron ventas
                 </Text>
               </>
             )}
           </View>
         )}
-        ListHeaderComponent={() => (
-          <View style={styles.headerContainer}>
-            <Text style={styles.headerText}>
-              Bienvenido {session?.nombre} 👋
-            </Text>
-          </View>
-        )}
       />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 10,
-  },
-  searchInput: {
-    height: 40,
-    borderColor: "gray",
-    borderWidth: 1,
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    marginBottom: 10,
-  },
-  card: {
-    backgroundColor: "#fff",
-    padding: 20,
-    marginVertical: 10,
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 3,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  description: {
-    fontSize: 14,
-    color: "#666",
-  },
-  list: {
-    flexGrow: 1,
-    padding: 16,
-  },
-  item: {
-    backgroundColor: "#fff",
-    padding: 20,
-    marginVertical: 8,
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 3,
-  },
-  itemText: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  emptyContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  noResultImage: {
-    width: 100,
-    height: 100,
-  },
-  noResultText: {
-    fontSize: 16,
-    color: "#666",
-  },
-  headerContainer: {
-    marginBottom: 20,
-  },
-  headerText: {
-    fontSize: 24,
-    fontWeight: "bold",
-  },
-});
 
 const obtenerMetodoEnvio = (metodoEnvio: number): string => {
   switch (metodoEnvio) {
@@ -266,19 +191,19 @@ const Card: React.FC<CardProps> = ({ venta }) => {
   const severity = obtenerSeverityEstatusVenta(venta.estatusVenta);
 
   return (
-    <View style={styles.card}>
-      <Text style={styles.title}>Venta ID: {venta.id}</Text>
-      <Text style={styles.description}>Fecha: {formattedDate}</Text>
-      <Text style={styles.description}>
+    <View className="bg-white p-5 my-2 rounded-lg shadow-md">
+      <Text className="text-lg font-bold">Venta ID: {venta.id}</Text>
+      <Text className="text-base text-gray-600">Fecha: {formattedDate}</Text>
+      <Text className="text-base text-gray-600">
         Total Cervezas: {venta.totalCervezas}
       </Text>
-      <Text style={styles.description}>
+      <Text className="text-base text-gray-600">
         Método de Envío: {obtenerMetodoEnvio(venta.metodoEnvio)}
       </Text>
-      <Text style={styles.description}>
+      <Text className="text-base text-gray-600">
         Método de Pago: {obtenerMetodoPago(venta.metodoPago)}
       </Text>
-      <Text style={styles.description}>
+      <Text className="text-base text-gray-600">
         Estatus:
         <Badge
           value={nombreEstatus}
@@ -288,7 +213,9 @@ const Card: React.FC<CardProps> = ({ venta }) => {
           textStyle={{ color: "white" }}
         />
       </Text>
-      <Text style={styles.description}>Monto: ${venta.montoVenta}</Text>
+      <Text className="text-base text-gray-600">
+        Monto: ${venta.montoVenta}
+      </Text>
     </View>
   );
 };

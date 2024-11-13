@@ -54,16 +54,6 @@ const ListaSolicitudes = () => {
       useSolicitudesMayoristasStore.getState().setSolicitudMayorista;
 
     setSolicitudMayorista(solicitudMayorista);
-
-    switch (solicitudMayorista.estatus) {
-      case 1:
-        router.push("/(agente)/(solicitudes-mayoristas)/prospecto-solicitud");
-        break;
-
-      default:
-        router.push("/(agente)/(solicitudes-mayoristas)/contactado-solicitud");
-        break;
-    }
   };
 
   const toggleFilter = (filterType: string) => {
@@ -148,16 +138,6 @@ const ListaSolicitudes = () => {
                 <Text style={styles.noResultText}>
                   No se encontraron tus solicitudes {":("}
                 </Text>
-
-                <CustomButton
-                  title="Registrar nueva solicitud"
-                  className="mt-5"
-                  onPress={() =>
-                    router.push(
-                      "/(mayorista)/(solicitudes-mayoristas)/nueva-solicitud"
-                    )
-                  }
-                />
               </>
             )}
           </View>
@@ -165,6 +145,16 @@ const ListaSolicitudes = () => {
         ListHeaderComponent={() => (
           <View style={styles.headerContainer}>
             <Text style={styles.welcomeText}>Mis solicitudes</Text>
+
+            <CustomButton
+              title="Registrar nueva solicitud"
+              className="mt-5 mb-5"
+              onPress={() =>
+                router.push(
+                  "/(mayorista)/(solicitudes-mayoristas)/nueva-solicitud"
+                )
+              }
+            />
 
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <View style={styles.filtersContainer}>
