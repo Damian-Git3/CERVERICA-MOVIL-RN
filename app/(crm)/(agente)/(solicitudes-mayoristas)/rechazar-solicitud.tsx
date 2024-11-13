@@ -6,6 +6,7 @@ import { View, Text, Modal, StyleSheet } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { SubmitHandler, useForm } from "react-hook-form";
 import CustomInput from "@/components/CustomInput";
+import { router } from "expo-router";
 
 type Inputs = {
   mensajeRechazo: string;
@@ -36,7 +37,11 @@ const RechazarSolicitud = ({
         idSolicitud: solicitudMayorista!.id,
         mensajeRechazo: data.mensajeRechazo.trim(),
       });
+
+      router.replace("/(agente)/(solicitudes-mayoristas)/lista-solicitudes");
+
       toggleModal();
+
       alert("Solicitud cancelada exitosamente.");
     } catch (error) {
       alert("Ocurrió un error al cancelar la solicitud.");

@@ -1,6 +1,7 @@
 import { HistorialPrecioInsert } from "@/dtos/HistorialPrecios";
 import axios from "axios";
 import React, { useReducer, useState } from "react";
+import Toast from "react-native-toast-message";
 
 const initialState = {
   listaRecetas: [],
@@ -48,9 +49,20 @@ const useHistorialPrecios = () => {
         type: "UPDATE_LISTA_RECETAS",
         payload: response.data,
       });
+
+      Toast.show({
+        type: "success",
+        text1: "Recetas obtenidas! 🎉",
+        text2: "Se han obtenido las recetas correctamente",
+      });
+
       return response.data;
     } catch (error) {
-      console.error("Error al obtener recetas", error);
+      Toast.show({
+        type: "error",
+        text1: "Error! 🎉",
+        text2: error as string,
+      });
     } finally {
       console.log("Recetas obtenidas");
     }
@@ -68,9 +80,21 @@ const useHistorialPrecios = () => {
         type: "GET_PRECIOS_RECETA",
         payload: response.data,
       });
+
+      Toast.show({
+        type: "success",
+        text1: "Precios de receta obtenidos! 🎉",
+        text2: "Se han obtenido los precios de la receta correctamente",
+      });
+
       return response.data;
     } catch (error) {
       console.error("Error los precios de receta", error);
+      Toast.show({
+        type: "error",
+        text1: "Error! 🎉",
+        text2: error as string,
+      });
     } finally {
       console.log("Precios de receta obtenidos");
     }
@@ -91,23 +115,44 @@ const useHistorialPrecios = () => {
         type: "GET_HISTORIAL_PRECIOS",
         payload: response.data,
       });
+
+      Toast.show({
+        type: "success",
+        text1: "Historial de precios obtenido! 🎉",
+        text2: "Se ha obtenido el historial de precios correctamente",
+      });
       return response.data;
     } catch (error) {
       console.error("Error los precios de receta", error);
+      Toast.show({
+        type: "error",
+        text1: "Error! 🎉",
+        text2: error as string,
+      });
     } finally {
       console.log("Precios de receta obtenidos");
     }
   };
 
-  const setNuevoPrecio = async (data: HistorialPrecioInsert) => {
+  const setNuevoPrecio = async (data: HistorialPrecioInsert): Promise<any> => {
     try {
       console.log("ENVIANDO PRECIOS", data);
       setCargando(true);
       const response = await axios.post(`/HistorialPrecios`, data);
-      console.log("RESPUETA PRECIOS", response);
+      console.log(response);
+      Toast.show({
+        type: "success",
+        text1: "Precio insertado! 🎉",
+        text2: "Se ha insertado el precio correctamente",
+      });
       return response;
     } catch (error) {
       console.error("Error al insertar nuevo precio", error);
+      Toast.show({
+        type: "error",
+        text1: "Error! 🎉",
+        text2: error as string,
+      });
     } finally {
       setCargando(false);
       console.log("Precio insertado");
