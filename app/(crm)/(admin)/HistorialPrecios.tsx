@@ -368,30 +368,36 @@ const NuevoHistorialModal = ({
             control={control}
             placeholder="Paquete 1"
             required={true}
+            numeric={true}
           />
+
           <CustomInput
             name="precioPaquete6"
             control={control}
             placeholder="Paquete 6"
             required={true}
+            numeric={true}
           />
           <CustomInput
             name="precioPaquete12"
             control={control}
             placeholder="Paquete 12"
             required={true}
+            numeric={true}
           />
           <CustomInput
             name="precioPaquete24"
             control={control}
             placeholder="Paquete 24"
             required={true}
+            numeric={true}
           />
           <CustomInput
             name="precioBaseMayoreo"
             control={control}
             placeholder="Precio Unitario Base para Mayoreo"
             required={true}
+            numeric={true}
           />
           <CustomButton
             onPress={handleSubmit(onSubmit)}
