@@ -170,6 +170,7 @@ const SolicitudAsistencia = () => {
       <View style={styles.separator} />
       {/* Botón de eliminación */}
       <TouchableOpacity
+      className="mb-[40]"
         style={styles.deleteButton}
         onPress={handleEliminarSolicitud}
       >

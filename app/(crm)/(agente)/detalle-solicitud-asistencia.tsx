@@ -64,8 +64,7 @@ const SolicitudAsistencia = () => {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Datos de la Asistencia</Text>
         <Text style={styles.cardText}>
-          <Text>Descripción:</Text>{" "}
-          {solicitudAsistencia?.solicitud.descripcion}
+          <Text>Descripción:</Text> {solicitudAsistencia?.solicitud.descripcion}
         </Text>
         <Text style={styles.cardText}>
           <Text>Fecha de Solicitud:</Text>{" "}
@@ -159,6 +158,7 @@ const SolicitudAsistencia = () => {
       <TouchableOpacity
         style={styles.deleteButton}
         onPress={handleEliminarSolicitud}
+        className="mb-[40]"
       >
         <Text style={styles.buttonText}>Eliminar Solicitud</Text>
       </TouchableOpacity>

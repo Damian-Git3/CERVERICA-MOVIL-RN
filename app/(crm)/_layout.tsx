@@ -33,7 +33,7 @@ const Layout = () => {
           <Image
             source={images.iconoNavbar}
             style={{
-              width: Platform.OS == "ios" ? 100 : "81%",
+              width: Platform.OS == "ios" ? 100 : "65%",
               height: Platform.OS == "ios" ? 35 : 50,
               resizeMode: "contain",
             }}
