@@ -149,7 +149,8 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   header: {
-    flexDirection: "row",
+    flexDirection: "column",
+    gap: 5,
     alignItems: "center",
     justifyContent: "space-between",
     marginBottom: 10,

@@ -146,7 +146,7 @@ const Menu = () => {
 
   return (
     <SafeAreaView className="flex-1">
-      <ScrollView style={styles.container}>
+      <ScrollView style={styles.container} className="mt-[20]">
         {/* Header con título y botones de búsqueda y configuración */}
         <View style={styles.header}>
           <View className="flex flex-row gap-3 items-center justify-center">

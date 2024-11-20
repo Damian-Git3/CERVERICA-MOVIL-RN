@@ -191,6 +191,7 @@ const RegistroCliente = () => {
               style={styles.textInput}
               placeholderTextColor="#a9a9a9"
               placeholder="Telefono"
+              maxLength={10}
               keyboardType="phone-pad"
               value={nuevoUsuario.telefono}
               onChangeText={(value) => handleInputChange("telefono", value)}
