@@ -35,6 +35,8 @@ export default function NuevaSolicitud() {
   useEffect(() => {
     getRecetas();
     obtenerProductosCarrito();
+    console.log("recetas", recetas);
+    console.log("productosCarrito", productosCarrito);
   }, []);
 
   return (
