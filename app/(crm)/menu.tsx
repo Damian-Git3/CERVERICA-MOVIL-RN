@@ -91,13 +91,13 @@ const Menu = () => {
       roles: ["Admin"],
     },
     {
-      name: "Solicitud Asistencia Agente",
+      name: "Mesa de Ayuda",
       icon: "happy",
       route: "/(crm)/(agente)/solicitud-asistencia",
       roles: ["Admin", "Agente"],
     },
     {
-      name: "Solicitud Asistencia Cliente",
+      name: "Mesa de Ayuda",
       icon: "happy",
       route: "/(crm)/(cliente)/solicitud-asistencia",
       roles: ["Cliente", "Mayorista"],
@@ -156,14 +156,14 @@ const Menu = () => {
             <Text style={styles.headerTitle}>Menú</Text>
           </View>
 
-          <View style={styles.headerIcons}>
+          {/*<View style={styles.headerIcons}>
             <TouchableOpacity>
               <Ionicons name="settings-outline" size={28} color="black" />
             </TouchableOpacity>
             <TouchableOpacity style={{ marginLeft: 15 }}>
               <Ionicons name="search" size={28} color="black" />
             </TouchableOpacity>
-          </View>
+          </View>*/}
         </View>
         <TouchableOpacity
           onPress={() => router.replace("/(perfil)/(tabs)/profile")}
