@@ -12,6 +12,17 @@ import { Picker } from "@react-native-picker/picker";
 const MotivoCambioModal = ({ modalVisible, setModalVisible, onSubmit }) => {
   const [motivo, setMotivo] = useState("");
 
+  
+  const filterTextInput = (text) => {
+    return text.replace(/[^a-zA-ZÀ-ÿ0-9.,\s]/g, '');
+  };
+
+  const handleTextChange = (text) => {
+    const filteredText = filterTextInput(text); 
+    setMotivo(filteredText); 
+  };
+
+
   const isSubmitDisabled = motivo.trim() === ""; // Verificar si el motivo está vacío
 
   return (
@@ -28,7 +39,7 @@ const MotivoCambioModal = ({ modalVisible, setModalVisible, onSubmit }) => {
             placeholder="Escriba el motivo de rechazo de la solicitud aquí"
             style={styles.input}
             value={motivo}
-            onChangeText={setMotivo}
+            onChangeText={handleTextChange}
             multiline={true}
             numberOfLines={4}
           />

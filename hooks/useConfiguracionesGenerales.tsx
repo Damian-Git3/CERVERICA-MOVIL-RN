@@ -79,7 +79,7 @@ export default function useConfiguracionesGenerales() {
   // Método para obtener las reglas de puntos de fidelidad
   const getConfiguracionesGenerales = async () => {
     try {
-      const response = await axios.get<ReglasPuntosDto>(
+      const response = await axios.get<any>(
         `/ConfiguracionesGenerales/obtener-configuracion-general`
       );
 
