@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import {
   View,
   Text,
@@ -8,6 +8,7 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
+  TextInput,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { router, useFocusEffect } from "expo-router";
@@ -15,7 +16,8 @@ import useCupones from "@/hooks/useCupones";
 import { images } from "@/constants";
 
 const Cupones = () => {
-  const { cargando, cupones, getCupones } = useCupones();
+  const { cargando, cupones = [], getCupones } = useCupones();
+  const [searchText, setSearchText] = useState("");
 
   useFocusEffect(
     useCallback(() => {
@@ -26,6 +28,21 @@ const Cupones = () => {
       fetchCupones();
     }, [])
   );
+
+  // Función para filtrar cupones
+  const filteredCupones = cupones ? cupones.filter(cupon => {
+    console.log(cupon)
+    return (
+      cupon.codigo.toLowerCase().includes(searchText.toLowerCase()) ||
+      cupon.valor.toString().toLowerCase().includes(searchText.toLowerCase()) ||
+      cupon.paquete.toString().toLowerCase().includes(searchText.toLowerCase()) ||
+      cupon.montoMaximo.toString().includes(searchText) ||
+      cupon.usos.toString().includes(searchText) ||
+      cupon.categoriaComprador.toString().includes(searchText) ||
+      new Date(cupon.fechaExpiracion).toLocaleDateString().includes(searchText) ||
+      (cupon.activo ? "Activo" : "Inactivo").toLowerCase().includes(searchText.toLowerCase())
+    );
+  }) : [];
 
   // Función para navegar a la pantalla de formulario
   const handleAddCoupon = () => {
@@ -43,11 +60,6 @@ const Cupones = () => {
       4: "Mayorista",
       5: "Inactivo",
     };
-
-    // Función para manejar el clic en la tarjeta
-    //const handleCardPress = () => {
-    //  navigation.navigate("formularioCupones", { cupon: item });
-    //};
 
     const handleCardPress = () => {
       router.push({
@@ -93,11 +105,19 @@ const Cupones = () => {
 
       <Text style={styles.title}>Cupones Disponibles</Text>
 
+      {/* Input para el filtro */}
+      <TextInput
+        style={styles.searchInput}
+        placeholder="Buscar"
+        value={searchText}
+        onChangeText={setSearchText}
+      />
+
       {cargando ? (
         <ActivityIndicator size="large" color="#0000ff" />
-      ) : cupones && cupones.length > 0 ? (
+      ) : filteredCupones && filteredCupones.length > 0 ? (
         <FlatList
-          data={cupones}
+          data={filteredCupones}
           renderItem={renderCouponCard}
           keyExtractor={(item) => item.id.toString()}
         />
@@ -126,6 +146,15 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
+  },
+  searchInput: {
+    height: 40,
+    borderColor: "#ccc",
+    borderWidth: 1,
+    borderRadius: 8,
+    marginBottom: 20,
+    paddingHorizontal: 10,
+    fontSize: 16,
   },
   card: {
     flexDirection: "row",

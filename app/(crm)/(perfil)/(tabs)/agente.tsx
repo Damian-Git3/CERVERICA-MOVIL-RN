@@ -22,6 +22,11 @@ const MotivoCambioModal = ({ modalVisible, setModalVisible, onSubmit }) => {
 
   const isSubmitDisabled = motivo.trim() === ""; // Verificar si el motivo está vacío
 
+  const handleTextChange = (text) => {
+    const filteredText = text.replace(/[^a-zA-ZÀ-ÿ0-9.,\s]/g, '');
+    setMotivo(filteredText);
+  };
+
   return (
     <Modal
       animationType="slide"
@@ -36,7 +41,7 @@ const MotivoCambioModal = ({ modalVisible, setModalVisible, onSubmit }) => {
             placeholder="Escriba el motivo aquí"
             style={styles.input}
             value={motivo}
-            onChangeText={setMotivo}
+            onChangeText={handleTextChange}
             multiline={true}
             numberOfLines={4}
           />

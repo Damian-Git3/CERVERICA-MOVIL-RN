@@ -40,7 +40,26 @@ const FormularioCupones: React.FC = () => {
 
   const [showDatePicker, setShowDatePicker] = useState(false);
 
+  const filterTextInput = (text) => {
+    return text.replace(/[^a-zA-Z0-9]/g, ""); 
+  };
+
+  /*
   const handleChange = (name: string, value: any) => {
+    const filteredValue = filterTextInput(value);
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
+  };
+  */
+
+  const handleChange = (name: string, value: any) => {
+    if (name == "codigo") {
+      const filteredValue = filterTextInput(value);
+      value = filteredValue;
+    }
+    
     setFormValues((prevValues) => ({
       ...prevValues,
       [name]: value,
