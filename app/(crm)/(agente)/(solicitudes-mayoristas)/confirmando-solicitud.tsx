@@ -1,15 +1,25 @@
+import React, { useEffect, useState } from "react";
+import {
+  FlatList,
+  StyleSheet,
+  Modal,
+  TouchableOpacity,
+  TextInput,
+  ScrollView,
+} from "react-native";
+import { Image, Text, View } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 import CustomButton from "@/components/CustomButton";
-import useSolicitudesMayoristas from "@/hooks/useSolicitudesMayoristas";
 import useSolicitudesMayoristasStore from "@/stores/SolicitudesMayoristasStore";
+import useSolicitudesMayoristas from "@/hooks/useSolicitudesMayoristas";
 import { router } from "expo-router";
-import { useEffect, useState } from "react";
-import { FlatList, StyleSheet } from "react-native";
-import { Image, Text, TextInput, View } from "react-native";
-import RechazarSolicitud from "./rechazar-solicitud";
 import { ProductoCarrito } from "@/models/ProductoCarrito";
 import { PedidoMayoristaInsertDTO } from "@/dtos/PedidosMayoristas/PedidoMayoristaInsertDTO";
 import usePedidosMayoristas from "@/hooks/usePedidosMayoristas";
 import Toast from "react-native-toast-message";
+import useConfiguracionVentasMayoreo from "@/hooks/useConfiguracionVentasMayoreo";
+import RechazarSolicitud from "./rechazar-solicitud";
+import { Ionicons } from "@expo/vector-icons";
 
 const ProductoCarritoCard = ({
   productoCarrito,
@@ -48,10 +58,18 @@ export default function ConfirmandoSolicitud() {
   const { solicitudMayorista } = useSolicitudesMayoristasStore();
   const { obtenerCarritoSolicitud, carritoSolicitud } =
     useSolicitudesMayoristas();
-  const { crearPedidoMayorista, cargando } = usePedidosMayoristas();
+  const { crearPedidoMayorista } = usePedidosMayoristas();
   const [isMounted, setIsMounted] = useState(false);
+  const { getConfiguracionVentasMayoreo, configuracionVentasMayoreo } =
+    useConfiguracionVentasMayoreo();
+
+  // New state for modal and form
+  const [isConfirmModalVisible, setIsConfirmModalVisible] = useState(false);
+  const [selectedPaymentTerm, setSelectedPaymentTerm] = useState(1);
+  const [observaciones, setObservaciones] = useState("");
 
   useEffect(() => {
+    getConfiguracionVentasMayoreo();
     setIsMounted(true);
   }, []);
 
@@ -69,8 +87,8 @@ export default function ConfirmandoSolicitud() {
     const nuevoPedidoMayorista: PedidoMayoristaInsertDTO = {
       idMayorista: solicitudMayorista!.idMayorista,
       idSolicitudMayorista: solicitudMayorista!.id,
-      plazoMeses: 1,
-      observaciones: "",
+      plazoMeses: selectedPaymentTerm,
+      observaciones: observaciones,
       listaCervezas: carritoSolicitud.map(
         (productoCarrito: ProductoCarrito) => ({
           idReceta: productoCarrito.receta.id,
@@ -85,11 +103,24 @@ export default function ConfirmandoSolicitud() {
       Toast.show({
         type: "success",
         text1: "Pedido confirmado!",
-        text2: "Manos a la obra en la producción!"
+        text2: "Manos a la obra en la producción!",
       });
 
       router.replace("/(agente)/(solicitudes-mayoristas)/lista-solicitudes");
     }
+  };
+
+  const openConfirmModal = () => {
+    setIsConfirmModalVisible(true);
+  };
+
+  const closeConfirmModal = () => {
+    setIsConfirmModalVisible(false);
+  };
+
+  const confirmOrder = () => {
+    closeConfirmModal();
+    handleConfirmarSolicitud();
   };
 
   return (
@@ -99,14 +130,84 @@ export default function ConfirmandoSolicitud() {
         renderItem={({ item }) => (
           <ProductoCarritoCard productoCarrito={item} />
         )}
+        keyExtractor={(item, index) => index.toString()}
       />
 
-      <CustomButton
-        title="Confirmar solicitud"
-        onPress={handleConfirmarSolicitud}
-      />
+      <CustomButton title="Confirmar solicitud" onPress={openConfirmModal} />
 
       <RechazarSolicitud solicitudMayorista={solicitudMayorista} />
+
+      {/* Confirmation Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isConfirmModalVisible}
+        onRequestClose={closeConfirmModal}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={closeConfirmModal}
+            >
+              <Ionicons name="close" size={24} color="#333" />
+            </TouchableOpacity>
+
+            <Text style={styles.modalTitle}>Detalles de la Solicitud</Text>
+
+            <View style={styles.formGroup}>
+              <Text style={styles.label}>Plazo de Pago (Meses)</Text>
+              <View style={styles.pickerContainer}>
+                <Picker
+                  selectedValue={selectedPaymentTerm}
+                  onValueChange={(itemValue) =>
+                    setSelectedPaymentTerm(itemValue)
+                  }
+                  style={styles.picker}
+                >
+                  {Array.from(
+                    { length: configuracionVentasMayoreo?.plazoMaximoPago },
+                    (_, index) => (
+                      <Picker.Item
+                        key={index + 1}
+                        label={`${index + 1} mes(es)`}
+                        value={index + 1}
+                      />
+                    )
+                  )}
+                </Picker>
+              </View>
+            </View>
+
+            <View style={styles.formGroup}>
+              <Text style={styles.label}>Observaciones (Opcional)</Text>
+              <TextInput
+                style={styles.textArea}
+                multiline={true}
+                numberOfLines={4}
+                placeholder="Escribe tus observaciones aquí..."
+                value={observaciones}
+                onChangeText={setObservaciones}
+              />
+            </View>
+
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={[styles.button, styles.cancelButton]}
+                onPress={closeConfirmModal}
+              >
+                <Text style={styles.buttonText}>Cancelar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.button, styles.confirmButton]}
+                onPress={confirmOrder}
+              >
+                <Text style={styles.buttonText}>Confirmar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -197,5 +298,59 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 0,
     right: 0,
+  },
+  closeButton: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+  },
+  formGroup: {
+    width: "100%",
+    marginBottom: 15,
+  },
+  label: {
+    fontSize: 16,
+    marginBottom: 10,
+    fontWeight: "bold",
+  },
+  pickerContainer: {
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 10,
+  },
+  picker: {
+    height: 50,
+    width: "100%",
+  },
+  textArea: {
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 10,
+    padding: 10,
+    height: 100,
+    textAlignVertical: "top",
+  },
+  modalButtons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    marginTop: 20,
+  },
+  button: {
+    flex: 1,
+    padding: 15,
+    borderRadius: 10,
+    alignItems: "center",
+    marginHorizontal: 5,
+  },
+  cancelButton: {
+    backgroundColor: "#FF6B6B",
+  },
+  confirmButton: {
+    backgroundColor: "#4ECDC4",
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "bold",
   },
 });

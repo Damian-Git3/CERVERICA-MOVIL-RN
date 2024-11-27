@@ -20,12 +20,14 @@ type RecetaCardProps = {
   receta: Receta;
   productosCarrito: ProductoCarrito[] | null;
   onCarritoChange?: () => void;
+  configuracionVentasMayoreo: any;
 };
 
 export default function RecetaCard({
   receta,
   productosCarrito,
   onCarritoChange,
+  configuracionVentasMayoreo,
 }: RecetaCardProps) {
   const {
     cargando,
@@ -37,11 +39,21 @@ export default function RecetaCard({
   const [modalVisibleConfirmacion, setModalVisibleConfirmacion] =
     useState(false);
   const [cantidad, setCantidad] = useState(1);
+  const [montoMinimo, setMontoMinimo] = useState<number | null>(null);
   const [productoCarrito, setProductoCarrito] = useState<ProductoCarrito>();
 
   const handleAbrirModal = () => {
     setModalVisible(true);
   };
+
+  useEffect(() => {
+    if (!configuracionVentasMayoreo) return;
+    setMontoMinimo(configuracionVentasMayoreo.montoMinimoMayorista as number);
+  }, [configuracionVentasMayoreo]);
+
+  useEffect(() => {
+    if (montoMinimo) setCantidad(montoMinimo);
+  }, [montoMinimo]);
 
   useEffect(() => {
     if (productosCarrito && productosCarrito.length > 0) {
@@ -64,7 +76,12 @@ export default function RecetaCard({
     });
 
     setModalVisible(false);
-    setCantidad(1);
+
+    if (montoMinimo) {
+      setCantidad(montoMinimo);
+    } else {
+      setCantidad(1);
+    }
 
     if (onCarritoChange) {
       onCarritoChange();
@@ -79,7 +96,12 @@ export default function RecetaCard({
     });
 
     setModalVisible(false);
-    setCantidad(1);
+
+    if (montoMinimo) {
+      setCantidad(montoMinimo);
+    } else {
+      setCantidad(1);
+    }
 
     if (onCarritoChange) {
       onCarritoChange();
@@ -102,11 +124,16 @@ export default function RecetaCard({
   };
 
   const aumentarCantidad = () => {
-    setCantidad(cantidad + 1);
+    setCantidad((prevCantidad) => Math.max(prevCantidad + 1, montoMinimo || 1));
   };
 
   const disminuirCantidad = () => {
-    setCantidad(cantidad - 1);
+    setCantidad((prevCantidad) => Math.max(prevCantidad - 1, montoMinimo || 1));
+  };
+
+  const handleCantidadChange = (text: string) => {
+    const nuevaCantidad = parseInt(text) || 1;
+    setCantidad(Math.max(nuevaCantidad, montoMinimo || 1));
   };
 
   return (
@@ -147,7 +174,7 @@ export default function RecetaCard({
                 className="text-center border border-gray-300 rounded w-16 h-full"
                 keyboardType="number-pad"
                 value={cantidad.toString()}
-                onChangeText={(text) => setCantidad(parseInt(text) || 1)}
+                onChangeText={handleCantidadChange}
               />
               <CustomButton
                 title="+"
@@ -179,7 +206,7 @@ export default function RecetaCard({
               style={styles.input}
               keyboardType="number-pad"
               value={cantidad.toString()}
-              onChangeText={(text) => setCantidad(parseInt(text) || 1)}
+              onChangeText={handleCantidadChange}
             />
 
             <CustomButton title="Agregar" onPress={handleAgregarACarrito} />
