@@ -1,33 +1,33 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   View,
   Text,
   FlatList,
   StyleSheet,
   Modal,
-  Button,
-  Alert,
+  Dimensions,
+  TouchableOpacity,
 } from "react-native";
-import { CartItem, useCartStore } from "@/stores/CartStore"; // Asegúrate de importar el store correctamente
-import useVentas from "@/hooks/useVentas";
-import { CrearVentaDto } from "@/dtos/CrearVentaDTO";
+import { ProductoCarrito } from "@/models/ProductoCarrito";
 import useSolicitudesMayoristas from "@/hooks/useSolicitudesMayoristas";
 import { router } from "expo-router";
-import useCarrito from "@/hooks/useCarrito";
-import { ProductoCarrito } from "@/models/ProductoCarrito";
-import CustomButton from "@/components/CustomButton";
 import Toast from "react-native-toast-message";
+import { Ionicons } from "@expo/vector-icons";
+
+const { width } = Dimensions.get("window");
 
 type CartProps = {
   modalVisible: boolean;
   setModalVisible: (visible: boolean) => void;
   productosCarrito: ProductoCarrito[] | null;
+  onClearCart?: () => void;
 };
 
-export default function Cart({
+export default function EnhancedCart({
   modalVisible,
   setModalVisible,
   productosCarrito,
+  onClearCart,
 }: CartProps) {
   const { crearSolicitudMayorista } = useSolicitudesMayoristas();
 
@@ -45,6 +45,40 @@ export default function Cart({
     }
   };
 
+  const calculateTotal = () => {
+    return (
+      productosCarrito?.reduce(
+        (total, item) =>
+          total + (item.receta.precioUnitarioBaseMayoreo ?? 0) * item.cantidad,
+        0
+      ) ?? 0
+    );
+  };
+
+  const renderCartItem = ({ item }: { item: ProductoCarrito }) => (
+    <View style={styles.cartItemContainer}>
+      <View style={styles.cartItemContent}>
+        <Text style={styles.productName} numberOfLines={2}>
+          {item.receta.nombre}
+        </Text>
+        <View style={styles.cartItemDetails}>
+          <Text style={styles.productPrice}>
+            ${(item.receta.precioUnitarioBaseMayoreo ?? 0).toFixed(2)}
+          </Text>
+          <View style={styles.quantityBadge}>
+            <Text style={styles.quantityText}>{item.cantidad}</Text>
+          </View>
+        </View>
+        <Text style={styles.productTotal}>
+          Total: $
+          {(
+            (item.receta.precioUnitarioBaseMayoreo ?? 0) * item.cantidad
+          ).toFixed(2)}
+        </Text>
+      </View>
+    </View>
+  );
+
   return (
     <Modal
       animationType="slide"
@@ -54,49 +88,58 @@ export default function Cart({
     >
       <View style={styles.modalOverlay}>
         <View style={styles.modalContent}>
-          <Text style={styles.modalTitle}>Carrito de Compras</Text>
-          {productosCarrito!.length > 0 ? (
-            <FlatList
-              data={productosCarrito}
-              renderItem={({ item }) => (
-                <View style={styles.cartItem}>
-                  <Text style={styles.productName}>{item.receta.nombre}</Text>
-                  <Text style={styles.productPrice}>
-                    ${(item.receta.precioUnitarioBaseMayoreo ?? 0).toFixed(2)}
-                  </Text>
-                  <Text style={styles.productQuantity}>
-                    Cantidad: {item.cantidad}
-                  </Text>
-                  <Text style={styles.productTotal}>
-                    Total: $
-                    {(
-                      (item.receta.precioUnitarioBaseMayoreo ?? 0) *
-                      item.cantidad
-                    ).toFixed(2)}
-                  </Text>
-                </View>
-              )}
-              keyExtractor={(item, index) => index.toString()}
-            />
-          ) : (
-            <Text style={styles.emptyCart}>El carrito está vacío</Text>
-          )}
-          <View style={styles.modalButtons} className="flex flex-col gap-2">
-            <CustomButton
-              title="Realizar solicitud"
-              onPress={handleRealizarSolicitud}
-            />
-            <CustomButton
-              title="Cerrar"
-              bgVariant="secondary"
+          <View style={styles.modalHeader}>
+            <Text style={styles.modalTitle}>Carrito de Compras</Text>
+            <TouchableOpacity
               onPress={() => setModalVisible(false)}
-            />
-            {productosCarrito!.length > 0 && (
-              <CustomButton
-                title="Limpiar Carrito"
-                bgVariant="danger"
-                /* onPress={clearCart} */
+              style={styles.closeButton}
+            >
+              <Ionicons name="close" size={24} color="#333" />
+            </TouchableOpacity>
+          </View>
+
+          {productosCarrito && productosCarrito.length > 0 ? (
+            <>
+              <FlatList
+                data={productosCarrito}
+                renderItem={renderCartItem}
+                keyExtractor={(item, index) => index.toString()}
+                contentContainerStyle={styles.flatListContent}
               />
+
+              <View style={styles.totalContainer}>
+                <Text style={styles.totalText}>Total:</Text>
+                <Text style={styles.totalAmount}>
+                  ${calculateTotal().toFixed(2)}
+                </Text>
+              </View>
+            </>
+          ) : (
+            <View style={styles.emptyCartContainer}>
+              <Ionicons name="cart-outline" size={80} color="#ccc" />
+              <Text style={styles.emptyCartText}>Tu carrito está vacío</Text>
+            </View>
+          )}
+
+          <View style={styles.actionButtons}>
+            {productosCarrito && productosCarrito.length > 0 && (
+              <>
+                <TouchableOpacity
+                  style={[styles.button, styles.clearButton]}
+                  onPress={onClearCart}
+                >
+                  <Ionicons name="trash-outline" size={20} color="white" />
+                  <Text style={styles.buttonText}>Limpiar Carrito</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={[styles.button, styles.requestButton]}
+                  onPress={handleRealizarSolicitud}
+                >
+                  <Ionicons name="send-outline" size={20} color="white" />
+                  <Text style={styles.buttonText}>Realizar Solicitud</Text>
+                </TouchableOpacity>
+              </>
             )}
           </View>
         </View>
@@ -106,85 +149,127 @@ export default function Cart({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 10,
-  },
-  cartButton: {
-    position: "absolute",
-    bottom: 20,
-    right: 20,
-    backgroundColor: "#ED9224",
-    borderRadius: 30,
-    padding: 15,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  badge: {
-    position: "absolute",
-    top: -5,
-    right: -5,
-    backgroundColor: "red",
-    borderRadius: 10,
-    width: 20,
-    height: 20,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  badgeText: {
-    color: "white",
-    fontWeight: "bold",
-    fontSize: 12,
-  },
   modalOverlay: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "flex-end",
   },
   modalContent: {
-    width: "80%",
     backgroundColor: "white",
-    padding: 20,
-    borderRadius: 10,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    maxHeight: "90%",
+  },
+  modalHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
   },
   modalTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: "bold",
-    marginBottom: 15,
-    textAlign: "center",
+    color: "#333",
   },
-  cartItem: {
-    marginBottom: 15,
-    padding: 10,
+  closeButton: {
+    padding: 5,
+  },
+  cartItemContainer: {
+    paddingHorizontal: 15,
+    paddingVertical: 10,
     borderBottomWidth: 1,
-    borderBottomColor: "#ddd",
+    borderBottomColor: "#eee",
+  },
+  cartItemContent: {
+    flexDirection: "column",
   },
   productName: {
     fontSize: 16,
     fontWeight: "bold",
+    color: "#333",
+    marginBottom: 5,
+  },
+  cartItemDetails: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   productPrice: {
     fontSize: 14,
     color: "#666",
   },
-  productQuantity: {
-    fontSize: 14,
-    color: "#666",
-    marginTop: 5,
+  quantityBadge: {
+    backgroundColor: "#ED9224",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 15,
+  },
+  quantityText: {
+    color: "white",
+    fontSize: 12,
+    fontWeight: "bold",
   },
   productTotal: {
     fontSize: 14,
     fontWeight: "bold",
     color: "#ED9224",
     marginTop: 5,
+    alignSelf: "flex-end",
   },
-  emptyCart: {
+  flatListContent: {
+    paddingBottom: 15,
+  },
+  totalContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 15,
+    borderTopWidth: 1,
+    borderTopColor: "#eee",
+  },
+  totalText: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  totalAmount: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#ED9224",
+  },
+  emptyCartContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 50,
+  },
+  emptyCartText: {
     fontSize: 16,
-    textAlign: "center",
-    marginTop: 20,
+    color: "#666",
+    marginTop: 15,
   },
-  modalButtons: {
-    marginTop: 20,
+  actionButtons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 15,
+  },
+  button: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 12,
+    borderRadius: 10,
+    marginHorizontal: 5,
+  },
+  clearButton: {
+    backgroundColor: "#FF6B6B",
+  },
+  requestButton: {
+    backgroundColor: "#4ECDC4",
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "bold",
+    marginLeft: 10,
   },
 });

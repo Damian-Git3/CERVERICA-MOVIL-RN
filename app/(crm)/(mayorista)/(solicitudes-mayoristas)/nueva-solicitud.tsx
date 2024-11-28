@@ -17,6 +17,7 @@ import useSolicitudesMayoristasStore from "@/stores/SolicitudesMayoristasStore";
 import { router } from "expo-router";
 import Cart from "@/components/Agente/SolicitudesMayoristas/Cart";
 import useCarrito from "@/hooks/useCarrito";
+import useConfiguracionVentasMayoreo from "@/hooks/useConfiguracionVentasMayoreo";
 
 export default function NuevaSolicitud() {
   const {
@@ -25,6 +26,8 @@ export default function NuevaSolicitud() {
     obtenerProductosCarrito,
   } = useCarrito();
   const { recetas, cargando: cargandoRecetas, getRecetas } = useRecetas();
+  const { getConfiguracionVentasMayoreo, configuracionVentasMayoreo } =
+    useConfiguracionVentasMayoreo();
 
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -35,8 +38,7 @@ export default function NuevaSolicitud() {
   useEffect(() => {
     getRecetas();
     obtenerProductosCarrito();
-    console.log("recetas", recetas);
-    console.log("productosCarrito", productosCarrito);
+    getConfiguracionVentasMayoreo();
   }, []);
 
   return (
@@ -48,6 +50,7 @@ export default function NuevaSolicitud() {
             receta={item}
             onCarritoChange={onCarritoChange}
             productosCarrito={productosCarrito}
+            configuracionVentasMayoreo={configuracionVentasMayoreo}
           />
         )}
         ListHeaderComponent={() => (
