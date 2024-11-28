@@ -49,15 +49,28 @@ const FormularioConfiguracionVentasMayoreo: React.FC = () => {
   }, []);
 
   const handleChange = (name: string, value: any) => {
-    setFormValues((prevValues) => ({
+    if (name == "montoMinimoMayorista") {
+      const regex = /^(\d*\.?\d*)$/; // Expresión regular que permite 0 o 1 punto decimal
+      if (regex.test(value)) {
+        setFormValues((prevValues) => ({
+          ...prevValues,
+          [name]: value === "" ? "0" : value, // Si está vacío, asignamos "0"
+        }));
+      }
+    } else {
+      setFormValues((prevValues) => ({
       ...prevValues,
       [name]:
-        name === "pagosMensuales"
+        name === "promocionesAutomaticas" ||
+        name === "notificacionPromocionesWhatsApp" ||
+        name === "notificacionPromocionesEmail"
           ? value
           : value === ""
           ? 0
           : parseFloat(value), // Asigna 0 si el campo está vacío
     }));
+    }
+    
   };
 
   const formatFechaModificacion = (fecha: Date) => {

@@ -78,7 +78,16 @@ const FormularioConfiguracionesGenerales: React.FC = () => {
   }, []);
 
   const handleChange = (name: string, value: any) => {
-    setFormValues((prevValues) => ({
+    if (name == "minimoCompraEnvioGratis") {
+      const regex = /^(\d*\.?\d*)$/; // Expresión regular que permite 0 o 1 punto decimal
+      if (regex.test(value)) {
+        setFormValues((prevValues) => ({
+          ...prevValues,
+          [name]: value === "" ? "0" : value, // Si está vacío, asignamos "0"
+        }));
+      }
+    } else {
+      setFormValues((prevValues) => ({
       ...prevValues,
       [name]:
         name === "promocionesAutomaticas" ||
@@ -89,6 +98,8 @@ const FormularioConfiguracionesGenerales: React.FC = () => {
           ? 0
           : parseFloat(value), // Asigna 0 si el campo está vacío
     }));
+    }
+    
   };
 
   const handleSubmit = async () => {
@@ -152,7 +163,7 @@ const FormularioConfiguracionesGenerales: React.FC = () => {
         <Text style={styles.label}>Mínimo Compra Envío Gratis:</Text>
         <TextInput
           style={styles.input}
-          keyboardType="numeric"
+          keyboardType="numeric" // Permite solo números y punto decimal
           value={formValues.minimoCompraEnvioGratis.toString()}
           onChangeText={(value) =>
             handleChange("minimoCompraEnvioGratis", value)
