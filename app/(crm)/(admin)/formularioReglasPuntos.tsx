@@ -43,11 +43,29 @@ const FormularioReglasPuntos: React.FC = () => {
     }
   }, []);
 
-  const handleChange = (name: string, value: string) => {
-    setFormValues((prevValues) => ({
+  const handleChange = (name: string, value: any) => {
+    if (name == "valorMXNPunto" || name == "montoMinimo") {
+      const regex = /^(\d*\.?\d*)$/; // Expresión regular que permite 0 o 1 punto decimal
+      if (regex.test(value)) {
+        setFormValues((prevValues) => ({
+          ...prevValues,
+          [name]: value === "" ? "0" : value, // Si está vacío, asignamos "0"
+        }));
+      }
+    } else {
+      setFormValues((prevValues) => ({
       ...prevValues,
-      [name]: value === "" ? 0 : parseFloat(value), // Si el valor es vacío, asigna 0
+      [name]:
+        name === "promocionesAutomaticas" ||
+        name === "notificacionPromocionesWhatsApp" ||
+        name === "notificacionPromocionesEmail"
+          ? value
+          : value === ""
+          ? 0
+          : parseFloat(value), // Asigna 0 si el campo está vacío
     }));
+    }
+    
   };
 
   const handleSubmit = async () => {

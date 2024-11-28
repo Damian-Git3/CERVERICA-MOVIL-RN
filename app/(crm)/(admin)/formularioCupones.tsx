@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   StyleSheet,
   Switch,
-  Platform,
 } from "react-native";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -40,31 +39,93 @@ const FormularioCupones: React.FC = () => {
 
   const [showDatePicker, setShowDatePicker] = useState(false);
 
-  const handleChange = (name: string, value: any) => {
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      [name]: value,
-    }));
+  const filterTextInput = (text) => {
+    return text.replace(/[^a-zA-Z0-9]/g, ""); 
   };
+
+  const handleChangeValor = (name: string, value: any) => {
+  if (name === "valor") {
+    if (formValues.tipo === 1) {
+      // Limitar valores entre 0 y 100 para el tipo 'Porcentaje'
+      const numericValue = parseFloat(value) || 0;
+      value = Math.max(0, Math.min(100, numericValue));
+    } else if (formValues.tipo === 2) {
+      // Validar solo números con un punto decimal permitido
+      const regex = /^(\d*\.?\d*)$/;
+      if (regex.test(value)) {
+        setFormValues((prevValues) => ({
+          ...prevValues,
+          [name]: value === "" ? "0" : value, // Si está vacío, asignamos "0"
+        }));
+        return;
+      }
+    }
+  }
+
+  // Para otros casos, actualizamos normalmente con validaciones
+  setFormValues((prevValues) => ({
+    ...prevValues,
+    [name]: value === "" ? 0 : parseFloat(value), // Si vacío, asigna 0
+  }));
+};
+
+
+  const handleChange = (name: string, value: any) => {
+  if (name === "valor") {
+    if (formValues.tipo === 1) { // Comparar con número, no cadena
+      // Limitar valores entre 0 y 100 para el tipo 'Porcentaje'
+      const numericValue = parseFloat(value) || 0;
+      value = Math.max(0, Math.min(100, numericValue));
+    } else if (formValues.tipo === 2) {
+      // Validar número con punto decimal permitido
+      const regex = /^\d*\.?\d*$/; // Permite un solo punto decimal
+      if (!regex.test(value)) {
+        return; // Salir si el valor no es válido
+      }
+    }
+  }
+
+  if (name === "codigo") {
+    value = filterTextInput(value); // Filtrar el código según las reglas definidas
+  }
+
+  // Actualizar estado para cualquier otro caso o después de la validación
+  setFormValues((prevValues) => ({
+    ...prevValues,
+    [name]: value,
+  }));
+};
+
 
   const handleSubmit = async () => {
     try {
+      if (formValues.tipo == "1" && formValues.valor > 100) {
+      Toast.show({
+        text1: "Error Porcentaje mayor a 100",
+        text2: "El valor no puede ser mayor a 100 cuando el tipo es porcentaje.",
+        type: "error",
+      });
+      return; // No continuar con el envío del formulario
+    }
+
       const fecha = new Date();
       const fechaFormatoAPI = fecha.toISOString();
 
       const formValuesConFecha = cupon
         ? {
             ...formValues, // Si ya existe un cupón, solo utilizamos los datos actuales del formulario sin modificar la fecha
+            tipo: parseInt(formValues.tipo, 10),
           }
         : {
             ...formValues, // Si es un cupón nuevo, incluir la fecha de creación
+            tipo: parseInt(formValues.tipo, 10),
             fechaCreacion: fechaFormatoAPI,
           };
 
       if (cupon) {
         // Si el cupón ya existe, actualizar sin tocar la fechaCreacion
-        console.log("ACTUALIZAR");
-        console.log(formValuesConFecha);
+        console.log("formValuesConFecha")
+        console.log(formValuesConFecha)
         await actualizarCupon(formValuesConFecha.id, formValuesConFecha);
 
         Toast.show({
@@ -92,11 +153,25 @@ const FormularioCupones: React.FC = () => {
     }
   };
 
-  // Formato legible para la fecha
   const formatDate = (date: string) => {
     if (!date) return "Seleccionar fecha";
     const d = new Date(date);
-    return d.toLocaleDateString(); // Formato legible: "dd/mm/yyyy"
+    return d.toLocaleDateString();
+  };
+
+  // Validación del formulario
+  const isFormValid = () => {
+    // Verificamos que todos los campos importantes estén completos
+    return (
+      formValues.codigo !== "" &&
+      formValues.fechaExpiracion !== "" &&
+      formValues.tipo !== 0 &&
+      formValues.paquete > 0 &&
+      formValues.cantidad > 0 &&
+      formValues.valor > 0 &&
+      formValues.usos > 0 &&
+      formValues.montoMaximo > 0
+    );
   };
 
   return (
@@ -129,7 +204,7 @@ const FormularioCupones: React.FC = () => {
             onChange={(event, selectedDate) => {
               if (selectedDate) {
                 handleChange("fechaExpiracion", selectedDate.toISOString());
-                setShowDatePicker(false); // Cierra el DateTimePicker después de seleccionar la fecha
+                setShowDatePicker(false);
               }
             }}
           />
@@ -171,7 +246,7 @@ const FormularioCupones: React.FC = () => {
           keyboardType="numeric"
           value={formValues.valor.toString()}
           onChangeText={(value) =>
-            handleChange("valor", parseFloat(value) || 0)
+            handleChange("valor", value)
           }
         />
 
@@ -212,7 +287,11 @@ const FormularioCupones: React.FC = () => {
           onValueChange={(value) => handleChange("activo", value)}
         />
 
-        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+        <TouchableOpacity
+          style={[styles.button, { opacity: isFormValid() ? 1 : 0.5 }]}
+          onPress={handleSubmit}
+          disabled={!isFormValid()}
+        >
           <Text style={styles.buttonText}>
             {cupon ? "Actualizar" : "Registrar"} Cupón
           </Text>
@@ -235,30 +314,26 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    fontWeight: "bold",
-    marginTop: 15,
+    marginBottom: 5,
   },
   input: {
     height: 40,
     borderColor: "#ccc",
     borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    marginBottom: 10,
-    fontSize: 16,
+    marginBottom: 15,
+    paddingLeft: 10,
   },
   button: {
-    backgroundColor: "#4CAF50",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+    backgroundColor: "#007bff",
+    padding: 15,
+    alignItems: "center",
+    justifyContent: "center",
     borderRadius: 5,
     marginTop: 20,
   },
   buttonText: {
     color: "#fff",
-    fontSize: 18,
-    fontWeight: "bold",
-    textAlign: "center",
+    fontSize: 16,
   },
 });
 

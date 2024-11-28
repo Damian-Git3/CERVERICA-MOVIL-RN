@@ -1,6 +1,6 @@
 import React, { useEffect, useContext, useState, useCallback } from "react";
 import { images } from "@/constants";
-import { Text, View, Button, ScrollView, Image } from "react-native";
+import { Text, View, Button, ScrollView, Image, TextInput } from "react-native";
 import Toast from "react-native-toast-message";
 import AuthContext from "@/context/Auth/AuthContext";
 import { StyleSheet } from "react-native";
@@ -9,9 +9,11 @@ import { router, useFocusEffect } from "expo-router";
 
 const SolicitudesCambioAgente = () => {
   const { session } = useContext(AuthContext);
-  const { getSolicitudes, solicitudesCambioAgente, cargando } =
-    useCambioAgente();
+  const { getSolicitudes, solicitudesCambioAgente, cargando } = useCambioAgente();
   const [noSolicitudes, setNoSolicitudes] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const [filteredSolicitudes, setFilteredSolicitudes] = useState(solicitudesCambioAgente);
 
   // Usar useFocusEffect para ejecutar la función cuando el componente se enfoque
   useFocusEffect(
@@ -23,6 +25,21 @@ const SolicitudesCambioAgente = () => {
       fetchSolicitudes();
     }, [])
   );
+
+  // Filtrar solicitudes en función del término de búsqueda
+  useEffect(() => {
+    if (searchTerm === "") {
+      setFilteredSolicitudes(solicitudesCambioAgente);
+    } else {
+      const filtered = solicitudesCambioAgente.filter((solicitud) =>
+        solicitud.nombreContacto.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        solicitud.agenteVentaActualNombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        solicitud.motivo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        solicitud.estatus.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredSolicitudes(filtered);
+    }
+  }, [searchTerm, solicitudesCambioAgente]);
 
   const handleVerSolicitudes = (solicitud) => {
     if (solicitud) {
@@ -39,38 +56,71 @@ const SolicitudesCambioAgente = () => {
     }
   };
 
+  const convertAndFormatDate = (dateString) => {
+    const date = new Date(dateString);
+
+    if (isNaN(date.getTime())) {
+      console.error("Fecha inválida:", dateString);
+      return "Fecha inválida";
+    }
+
+    const options = {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    };
+
+    return date.toLocaleString("es-ES", options);
+  };
+
   return (
     <ScrollView>
       <View style={styles.container}>
         <Text style={styles.header}>Solicitudes de Cambio de Agente</Text>
+        
+        {/* Campo de búsqueda */}
+        <TextInput
+          style={styles.input}
+          placeholder="Buscar"
+          value={searchTerm}
+          onChangeText={(text) => setSearchTerm(text)}
+        />
+
         {cargando && <Text>Cargando solicitudes...</Text>}
         {noSolicitudes ? (
           <View style={styles.containerDatos}>
             <Image
               source={images.noResult}
-              className="w-40 h-40"
-              alt="No se encontraron solicitudes de mayoristas"
+              style={{ width: 160, height: 160 }}
               resizeMode="contain"
             />
-            <Text className="text-center">
-              No se encontraron solicitudes de cambio de agente
-            </Text>
+            <Text>No se encontraron solicitudes de cambio de agente</Text>
           </View>
         ) : (
-          solicitudesCambioAgente.map((solicitud) => (
-            <View key={solicitud.id} style={styles.solicitudContainer}>
-              <Text>Solicitante: {solicitud.nombreContacto}</Text>
-              <Text>Agente a cambiar: {solicitud.agenteVentaActualNombre}</Text>
-              <Text>Motivo: {solicitud.motivo}</Text>
-              <Text>Estatus: {solicitud.estatus}</Text>
+          filteredSolicitudes.length > 0 ? (
+            filteredSolicitudes.map((solicitud) => (
+              <View key={solicitud.id} style={styles.solicitudContainer}>
+                <Text>Solicitante: {solicitud.nombreContacto}</Text>
+                <Text>Agente a cambiar: {solicitud.agenteVentaActualNombre}</Text>
+                <Text>Motivo: {solicitud.motivo}</Text>
+                <Text>Fecha solicitud: {convertAndFormatDate(solicitud.fechaSolicitud)}</Text>
+                <Text>Estatus: {solicitud.estatus}</Text>
 
-              <Button                
-                title="Ver Solicitud"
-                onPress={() => handleVerSolicitudes(solicitud)}
-                color="#2196F3"
-              />
+                <Button
+                  title="Ver Solicitud"
+                  onPress={() => handleVerSolicitudes(solicitud)}
+                  color="#2196F3"
+                />
+              </View>
+            ))
+          ) : (
+            <View style={styles.containerDatos}>
+              <Text>No se encontraron resultados para tu búsqueda.</Text>
             </View>
-          ))
+          )
         )}
       </View>
     </ScrollView>
@@ -96,6 +146,16 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: "center",
     color: "#333",
+  },
+  input: {
+    height: 40,
+    borderColor: "#ccc",
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    marginBottom: 20,
+    width: "100%",
+    backgroundColor: "#fff"
   },
   solicitudContainer: {
     backgroundColor: "#fff",
