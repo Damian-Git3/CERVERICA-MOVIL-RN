@@ -138,6 +138,12 @@ const Menu = () => {
       route: "/(agente)/mayoristas-asignados",
       roles: ["Agente"],
     },
+    {
+      name: "Mis pedidos",
+      icon: "people",
+      route: "/(mayorista)/pedidos",
+      roles: ["Mayorista"],
+    },
   ];
 
   const filteredModules = modules.filter((module) =>

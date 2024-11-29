@@ -8,6 +8,8 @@ const END_POINT = "/Ventas";
 // Estado inicial del reducer
 const initialState = {
   ventas: null as Venta[] | null,
+  pedidos: null as Venta[] | null,
+  pedido: null as Venta | null,
   selectedVenta: null as Venta | null,
   reporteVentas: null as ReporteVentas | null,
   resumenVentas: null as ResumenVentas | null,
@@ -17,6 +19,8 @@ const initialState = {
 
 // Tipos de acciones para el reducer
 type Action =
+  | { type: "GET_PEDIDOS_USUARIO"; payload: Venta[] }
+  | { type: "GET_PEDIDO"; payload: Venta }
   | { type: "GET_VENTAS"; payload: Venta[] }
   | { type: "GET_VENTA"; payload: Venta }
   | { type: "GET_REPORTE_VENTAS"; payload: ReporteVentas }
@@ -30,6 +34,10 @@ const VentasReducer = (state: typeof initialState, action: Action) => {
   const { payload, type } = action;
 
   switch (type) {
+    case "GET_PEDIDOS_USUARIO":
+      return { ...state, pedidos: payload };
+    case "GET_PEDIDO":
+      return { ...state, pedido: payload };
     case "GET_VENTAS":
       console.log("llamado al reducer ventas");
       return { ...state, ventas: payload };
@@ -43,6 +51,7 @@ const VentasReducer = (state: typeof initialState, action: Action) => {
       console.log("llamado al reducer resumen de ventas");
       return { ...state, resumenVentas: payload };
     case "RETROCEDER_STATUS":
+      return { ...state, response: payload };
     case "AVANZAR_STATUS":
       return { ...state, response: payload };
     case "GET_RECETAS":
@@ -56,6 +65,18 @@ const VentasReducer = (state: typeof initialState, action: Action) => {
 export default function useVentas() {
   const [state, dispatch] = useReducer(VentasReducer, initialState);
   const [cargando, setCargando] = useState(false);
+
+  const getPedidosUsuario = async () => {
+    setCargando(true);
+    try {
+      const result = await axios.get(`${END_POINT}/pedidos-usuario`);
+      dispatch({ type: "GET_PEDIDOS_USUARIO", payload: result.data });
+    } catch (error) {
+      console.error("Error al obtener ventas:", error);
+    } finally {
+      setCargando(false);
+    }
+  };
 
   const getVentas = async () => {
     setCargando(true);
@@ -153,8 +174,22 @@ export default function useVentas() {
     }
   };
 
+  const getPedido = async (id: number) => {
+    setCargando(true);
+    try {
+      const result = await axios.get(`${END_POINT}/pedidos/${id}`);
+      dispatch({ type: "GET_PEDIDO", payload: result.data });
+    } catch (error) {
+      console.error("Error al obtener pedido:", error);
+    } finally {
+      setCargando(false);
+    }
+  };
+
   return {
     cargando,
+    pedidos: state.pedidos,
+    pedido: state.pedido,
     ventas: state.ventas,
     selectedVenta: state.selectedVenta,
     resumenVentas: state.resumenVentas,
@@ -169,5 +204,7 @@ export default function useVentas() {
     empaquetar,
     crearVenta,
     getRecetas,
+    getPedidosUsuario,
+    getPedido,
   };
 }
