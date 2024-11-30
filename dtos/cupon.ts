@@ -1,29 +1,15 @@
 export interface ICupon {
   id: number;
-  idUsuario?: string; // Opcional ya que en el modelo es nullable
-  idReceta?: number; // Opcional ya que en el modelo es nullable
-  fechaCreacion: Date;
-  fechaExpiracion: Date;
   codigo: string;
-  tipo: TipoCupon;
+  fechaCreacion: string;
+  fechaExpiracion: string;
+  tipo: number;
   paquete: number;
   cantidad: number;
   valor: number;
   usos: number;
-  montoMaximo: number;
-  categoriaComprador: CategoriaComprador;
+  montoMaximo?: number;
+  montoMinimo?: number;
+  categoriaComprador: number;
   activo: boolean;
-}
-
-export enum TipoCupon {
-  Porcentaje = 1,
-  Fijo = 2,
-}
-
-export enum CategoriaComprador {
-  Todos = 1,
-  Frecuente = 2,
-  Minorista = 3,
-  Mayorista = 4,
-  Inactivo = 5,
 }

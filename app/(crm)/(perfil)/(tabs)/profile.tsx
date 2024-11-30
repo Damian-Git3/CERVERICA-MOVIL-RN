@@ -84,13 +84,13 @@ const Profile = () => {
   ];
 
   // Filtrar módulos según el rol
-  // Filtrar módulos según el rol
+
   const filteredModules =
     session?.rol === "Mayorista"
       ? modules.filter((module) => module.name === "Mi Agente")
       : session?.rol !== "Admin"
-      ? modules.filter((module) => module.name !== "Mi Agente")
-      : [];
+        ? modules.filter((module) => module.name !== "Mi Agente")
+        : [];
 
   return (
     <ScrollView>
@@ -181,8 +181,8 @@ const Profile = () => {
               }
             >
               {module.icon === "percent" ||
-              module.icon === "tags" ||
-              module.icon === "dollar" ? (
+                module.icon === "tags" ||
+                module.icon === "dollar" ? (
                 <FontAwesome name={module.icon} size={30} color="black" />
               ) : (
                 <Ionicons name={module.icon} size={30} color="black" />
