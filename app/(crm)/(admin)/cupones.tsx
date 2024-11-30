@@ -28,7 +28,6 @@ const Cupones = () => {
       fetchCupones();
     }, [])
   );
-
   // Función para filtrar cupones
   const filteredCupones = cupones ? cupones.filter(cupon => {
     console.log(cupon)
@@ -38,7 +37,6 @@ const Cupones = () => {
       cupon.paquete.toString().toLowerCase().includes(searchText.toLowerCase()) ||
       cupon.montoMaximo.toString().includes(searchText) ||
       cupon.usos.toString().includes(searchText) ||
-      cupon.categoriaComprador.toString().includes(searchText) ||
       new Date(cupon.fechaExpiracion).toLocaleDateString().includes(searchText) ||
       (cupon.activo ? "Activo" : "Inactivo").toLowerCase().includes(searchText.toLowerCase())
     );
