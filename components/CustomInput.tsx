@@ -23,21 +23,21 @@ const CustomInput = ({
     rules: { required: required ? "Este campo es obligatorio" : false },
   });
 
-  const handleChangeText = (text: string) => {
-    if (numeric) {
-      // Filtrar caracteres no numéricos
-      const numericText = text.replace(/[^0-9]/g, "");
-      field.onChange(numericText);
-    } else {
-      field.onChange(text);
-    }
+  const handleNumericChangeText = (text: string) => {
+    // Filtrar caracteres no numéricos
+    const numericText = text.replace(/[^0-9.]/g, "");
+    field.onChange(numericText);
+  };
+
+  const handleTextChangeText = (text: string) => {
+    field.onChange(text);
   };
 
   return (
     <>
       <TextInput
         value={field.value}
-        onChangeText={handleChangeText}
+        onChangeText={numeric ? handleNumericChangeText : handleTextChangeText}
         style={styles.input}
         {...props}
         placeholderTextColor="#a9a9a9"
