@@ -17,6 +17,13 @@ const MayoristaLayout = () => {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name="pedidos"
+        options={{
+          title: "Pedidos",
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 };

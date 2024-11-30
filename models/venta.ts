@@ -4,10 +4,11 @@ export interface Venta {
   fechaVenta: string;
   totalCervezas: number;
   metodoEnvio: number;
-  metodoPago: number; 
-  numeroTarjeta: string; 
-  estatusVenta: number; 
+  metodoPago: number;
+  numeroTarjeta: string;
+  estatusVenta: number;
   montoVenta: number;
+  total: number;
   productosPedido: DetalleVenta[];
 }
 
@@ -23,10 +24,12 @@ export interface DetalleVenta {
 
 export interface ReporteVentas {
   fecha: string;
-  data: [{
-    date: string;
-    monto: number;
-  }];
+  data: [
+    {
+      date: string;
+      monto: number;
+    }
+  ];
   total: number;
 }
 
@@ -34,5 +37,4 @@ export interface ResumenVentas {
   semana: number;
   mes: number;
   anio: number;
-
 }
