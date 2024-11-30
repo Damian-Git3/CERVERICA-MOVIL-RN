@@ -50,8 +50,7 @@ const DetalleSolicitudAsistenciaHistorico = () => {
       {/* Información de la Solicitud */}
       <View style={styles.section}>
         <Text style={styles.cardText}>
-          <Text>Descripción:</Text>{" "}
-          {solicitudAsistencia?.solicitud.descripcion}
+          <Text>Descripción:</Text> {solicitudAsistencia?.solicitud.descripcion}
         </Text>
         <Text style={styles.cardText}>
           <Text>Fecha de Solicitud:</Text>{" "}
@@ -87,6 +86,7 @@ const DetalleSolicitudAsistenciaHistorico = () => {
 
       {/* Detalles de la Categoría */}
       <View style={styles.section}>
+        <Text style={styles.cardTitle}>Categoría</Text>
         <Text style={styles.cardText}>
           <Text>Categoría:</Text>{" "}
           {solicitudAsistencia?.solicitud.categoriaAsistencia?.nombre}
@@ -101,8 +101,9 @@ const DetalleSolicitudAsistenciaHistorico = () => {
 
       {/* Información del Agente de Venta */}
       <View style={styles.section}>
+        <Text style={styles.cardTitle}>Agente</Text>
         <Text style={styles.cardText}>
-          <Text>Agente de Venta:</Text>{" "}
+          <Text>Agente:</Text>{" "}
           {solicitudAsistencia?.solicitud.agenteVenta?.fullName}
         </Text>
         <Text style={styles.cardText}>
