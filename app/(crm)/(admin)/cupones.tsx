@@ -66,6 +66,15 @@ const Cupones = () => {
       });
     };
 
+    const opcionesPaquete = [
+      { label: "1 cerveza", value: 1 },
+      { label: "6 cervezas", value: 6 },
+      { label: "12 cervezas", value: 12 },
+      { label: "24 cervezas", value: 24 },
+    ];
+
+    const paqueteSeleccionado = opcionesPaquete.find(opcion => opcion.value === item.paquete);
+
     return (
       <TouchableOpacity onPress={handleCardPress} style={styles.card}>
         <View style={styles.yellowSection}>
@@ -74,14 +83,15 @@ const Cupones = () => {
         <View style={styles.whiteSection}>
           <Text style={styles.couponTitle}>Código: {item.codigo}</Text>
           <Text style={styles.couponText}>
-            Monto maximo: {item.montoMaximo} MXN
+            {item.tipo === 1 ? `Monto máximo: ${item.montoMaximo} MXN` : `Monto mínimo: ${item.montoMinimo} MXN`}
+
           </Text>
-          <Text style={styles.couponText}>Paquete: {item.paquete}</Text>
-          <Text style={styles.couponText}>Usos: {item.usos}</Text>
           <Text style={styles.couponText}>
-            Categoría comprador:{" "}
-            {categoriaComprador[item.categoriaComprador] || "Desconocido"}
+            Paquete: {paqueteSeleccionado ? paqueteSeleccionado.label : "Paquete no encontrado"}
           </Text>
+          <Text style={styles.couponText}>Cantidad de cupones: {item.cantidad}</Text>
+          <Text style={styles.couponText}>Cupones usados: {item.usos}</Text>
+
           <Text style={styles.couponText}>
             Expira el:{" "}
             {isNaN(new Date(item.fechaExpiracion))
@@ -172,7 +182,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   discountText: {
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: "800",
     color: "black",
   },
