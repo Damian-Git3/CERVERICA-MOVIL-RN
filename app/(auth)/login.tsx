@@ -39,10 +39,16 @@ const LoginScreen = () => {
     try {
       const respuestaLogin = await onLogin!(email, password);
 
-      if (respuestaLogin.errors) {
+      console.log(respuestaLogin);
+
+      if (respuestaLogin.data.isSuccess == false) {
+        setErrores([respuestaLogin.data.message]);
+      }
+
+      if (respuestaLogin.data.errors) {
         const newErrors: string[] = [];
 
-        Object.values(respuestaLogin.errors).forEach((errorMessages) => {
+        Object.values(respuestaLogin.data.errors).forEach((errorMessages) => {
           if (Array.isArray(errorMessages)) {
             newErrors.push(...errorMessages);
           }
@@ -56,8 +62,6 @@ const LoginScreen = () => {
       if (respuestaLogin.isSuccess == false) {
         setErrores([respuestaLogin.message]);
       }
-
-      console.log(respuestaLogin.data.rol);
 
       if (respuestaLogin.data.isSuccess) {
         router.replace("/(crm)/inicio");
@@ -159,16 +163,14 @@ const LoginScreen = () => {
           )}
         </View>
 
-        <View className="flex-1 justify-center items-center">
-          <Text className="text-center mt-5 text-lg">
-            No tienes una cuenta?{" "}
-            <TouchableOpacity
-              onPress={() => router.push("/(auth)/registro-tipo-cuenta")}
-            >
-              <Text className="text-[#ed9224] text-base">Registrate</Text>
-            </TouchableOpacity>
-          </Text>
-        </View>
+        <Text className="text-center mt-[100] text-lg">
+          No tienes una cuenta?{" "}
+          <TouchableOpacity
+            onPress={() => router.push("/(auth)/registro-tipo-cuenta")}
+          >
+            <Text className="text-[#ed9224] text-base">Registrate</Text>
+          </TouchableOpacity>
+        </Text>
       </ScrollView>
 
       <View className="absolute bottom-0 left-0">

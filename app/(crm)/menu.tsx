@@ -1,10 +1,8 @@
 import CustomButton from "@/components/CustomButton";
-import { icons } from "@/constants";
 import AuthContext from "@/context/Auth/AuthContext";
-import { router } from "expo-router";
+import { Href, router } from "expo-router";
 import React, { useContext } from "react";
 import {
-  Image,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -14,8 +12,10 @@ import {
 import { ScrollView } from "react-native-gesture-handler";
 import Toast from "react-native-toast-message";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import Icon from "react-native-vector-icons/Ionicons";
-import Ionicons from "react-native-vector-icons/Ionicons";
+import {
+  default as Icon,
+  default as Ionicons,
+} from "react-native-vector-icons/Ionicons";
 
 const Menu = () => {
   const { onLogout, session } = useContext(AuthContext);
@@ -29,59 +29,150 @@ const Menu = () => {
       text2: "Lamentamos que te tengas que ir:(",
     });
 
-    if (respuestaLogout.data.isSuccess) {
-      router.replace("/(auth)/login");
-    }
+    router.replace("/(auth)/login");
   };
 
   const userName = session?.nombre;
   const userInitial = userName?.charAt(0).toUpperCase();
 
-  const modules = [
-    { name: "Vendedores", icon: "people", route: "/(admin)/ventas" },
-    { name: "Clientes Mayoristas", icon: "people", route: "/(admin)/ventas" },
-    { name: "Precios", icon: "dollar", route: "/(admin)/ventas" },
-    { name: "Cupones", icon: "tags", route: "/(admin)/ventas" },
-    { name: "Descuentos", icon: "percent", route: "/(admin)/ventas" },
-    { name: "Dashboard", icon: "stats-chart", route: "/(admin)/ventas" },
+  // Lista de módulos, incluyendo restricciones de roles
+  const modules: {
+    name: string;
+    icon: string;
+    route: Href;
+    roles: string[];
+  }[] = [
+    {
+      name: "Vendedores",
+      icon: "people",
+      route: "/(admin)/ventas",
+      roles: ["Admin"],
+    },
+    {
+      name: "Clientes Mayoristas",
+      icon: "people",
+      route: "/(admin)/ventas",
+      roles: ["Admin"],
+    },
+    {
+      name: "Precios",
+      icon: "dollar",
+      route: "/(admin)/HistorialPrecios",
+      roles: ["Admin"],
+    },
+    {
+      name: "Descuentos",
+      icon: "percent",
+      route: "/(admin)/ventas",
+      roles: ["Mayorista"],
+    },
+    {
+      name: "Pagos",
+      icon: "dollar",
+      route: "/(mayorista)/pagos",
+      roles: ["Mayorista"],
+    },
+    {
+      name: "Dashboard",
+      icon: "stats-chart",
+      route: "/(admin)/(dashboard)",
+      roles: ["Admin"],
+    },
     {
       name: "Notificaciones",
       icon: "notifications",
       route: "/(crm)/(notificacion)",
+      roles: ["Admin", "Mayorista", "Agente", "Cliente"],
     },
-    { name: "Ventas", icon: "cart", route: "/(admin)/ventas" },
     {
-      name: "Solicitud Asistencia",
+      name: "Ventas",
+      icon: "cart",
+      route: "/(admin)/ventas",
+      roles: ["Admin"],
+    },
+    {
+      name: "Mesa de Ayuda",
       icon: "happy",
       route: "/(crm)/(agente)/solicitud-asistencia",
+      roles: ["Admin", "Agente"],
     },
     {
-      name: "Lista solicitudes mayoristas",
+      name: "Mesa de Ayuda",
       icon: "happy",
-      route: "/(crm)/(agente)/(solicitudes-mayoristas)/lista-solicitudes",
+      route: "/(crm)/(cliente)/solicitud-asistencia",
+      roles: ["Cliente", "Mayorista"],
+    },
+    {
+      name: "Solicitud Cambio Agente",
+      icon: "swap-horizontal-outline",
+      route: "/(admin)/solicitudesCambioAgente",
+      roles: ["Admin"],
+    },
+    {
+      name: "Gestión de Configuraciones",
+      icon: "settings-outline",
+      route: "/(admin)/menuConfiguraciones",
+      roles: ["Admin"],
+    },
+    {
+      name: "Solicitudes mayoristas",
+      icon: "swap-horizontal-outline",
+      route: "/(agente)/(solicitudes-mayoristas)/lista-solicitudes",
+      roles: ["Agente"],
+    },
+    {
+      name: "Cupones",
+      icon: "tags",
+      route: "/(admin)/cupones",
+      roles: ["Admin"],
+    },
+    {
+      name: "Mis solicitudes",
+      icon: "tags",
+      route: "/(mayorista)/(solicitudes-mayoristas)/lista-solicitudes",
+      roles: ["Mayorista"],
+    },
+    {
+      name: "Mayoristas Asignados",
+      icon: "people",
+      route: "/(agente)/mayoristas-asignados",
+      roles: ["Agente"],
+    },
+    {
+      name: "Mis pedidos",
+      icon: "people",
+      route: "/(mayorista)/pedidos",
+      roles: ["Mayorista"],
     },
   ];
 
+  const filteredModules = modules.filter((module) =>
+    module.roles.includes(session ? session.rol : "")
+  );
+
   return (
-    <View className="flex-1 mt-10">
-      <ScrollView style={styles.container}>
+    <SafeAreaView className="flex-1">
+      <ScrollView style={styles.container} className="mt-[20]">
         {/* Header con título y botones de búsqueda y configuración */}
         <View style={styles.header}>
-          <View>
+          <View className="flex flex-row gap-3 items-center justify-center">
+            <TouchableOpacity onPress={() => router.back()}>
+              <Ionicons name="menu" size={30} />
+            </TouchableOpacity>
             <Text style={styles.headerTitle}>Menú</Text>
           </View>
 
-          <View style={styles.headerIcons}>
+          {/*<View style={styles.headerIcons}>
             <TouchableOpacity>
               <Ionicons name="settings-outline" size={28} color="black" />
             </TouchableOpacity>
             <TouchableOpacity style={{ marginLeft: 15 }}>
               <Ionicons name="search" size={28} color="black" />
             </TouchableOpacity>
-          </View>
+          </View>*/}
         </View>
         <TouchableOpacity
-          onPress={() => router.push("/(perfil)/(tabs)/profile")}
+          onPress={() => router.replace("/(perfil)/(tabs)/profile")}
         >
           <View style={styles.userInfo}>
             <View style={styles.circle}>
@@ -92,13 +183,12 @@ const Menu = () => {
         </TouchableOpacity>
 
         <View style={styles.modulesGrid}>
-          {modules.map((module, index) => (
+          {filteredModules.map((module, index) => (
             <TouchableOpacity
-              key={module.name}
+              key={index}
               style={styles.moduleCard}
-              onPress={() => router.replace(module.route as any)}
+              onPress={() => router.replace(module.route as any)} // Agrega la navegación aquí
             >
-              {/* Decide qué icono usar según el módulo */}
               {module.icon === "percent" ||
               module.icon === "tags" ||
               module.icon === "dollar" ? (
@@ -112,24 +202,23 @@ const Menu = () => {
         </View>
 
         <CustomButton
+          style={styles.customButton}
           onPress={handleLogout}
           title=" Cerrar sesión"
           IconLeft={() => <Icon name="exit-outline" color="white" size={18} />}
         />
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 
-const menuAdmin = () => {
+/* const menuAdmin = () => {
   return (
-    <>
-      <TouchableOpacity onPress={() => router.replace("/(crm)/(admin)/inicio")}>
-        <FontAwesome name="dollar" size={16} color="black" />
-      </TouchableOpacity>
-    </>
+    <TouchableOpacity onPress={() => router.replace("/(crm)/(admin)/inicio" as any)}>
+      <FontAwesome name="dollar" size={16} color="black" />
+    </TouchableOpacity>
   );
-};
+}; */
 
 const styles = StyleSheet.create({
   container: {

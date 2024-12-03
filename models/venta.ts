@@ -3,18 +3,19 @@ export interface Venta {
   id: number;
   fechaVenta: string;
   totalCervezas: number;
-  metodoEnvio: number; // Asumiendo que MetodoEnvio es un string, ajusta según sea necesario
-  metodoPago: number; // Asumiendo que MetodoPago es un string, ajusta según sea necesario
-  numeroTarjeta: string; // Asumiendo que NumeroTarjeta es un string, ajusta según sea necesario
-  estatusVenta: number; // Asumiendo que EstatusVenta es un string, ajusta según sea necesario
+  metodoEnvio: number;
+  metodoPago: number;
+  numeroTarjeta: string;
+  estatusVenta: number;
   montoVenta: number;
+  total: number;
   productosPedido: DetalleVenta[];
 }
 
 export interface DetalleVenta {
   id: number;
   cantidad: number;
-  pack: string; // Asumiendo que Pack es un string, ajusta según sea necesario
+  pack: string;
   idStock: number;
   montoVenta: number;
   costoUnitario: number;
@@ -23,10 +24,12 @@ export interface DetalleVenta {
 
 export interface ReporteVentas {
   fecha: string;
-  data: [{
-    date: string;
-    monto: number;
-  }];
+  data: [
+    {
+      date: string;
+      monto: number;
+    }
+  ];
   total: number;
 }
 
@@ -34,5 +37,4 @@ export interface ResumenVentas {
   semana: number;
   mes: number;
   anio: number;
-
 }

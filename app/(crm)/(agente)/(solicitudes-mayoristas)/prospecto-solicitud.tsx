@@ -2,13 +2,30 @@ import CustomButton from "@/components/CustomButton";
 import useSolicitudesMayoristas from "@/hooks/useSolicitudesMayoristas";
 import useSolicitudesMayoristasStore from "@/stores/SolicitudesMayoristasStore";
 import { router } from "expo-router";
+import { useEffect, useState } from "react";
 import { Text, View, Button, Linking, Alert, StyleSheet } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import RechazarSolicitud from "./rechazar-solicitud";
 
 export default function ProspectoSolicitud() {
   const { solicitudMayorista } = useSolicitudesMayoristasStore();
-  const { avanzarSiguienteEstatus, getSolicitudesMayoristas } =
-    useSolicitudesMayoristas();
+  const {
+    avanzarSiguienteEstatus,
+    getSolicitudesAgente,
+    cancelarSolicitudMayorista,
+  } = useSolicitudesMayoristas();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (isMounted && solicitudMayorista == null) {
+      router.replace("/(agente)/(solicitudes-mayoristas)/lista-solicitudes");
+    }
+  }, [isMounted, solicitudMayorista]);
 
   // Función para abrir mapas
   const abrirMapas = () => {
@@ -111,7 +128,7 @@ export default function ProspectoSolicitud() {
                 Alert.alert("Éxito", "Prospecto marcado como contactado.");
 
                 // Actualizar la lista de solicitudes
-                await getSolicitudesMayoristas();
+                await getSolicitudesAgente();
 
                 // Volver a la pantalla anterior
                 router.replace(
@@ -132,35 +149,102 @@ export default function ProspectoSolicitud() {
     );
   };
 
+  const marcarSolicitudCancelada = async () => {
+    Alert.alert(
+      "Confirmación",
+      "¿Estás seguro de marcar esta solicitud como cancelada?",
+      [
+        {
+          text: "Cancelar",
+          style: "cancel",
+        },
+        {
+          text: "Confirmar",
+          onPress: async () => {
+            if (solicitudMayorista) {
+              try {
+                await cancelarSolicitudMayorista({
+                  idSolicitud: solicitudMayorista.id,
+                  mensajeRechazo: "Aceptado",
+                });
+
+                Alert.alert("Éxito", "Solicitud marcada como cancelada");
+
+                await getSolicitudesAgente();
+
+                router.replace(
+                  "/(agente)/(solicitudes-mayoristas)/lista-solicitudes"
+                );
+              } catch (error) {
+                Alert.alert(
+                  "Error",
+                  "Ocurrió un error al actualizar el estatus."
+                );
+              }
+            }
+          },
+        },
+      ],
+      { cancelable: false } // No se puede cerrar tocando fuera de la alerta
+    );
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Desde prospecto</Text>
+    <ScrollView style={styles.container}>
+      <Text style={styles.header}>Nuevo prospecto</Text>
       {solicitudMayorista && (
         <>
+          <Text style={styles.textTitle}>Nombre de contacto:</Text>
           <Text style={styles.text}>
-            Nombre de contacto: {solicitudMayorista.mayorista.nombreContacto}
+            {solicitudMayorista.mayorista.nombreContacto}
+          </Text>
+
+          <Text style={styles.textTitle} className="mt-3">
+            Nombre de la empresa:
           </Text>
           <Text style={styles.text}>
-            Nombre de la empresa: {solicitudMayorista.mayorista.nombreEmpresa}
+            {solicitudMayorista.mayorista.nombreEmpresa}
+          </Text>
+
+          <Text style={styles.textTitle} className="mt-3">
+            Dirección:
           </Text>
           <Text style={styles.text}>
-            Dirección: {solicitudMayorista.mayorista.direccionEmpresa}
+            {solicitudMayorista.mayorista.direccionEmpresa}
+          </Text>
+
+          <Text style={styles.textTitle} className="mt-3">
+            Teléfono de Contacto:
           </Text>
           <Text style={styles.text}>
-            Teléfono de Contacto:{" "}
             {solicitudMayorista.mayorista.telefonoContacto}
           </Text>
-          <Text style={styles.text}>
-            Teléfono de Empresa: {solicitudMayorista.mayorista.telefonoEmpresa}
+
+          <Text style={styles.textTitle} className="mt-3">
+            Teléfono de Empresa:
           </Text>
           <Text style={styles.text}>
-            Correo de Contacto: {solicitudMayorista.mayorista.emailContacto}
+            {solicitudMayorista.mayorista.telefonoEmpresa}
+          </Text>
+
+          <Text style={styles.textTitle} className="mt-3">
+            Correo de Contacto:
           </Text>
           <Text style={styles.text}>
-            Correo de Empresa: {solicitudMayorista.mayorista.emailEmpresa}
+            {solicitudMayorista.mayorista.emailContacto}
+          </Text>
+
+          <Text style={styles.textTitle} className="mt-3">
+            Correo de Empresa:
           </Text>
           <Text style={styles.text}>
-            Fecha de inicio:{" "}
+            {solicitudMayorista.mayorista.emailEmpresa}
+          </Text>
+
+          <Text style={styles.textTitle} className="mt-3">
+            Fecha de inicio:
+          </Text>
+          <Text style={styles.text}>
             {new Date(solicitudMayorista.fechaInicio).toLocaleDateString()}
           </Text>
         </>
@@ -191,7 +275,9 @@ export default function ProspectoSolicitud() {
         className="mt-10"
         IconRight={() => <Ionicons name="checkmark" size={28} color="white" />}
       />
-    </View>
+
+      <RechazarSolicitud solicitudMayorista={solicitudMayorista} />
+    </ScrollView>
   );
 }
 
@@ -216,11 +302,17 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 15,
     color: "#333",
+    textAlign: "center",
   },
   text: {
-    fontSize: 16,
+    fontSize: 15,
     marginVertical: 5,
-    color: "#555",
+    textAlign: "center",
+  },
+  textTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
   },
   buttonContainer: {
     marginTop: 30,

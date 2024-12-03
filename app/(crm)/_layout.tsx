@@ -1,10 +1,8 @@
 import { images } from "@/constants";
 import AuthContext from "@/context/Auth/AuthContext";
-import { Link, router, Stack } from "expo-router";
+import { Link, Stack } from "expo-router";
 import { useContext } from "react";
-import { Image, View } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import Toast from "react-native-toast-message";
+import { Image, Platform } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 // @ts-ignore
 import UserAvatar from "react-native-user-avatar";
@@ -16,28 +14,30 @@ const Layout = () => {
     <Stack
       screenOptions={{
         headerLeft: () => (
-          <Link href="/(crm)/(perfil)/(tabs)/profile" className="ml-5">
+          <Link href="/(crm)/menu" className="ml-5">
+            <Icon name="menu" size={30} />
+          </Link>
+        ),
+        headerRight: () => (
+          <Link href="/(crm)/(perfil)/(tabs)/profile" className="mr-5">
             <UserAvatar
-              size={40}
+              size={35}
               name={session?.nombre}
               bgColor="#f5d9ab"
               textColor="black"
             />
           </Link>
         ),
-        headerRight: () => (
-          <Link href="/(crm)/menu" className="mr-5">
-            <Icon name="menu" size={30} />
-          </Link>
-        ),
         headerTitleAlign: "center",
         headerTitle: () => (
-          <>
-            <Image
-              source={images.iconoNavbar}
-              style={{ width: 100, height: 35, resizeMode: "contain" }}
-            />
-          </>
+          <Image
+            source={images.iconoNavbar}
+            style={{
+              width: Platform.OS == "ios" ? 100 : "65%",
+              height: Platform.OS == "ios" ? 35 : 50,
+              resizeMode: "contain",
+            }}
+          />
         ),
         headerStyle: {
           backgroundColor: "#ed9224",
@@ -45,41 +45,17 @@ const Layout = () => {
         contentStyle: {
           backgroundColor: "white",
         },
+        gestureDirection: "vertical",
       }}
     >
-      <Stack.Screen name="(agente)" />
       <Stack.Screen
         name="menu"
         options={{
-          headerTitle: "Menú",
-          headerLeft: undefined,
-          headerRight: undefined,
-          headerBackTitle: "Regresar",
-          headerTintColor: "black",
+          animationTypeForReplace: "pop",
           headerShown: false,
         }}
       />
       <Stack.Screen name="inicio" />
-      <Stack.Screen
-        name="(perfil)"
-        options={{
-          headerTitle: "Perfil de usuario",
-          headerLeft: undefined,
-          headerRight: undefined,
-          headerBackTitle: "Regresar",
-          headerTintColor: "black",
-        }}
-      />
-      {/* <Stack.Screen
-        name="solicitud-asistencia"
-        options={{
-          headerTitle: "Solicitud de asistencia",
-          headerLeft: undefined,
-          headerRight: undefined,
-          headerBackTitle: "Regresar",
-          headerTintColor: "black",
-        }}
-      /> */}
     </Stack>
   );
 };

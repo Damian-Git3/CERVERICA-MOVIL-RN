@@ -18,6 +18,7 @@ export interface UserMayoristaDetailDto {
   phoneNumberConfirmed: boolean;
   accessFailedCount: number;
   activo: boolean;
+  idMayorista: string;
   rfcEmpresa: string;
   nombreEmpresa: string;
   direccionEmpresa: string;

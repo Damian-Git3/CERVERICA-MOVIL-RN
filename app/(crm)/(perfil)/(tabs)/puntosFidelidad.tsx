@@ -1,21 +1,21 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation } from "expo-router";
+import usePuntosFidelidad from "@/hooks/usePuntosFidelidad";
 
 const Puntosfidelidad = () => {
-  const navigation = useNavigation();
-  navigation.setOptions({ headerShown: false });
-  /* const { puntosFidelidad, transacciones } = useContext(PerfilContext); */
+  const {
+    getPuntosFidelidad,
+    getTransacciones,
+    puntosFidelidad,
+    transacciones,
+    cargando,
+  } = usePuntosFidelidad();
 
-  const puntosFidelidad = {
-    puntosAcumulados: 0,
-    puntosRedimidos: 0,
-    puntosDisponibles: 0,
-    fechaUltimaActualizacion: "30/10/24",
-  };
-
-  const transacciones: any = [];
+  useEffect(() => {
+    getPuntosFidelidad();
+    getTransacciones();
+  }, []);
 
   return (
     <SafeAreaView>
