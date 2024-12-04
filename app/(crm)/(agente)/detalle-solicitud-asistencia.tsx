@@ -36,6 +36,11 @@ const SolicitudAsistencia = () => {
       params: { solicitudId: solicitudId },
     });
   };
+
+  const filterTextInput = (text: string): string => {
+    return text.replace(/[^a-zA-ZÀ-ÿ0-9.,\s!¡¿?\(\)]/g, '');
+  }
+
   const handleEliminarSolicitud = () => setModalVisible(true);
 
   const confirmEliminarSolicitud = async (descripcion: string) => {
@@ -189,6 +194,10 @@ const EliminarSolicitudModal: React.FC<EliminarSolicitudModalProps> = ({
 }) => {
   const [motivo, setMotivo] = React.useState("");
 
+  const filterTextInput = (text: string): string => {
+    return text.replace(/[^a-zA-ZÀ-ÿ0-9.,\s!¡¿?\(\)]/g, '');
+  }
+
   return (
     <Modal
       animationType="fade"
@@ -212,7 +221,7 @@ const EliminarSolicitudModal: React.FC<EliminarSolicitudModalProps> = ({
             style={styles.input}
             placeholder="Motivo de eliminación"
             value={motivo}
-            onChangeText={setMotivo}
+            onChangeText={(text) => setMotivo(filterTextInput(text))}
           />
           <View style={styles.buttonContainer}>
             <Pressable

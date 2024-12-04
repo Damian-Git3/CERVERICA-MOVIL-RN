@@ -27,6 +27,10 @@ const SeguimientoSolicitud = () => {
 
   const formValido = mensaje.trim().length > 0 && descripcion.trim().length > 0;
 
+  const filterTextInput = (text: string): string => {
+    return text.replace(/[^a-zA-ZÀ-ÿ0-9.,\s!¡¿?\(\)]/g, '');
+  }
+
   const handleVolver = () => {
     router.push("/solicitud-asistencia");
   };
@@ -82,7 +86,7 @@ const SeguimientoSolicitud = () => {
             multiline
             numberOfLines={4}
             value={mensaje}
-            onChangeText={setMensaje}
+            onChangeText={(text) => setMensaje(filterTextInput(text))}
             placeholder="Escribe el mensaje de seguimiento"
           />
         </View>
@@ -95,7 +99,7 @@ const SeguimientoSolicitud = () => {
             multiline
             numberOfLines={4}
             value={descripcion}
-            onChangeText={setDescripcion}
+            onChangeText={(text) => setDescripcion(filterTextInput(text))}
             placeholder="Escribe la descripción del seguimiento"
           />
         </View>
