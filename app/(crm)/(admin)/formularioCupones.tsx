@@ -29,11 +29,11 @@ const FormularioCupones: React.FC = () => {
     fechaCreacion: cupon?.fechaCreacion || new Date().toISOString(),
     fechaExpiracion: cupon?.fechaExpiracion || "",
     tipo: cupon?.tipo || 2,
-    paquete: cupon?.paquete || 0,
+    paquete: 0,
     cantidad: cupon?.cantidad || 0,
     valor: cupon?.valor || 0,
     usos: cupon?.usos || 0,
-    montoMaximo: cupon?.montoMaximo || 0,
+    montoMaximo: 0,
     montoMinimo: cupon?.montoMinimo || 0,
     activo: cupon?.activo || true,
   });
@@ -189,10 +189,9 @@ const FormularioCupones: React.FC = () => {
       formValues.codigo.trim() !== "" && // Asegura que el código no esté vacío
       formValues.fechaExpiracion !== "" && // Asegura que la fecha de expiración no esté vacía
       formValues.tipo !== 0 && // Asegura que el tipo no sea 0
-      formValues.paquete > 0 && // Asegura que el paquete sea mayor a 0
       formValues.cantidad > 0 && // Asegura que la cantidad sea mayor a 0
       formValues.valor > 0 && // Asegura que el valor sea mayor a 0
-      formValues.montoMaximo > 0 // Asegura que el monto máximo sea mayor a 0
+      formValues.montoMinimo > 0 // Asegura que el monto máximo sea mayor a 0
     );
   };
 
@@ -251,17 +250,6 @@ const FormularioCupones: React.FC = () => {
           ))}
         </Picker>
 
-        <Text style={styles.label}>Paquete:</Text>
-        <Picker
-          selectedValue={formValues.paquete}
-          style={styles.input}
-          onValueChange={(value) => handleChange("paquete", value)}
-        >
-          {opcionesPaquete.map((opcion) => (
-            <Picker.Item key={opcion.value} label={opcion.label} value={opcion.value} />
-          ))}
-        </Picker>
-
         <Text style={styles.label}>Cantidad Cupones:</Text>
         <TextInput
           style={styles.input}
@@ -282,31 +270,15 @@ const FormularioCupones: React.FC = () => {
           }
         />
 
-        {formValues.tipo === "1" ? (
-          <>
-            <Text style={styles.label}>Monto Mínimo:</Text>
-            <TextInput
-              style={styles.input}
-              keyboardType="numeric"
-              value={formatCurrency(formValues.montoMinimo)}
-              onChangeText={(value) =>
-                handleChange("montoMinimo", parseFloat(value.replace(/[^\d.-]/g, '')) || 0) // Remueve caracteres no numéricos
-              }
-            />
-          </>
-        ) : (
-          <>
-            <Text style={styles.label}>Monto Máximo:</Text>
-            <TextInput
-              style={styles.input}
-              keyboardType="numeric"
-              value={formatCurrency(formValues.montoMaximo)}
-              onChangeText={(value) =>
-                handleChange("montoMaximo", parseFloat(value.replace(/[^\d.-]/g, '')) || 0) // Remueve caracteres no numéricos
-              }
-            />
-          </>
-        )}
+        <Text style={styles.label}>Monto Mínimo:</Text>
+        <TextInput
+          style={styles.input}
+          keyboardType="numeric"
+          value={formatCurrency(formValues.montoMinimo)}
+          onChangeText={(value) =>
+            handleChange("montoMinimo", parseFloat(value.replace(/[^\d.-]/g, '')) || 0) // Remueve caracteres no numéricos
+          }
+        />
 
         <Text style={styles.label}>Activo:</Text>
         <Switch

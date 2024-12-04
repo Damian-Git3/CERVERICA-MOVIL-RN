@@ -34,8 +34,6 @@ const Cupones = () => {
     return (
       cupon.codigo.toLowerCase().includes(searchText.toLowerCase()) ||
       cupon.valor.toString().toLowerCase().includes(searchText.toLowerCase()) ||
-      cupon.paquete.toString().toLowerCase().includes(searchText.toLowerCase()) ||
-      cupon.montoMaximo.toString().includes(searchText) ||
       cupon.usos.toString().includes(searchText) ||
       new Date(cupon.fechaExpiracion).toLocaleDateString().includes(searchText) ||
       (cupon.activo ? "Activo" : "Inactivo").toLowerCase().includes(searchText.toLowerCase())
@@ -83,12 +81,10 @@ const Cupones = () => {
         <View style={styles.whiteSection}>
           <Text style={styles.couponTitle}>Código: {item.codigo}</Text>
           <Text style={styles.couponText}>
-            {item.tipo === 1 ? `Monto máximo: ${item.montoMaximo} MXN` : `Monto mínimo: ${item.montoMinimo} MXN`}
+            {`Monto mínimo: ${item.montoMinimo} MXN`}
 
           </Text>
-          <Text style={styles.couponText}>
-            Paquete: {paqueteSeleccionado ? paqueteSeleccionado.label : "Paquete no encontrado"}
-          </Text>
+
           <Text style={styles.couponText}>Cantidad de cupones: {item.cantidad}</Text>
           <Text style={styles.couponText}>Cupones usados: {item.usos}</Text>
 
