@@ -44,8 +44,7 @@ const DetalleSolicitudAsistenciaHistorico = () => {
       {/* Información de la Solicitud */}
       <View style={styles.section}>
         <Text style={styles.cardText}>
-          <Text>Descripción:</Text>{" "}
-          {solicitudAsistencia?.solicitud.descripcion}
+          <Text>Descripción:</Text> {solicitudAsistencia?.solicitud.descripcion}
         </Text>
         <Text style={styles.cardText}>
           <Text>Fecha de Solicitud:</Text>{" "}
@@ -75,23 +74,22 @@ const DetalleSolicitudAsistenciaHistorico = () => {
         </Text>
       </View>
 
-      {/* Información del Agente de Venta */}
+      {/* Información del cliente */}
       <View style={styles.section}>
         <Text style={styles.cardText}>
-          <Text>Agente de Venta:</Text>{" "}
-          {solicitudAsistencia?.cliente?.fullName}
+          <Text>Cliente:</Text> {solicitudAsistencia?.clienteData?.fullName}
         </Text>
         <Text style={styles.cardText}>
-          <Text>Email:</Text> {solicitudAsistencia?.cliente?.email}
+          <Text>Email:</Text> {solicitudAsistencia?.clienteData?.email}
         </Text>
         <Text style={styles.cardText}>
           <Text>Activo:</Text>{" "}
-          {solicitudAsistencia?.cliente?.activo ? "Sí" : "No"}
+          {solicitudAsistencia?.clienteData?.activo ? "Sí" : "No"}
         </Text>
         <Text style={styles.cardText}>
           <Text>Fecha de Registro:</Text>{" "}
           {new Date(
-            solicitudAsistencia?.cliente?.fechaRegistro
+            solicitudAsistencia?.clienteData?.fechaRegistro
           ).toLocaleString()}
         </Text>
       </View>
