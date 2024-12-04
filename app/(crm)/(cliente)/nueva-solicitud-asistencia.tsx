@@ -75,6 +75,9 @@ const SolicitudAsistencia = () => {
       });
     }
   };
+  const filterTextInput = (text: string): string => {
+    return text.replace(/[^a-zA-ZÀ-ÿ0-9.,\s!¡¿?\(\)]/g, '');
+  }
 
   const handleCategoriaSeleccion = (categoria) => {
     setCategoriaSeleccionada(categoria.id);
@@ -83,8 +86,8 @@ const SolicitudAsistencia = () => {
 
   const filteredCategorias = categoriasAsistencias
     ? categoriasAsistencias.filter((categoria) =>
-        categoria.nombre.toLowerCase().includes(searchQuery.toLowerCase())
-      )
+      categoria.nombre.toLowerCase().includes(searchQuery.toLowerCase())
+    )
     : [];
 
   return (
@@ -107,8 +110,8 @@ const SolicitudAsistencia = () => {
             <Text>
               {categoriaSeleccionada
                 ? categoriasAsistencias.find(
-                    (cat) => cat.id === categoriaSeleccionada
-                  )?.nombre
+                  (cat) => cat.id === categoriaSeleccionada
+                )?.nombre
                 : "Selecciona una categoría"}
             </Text>
           </TouchableOpacity>
@@ -154,7 +157,7 @@ const SolicitudAsistencia = () => {
             multiline
             numberOfLines={4}
             value={descripcion}
-            onChangeText={setDescripcion}
+            onChangeText={(text) => setDescripcion(filterTextInput(text))}
             placeholder="Describe tu solicitud"
           />
         </View>

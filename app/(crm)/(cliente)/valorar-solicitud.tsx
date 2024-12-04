@@ -33,6 +33,11 @@ const ValorarSolicitud = () => {
     router.push("/solicitud-asistencia");
   };
 
+  const filterTextInput = (text: string): string => {
+    return text.replace(/[^a-zA-ZÀ-ÿ0-9.,\s!¡¿?\(\)]/g, '');
+  }
+
+
   const handleConfirmSubmit = async () => {
     if (formValido) {
       const res = await valorarSolicitudAsistencia({
@@ -115,7 +120,7 @@ const ValorarSolicitud = () => {
             multiline
             numberOfLines={4}
             value={mensaje}
-            onChangeText={setMensaje}
+            onChangeText={(text) => setMensaje(filterTextInput(text))}
             placeholder="Describe tu experiencia"
           />
         </View>

@@ -29,6 +29,10 @@ const SolicitudAsistencia = () => {
   const { solicitudId } = useLocalSearchParams();
   const [modalChangeAgentVisible, setModalChangeAgentVisible] = useState(false);
 
+  const filterTextInput = (text: string): string => {
+    return text.replace(/[^a-zA-ZÀ-ÿ0-9.,\s!¡¿?\(\)]/g, '');
+  }
+
   const handleCambiarAgente = () => {
     // Lógica para manejar el motivo
     setModalChangeAgentVisible(true);
@@ -170,7 +174,7 @@ const SolicitudAsistencia = () => {
       <View style={styles.separator} />
       {/* Botón de eliminación */}
       <TouchableOpacity
-      className="mb-[40]"
+        className="mb-[40]"
         style={styles.deleteButton}
         onPress={handleEliminarSolicitud}
       >
@@ -190,6 +194,10 @@ const SolicitudAsistencia = () => {
 const ChangeAgentModal = ({ visible, onClose, onSubmit }) => {
   const [reason, setReason] = useState("");
 
+  const filterTextInput = (text: string): string => {
+    return text.replace(/[^a-zA-ZÀ-ÿ0-9.,\s!¡¿?\(\)]/g, '');
+  }
+
   return (
     <Modal
       visible={visible}
@@ -204,7 +212,7 @@ const ChangeAgentModal = ({ visible, onClose, onSubmit }) => {
             style={styles.input}
             placeholder="Escribe el motivo aquí"
             value={reason}
-            onChangeText={setReason}
+            onChangeText={(text) => setReason(filterTextInput(text))}
           />
           <View style={styles.buttonContainer}>
             <Pressable style={styles.cancelButton} onPress={onClose}>
@@ -243,6 +251,10 @@ const EliminarSolicitudModal: React.FC<EliminarSolicitudModalProps> = ({
 }) => {
   const [motivo, setMotivo] = React.useState("");
 
+  const filterTextInput = (text: string): string => {
+    return text.replace(/[^a-zA-ZÀ-ÿ0-9.,\s!¡¿?\(\)]/g, '');
+  }
+
   return (
     <Modal
       animationType="fade"
@@ -266,7 +278,7 @@ const EliminarSolicitudModal: React.FC<EliminarSolicitudModalProps> = ({
             style={styles.input}
             placeholder="Motivo de eliminación"
             value={motivo}
-            onChangeText={setMotivo}
+            onChangeText={(text) => setMotivo(filterTextInput(text))}
           />
           <View style={styles.buttonContainer}>
             <Pressable
