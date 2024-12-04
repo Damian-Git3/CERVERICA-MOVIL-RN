@@ -49,23 +49,23 @@ const FormularioReglasPuntos: React.FC = () => {
       if (regex.test(value)) {
         setFormValues((prevValues) => ({
           ...prevValues,
-          [name]: value === "" ? "0" : value, // Si está vacío, asignamos "0"
+          [name]: value === "" ? "0" : parseFloat(value), // Si está vacío, asignamos "0"
         }));
       }
     } else {
       setFormValues((prevValues) => ({
-      ...prevValues,
-      [name]:
-        name === "promocionesAutomaticas" ||
-        name === "notificacionPromocionesWhatsApp" ||
-        name === "notificacionPromocionesEmail"
-          ? value
-          : value === ""
-          ? 0
-          : parseFloat(value), // Asigna 0 si el campo está vacío
-    }));
+        ...prevValues,
+        [name]:
+          name === "promocionesAutomaticas" ||
+            name === "notificacionPromocionesWhatsApp" ||
+            name === "notificacionPromocionesEmail"
+            ? value
+            : value === ""
+              ? 0
+              : parseFloat(value), // Asigna 0 si el campo está vacío
+      }));
     }
-    
+
   };
 
   const handleSubmit = async () => {

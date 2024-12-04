@@ -49,28 +49,10 @@ const FormularioConfiguracionVentasMayoreo: React.FC = () => {
   }, []);
 
   const handleChange = (name: string, value: any) => {
-    if (name == "montoMinimoMayorista") {
-      const regex = /^(\d*\.?\d*)$/; // Expresión regular que permite 0 o 1 punto decimal
-      if (regex.test(value)) {
-        setFormValues((prevValues) => ({
-          ...prevValues,
-          [name]: value === "" ? "0" : value, // Si está vacío, asignamos "0"
-        }));
-      }
-    } else {
-      setFormValues((prevValues) => ({
+    setFormValues((prevValues) => ({
       ...prevValues,
-      [name]:
-        name === "promocionesAutomaticas" ||
-        name === "notificacionPromocionesWhatsApp" ||
-        name === "notificacionPromocionesEmail"
-          ? value
-          : value === ""
-          ? 0
-          : parseFloat(value), // Asigna 0 si el campo está vacío
+      [name]: name === "pagosMensuales" ? value : value === "" ? 0 : parseFloat(value),
     }));
-    }
-    
   };
 
   const formatFechaModificacion = (fecha: Date) => {
@@ -87,7 +69,6 @@ const FormularioConfiguracionVentasMayoreo: React.FC = () => {
   };
 
   const handleSubmit = async () => {
-    // Obtener la fecha de modificación formateada
     const fechaFormatoAPI = formatFechaModificacion(new Date());
 
     const dataToSend = {
@@ -98,6 +79,8 @@ const FormularioConfiguracionVentasMayoreo: React.FC = () => {
 
     try {
       if (configuracion) {
+        console.log("ACTUALIZAR");
+        console.log(dataToSend);
         await actualizarConfiguracionVentasMayoreo(dataToSend);
         Toast.show({
           text1: "Actualización Exitosa",
@@ -105,6 +88,8 @@ const FormularioConfiguracionVentasMayoreo: React.FC = () => {
           type: "success",
         });
       } else {
+        console.log("REGISTRAR");
+        console.log(dataToSend);
         await registrarConfiguracionVentasMayoreo(dataToSend);
         Toast.show({
           text1: "Registro Exitoso",
@@ -138,11 +123,15 @@ const FormularioConfiguracionVentasMayoreo: React.FC = () => {
         onChangeText={(value) => handleChange("plazoMaximoPago", value)}
       />
 
-      <Text style={styles.label}>Pagos Mensuales:</Text>
-      <Switch
-        value={formValues.pagosMensuales} // Usar el valor del estado
-        onValueChange={(value) => handleChange("pagosMensuales", value)} // Cambiar el valor directamente
-      />
+      <View style={styles.containerSwitch}>
+        <Text style={styles.label}>Pagos Mensuales:</Text>
+        <Switch
+          style={styles.switch}
+          value={formValues.pagosMensuales}
+          onValueChange={(value) => handleChange("pagosMensuales", value)}
+        />
+      </View>
+
 
       <Text style={styles.label}>Monto Mínimo Mayorista:</Text>
       <TextInput
@@ -195,6 +184,12 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#fff",
     fontSize: 18,
+  },
+  containerSwitch: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    marginVertical: 10,
   },
 });
 
