@@ -84,12 +84,11 @@ const Profile = () => {
   ];
 
   // Filtrar módulos según el rol
-
   const filteredModules =
     session?.rol === "Mayorista"
       ? modules.filter((module) => module.name === "Mi Agente")
-      : session?.rol !== "Admin"
-        ? modules.filter((module) => module.name !== "Mi Agente")
+      : session?.rol === "Cliente"
+        ? modules.filter((module) => module.name === "Mis PistoPoints")
         : [];
 
   return (
