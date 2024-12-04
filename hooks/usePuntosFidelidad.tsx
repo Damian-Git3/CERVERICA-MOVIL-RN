@@ -103,7 +103,7 @@ export default function usePuntosFidelidad() {
     }
   };
 
-  // Método para obtener puntos de fidelidad
+  // Método para obtener puntos de fidelidad del usuario auntenticado
   const getPuntosFidelidad = async () => {
     try {
       const response = await axios.get<PuntosFidelidadDto>(
